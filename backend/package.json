@@ -1,13 +1,18 @@
 {
   "dependencies": {
     "cors": "^2.8.6",
-    "express": "^5.2.1"
+    "dotenv": "^16.4.1",
+    "express": "^5.2.1",
+    "pg": "^8.6.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
   },
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
-  }
+    "dev": "nodemon server.js",
+    "db:schema": "node scripts/runSchema.js",
+    "db:init": "node -e \"require('dotenv').config(); const { query } = require('./db'); const fs = require('fs'); const sql = fs.readFileSync('./schema.sql','utf8'); query(sql).then(() => console.log('Schema applied')).catch(err => { console.error(err); process.exit(1); });\""
+  },
+  "type": "module"
 }
