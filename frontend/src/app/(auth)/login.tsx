@@ -1,7 +1,29 @@
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator } from "react-native";
 import { Link } from "expo-router";
+import { login } from "../../services/login";
+import { useState } from "react";
+
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleLogin = async () => {
+    setIsLoading(true);
+    setError("");
+    try {
+      const data = await login(email, password);
+      console.log("User logged in:", data);
+    } catch (error) {
+      console.error("Login failed:", error);
+      setError("Login failed. Please check your credentials.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome Back</Text>
@@ -11,20 +33,33 @@ export default function Login() {
         placeholder="Email"
         keyboardType="email-address"
         autoCapitalize="none"
+        value={email}
+        onChangeText={setEmail}
+        editable={!isLoading}
       />
 
       <TextInput
         style={styles.input}
         placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
         secureTextEntry
+        editable={!isLoading}
       />
 
       <View style={styles.button}>
         <Button 
           title="Login"
-          onPress={() => console.log("Login pressed")}
+          onPress={handleLogin}
+          disabled={isLoading}
         />
       </View>
+
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />
+      ) : null}
+
+      {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <Link href="/(auth)/register">
         <Text style={styles.register}>
@@ -66,5 +101,15 @@ const styles = StyleSheet.create({
     marginTop: 20,
     textAlign: "center",
     color: "blue",
+  },
+
+  loader: {
+    marginTop: 12,
+  },
+
+  error: {
+    color: "red",
+    textAlign: "center",
+    marginBottom: 15,
   },
 });

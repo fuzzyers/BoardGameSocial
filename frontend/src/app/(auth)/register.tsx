@@ -1,7 +1,15 @@
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { Link } from "expo-router";
+import { useState } from "react";
+import { register } from "../../services/register";
 
 export default function Register() {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [error, setError] = useState("");
+    
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Create Account</Text>
@@ -10,6 +18,8 @@ export default function Register() {
         style={styles.input}
         placeholder="Name"
         autoCapitalize="words"
+        value={name}
+        onChangeText={setName}
       />
 
       <TextInput
@@ -17,26 +27,34 @@ export default function Register() {
         placeholder="Email"
         keyboardType="email-address"
         autoCapitalize="none"
+        value={email}
+        onChangeText={setEmail}
       />
 
       <TextInput
         style={styles.input}
         placeholder="Password"
         secureTextEntry
+        value={password}
+        onChangeText={setPassword}
       />
 
       <TextInput
         style={styles.input}
         placeholder="Confirm Password"
         secureTextEntry
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
       />
 
       <View style={styles.button}>
         <Button
           title="Register"
-          onPress={() => console.log("Register pressed")}
+          onPress={() => register(name, email, password, confirmPassword).catch(err => setError("Registration failed"))}
         />
       </View>
+
+      {error ? <Text style={styles.error}>{error}</Text> : null}
 
         <Link href="/(auth)/login">
             <Text style={styles.login}>
@@ -78,5 +96,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     textAlign: "center",
     color: "blue",
+  },
+
+  error: {
+    color: "red",
+    textAlign: "center",
+    marginBottom: 15,
   },
 });
