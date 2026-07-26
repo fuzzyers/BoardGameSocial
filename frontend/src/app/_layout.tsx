@@ -1,16 +1,20 @@
-import { Redirect, Slot, useSegments } from "expo-router";
+import { getToken } from "@/services/auth";
+import { Redirect, router, Slot, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 
 export default function Layout() {
-  const isSignedIn = false;
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = await getToken();
+      if (!token) {
+        router.push("/(auth)/login");
+      }
+    };
+    checkAuth();
+  }, []);
   const segments = useSegments();
-
-  const inAuthGroup = segments[0] === "(auth)";
-
-  if (!isSignedIn && !inAuthGroup) {
-    return <Redirect href="/login" />;
-  }
 
   return (
     <View style={styles.container}>

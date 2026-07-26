@@ -1,5 +1,5 @@
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
-import { Link } from "expo-router";
+import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator } from "react-native";
+import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import { register } from "../../services/register";
 
@@ -9,7 +9,23 @@ export default function Register() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
     
+    const handleRegister = async () => {
+        setError("");
+        setIsLoading(true);
+        try {
+            await register(name, email, password, confirmPassword);
+
+            router.push("/(app)");
+        } catch (error) {
+            setError("Registration failed. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Create Account</Text>
@@ -50,9 +66,14 @@ export default function Register() {
       <View style={styles.button}>
         <Button
           title="Register"
-          onPress={() => register(name, email, password, confirmPassword).catch(err => setError("Registration failed"))}
+          onPress={handleRegister}
+          disabled={isLoading}
         />
       </View>
+
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />
+      ) : null}
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
@@ -96,6 +117,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
     textAlign: "center",
     color: "blue",
+  },
+
+  loader: {
+    marginTop: 12,
   },
 
   error: {

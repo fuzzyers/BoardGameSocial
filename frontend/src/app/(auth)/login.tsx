@@ -1,5 +1,5 @@
 import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator } from "react-native";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { login } from "../../services/login";
 import { useState } from "react";
 
@@ -9,21 +9,23 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleLogin = async () => {
     setIsLoading(true);
     setError("");
     try {
-      const data = await login(email, password);
-      console.log("User logged in:", data);
+      await login(email, password);
+
+      router.replace("/(app)"); 
     } catch (error) {
-      console.error("Login failed:", error);
+
       setError("Login failed. Please check your credentials.");
     } finally {
       setIsLoading(false);
     }
   };
-  
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome Back</Text>
