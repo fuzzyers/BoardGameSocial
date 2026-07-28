@@ -1,5 +1,7 @@
 import { createGroup } from "@/services/groups";
 import { View, Text, StyleSheet, useWindowDimensions, Pressable, ScrollView } from "react-native";
+import CreateGroupModal from "./createGroupModal";
+import { useState } from "react";
 
 type Group = {
     id:number;
@@ -11,8 +13,13 @@ type NavChatProps = {
 };
 
 export default function NavChat({groups}: NavChatProps) {
+    const [showModal, setShowModal] = useState(false)
     const { width, height } = useWindowDimensions();
     const styles = createStyles(width, height)
+
+    const setModal = () => {
+        setShowModal(!showModal)
+    }
 
     return (
         <View style={styles.navbar}>
@@ -20,9 +27,10 @@ export default function NavChat({groups}: NavChatProps) {
                 showsVerticalScrollIndicator={true}
                 contentContainerStyle={styles.navbarContent}
             >
-                <Pressable style={styles.navbarButton} onPress={() => createGroup("test", "test")}>
+                <Pressable style={styles.navbarButton} onPress={() => setModal()}>
                     <Text style={styles.navbarButtonText}>Create a Group</Text>
                 </Pressable>
+                <CreateGroupModal visible={showModal} onClose={() => setShowModal(false)}/>
                  {groups.map((group) => (
                     <Pressable 
                         key={group.id}
