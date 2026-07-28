@@ -4,7 +4,7 @@ import {generateToken} from "../utils/jwt.js";
 
 export const registerUser = async (req, res) => {
     const { email, name, password, confirmPassword } = req.body;
-    console.log("Registering user with email:", email, "and name:", name);
+    
     try {
         const hashedPassword = await bcrypt.hashSync(password, 10);
 
@@ -19,8 +19,8 @@ export const registerUser = async (req, res) => {
         }
 
         const result = await pool.query(
-            'INSERT INTO users (email, name, password) VALUES ($1, $2, $3) RETURNING *',
-            [email, name, hashedPassword]
+            'INSERT INTO users (email, name, password, role_id) VALUES ($1, $2, $3, $4) RETURNING *',
+            [email, name, hashedPassword, 1]
         );
 
         const token = generateToken(result.rows[0]); 
