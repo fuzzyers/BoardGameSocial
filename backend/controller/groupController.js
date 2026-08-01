@@ -1,4 +1,4 @@
-import { addMemberToGroup, create, getGroupsWithUser, getGroupWithMembers } from "../services/groups.js";
+import { addMemberToGroup, create, getGroupById, getGroupsWithUser, getGroupWithMembers } from "../services/groups.js";
 import pool from "../db/db.js";
 import { createMessageBoard } from "../services/messages.js";
 
@@ -78,6 +78,17 @@ export const getAllGroups = async (req, res) => {
         const getData = await getGroupsWithUser(userId)
 
         res.status(200).json({message: "success", data: getData})
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getAllGroupByIdData = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const response = await getGroupById(id)
+
+        res.status(200).json(response)
     } catch (error) {
         console.log(error)
     }

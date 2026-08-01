@@ -1,15 +1,17 @@
 import { View, Text, StyleSheet, useWindowDimensions, Pressable } from "react-native";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { deleteToken } from "@/services/auth";
 
 export default function Navbar() {
     const { width, height } = useWindowDimensions();
     const styles = createStyles(width, height)
     const router = useRouter();
+
     const handleLogout = async () => {
-        deleteToken(); 
+        await deleteToken(); 
         router.push("/(auth)/login"); 
     }
+
     return (
         <View style={styles.navbar}>
             <Pressable style={styles.navbarButton}>

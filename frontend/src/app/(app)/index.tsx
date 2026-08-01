@@ -1,30 +1,40 @@
 import { StyleSheet, Text, View } from 'react-native';
 import Navbar from "@/components/navbar";
 import ChatBox from '@/components/chatbox';
-import NavChat from '@/components/navChat';
+import NavGroup from '@/components/navGroup';
 import { useEffect, useState } from 'react';
 import { getGroups } from '@/services/groups';
 
+type Group = {
+    id: number;
+    name: string;
+    description: string;
+    created_at: string;
+    chat_id: number;
+};
+
 export default function HomeScreen() {
   const [groups, setGroups] = useState([])
+  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null)
+
   useEffect(() => {
     const getData = async () => {
       const groupsData = await getGroups()
-      console.log(groupsData?.data.data)
+
       setGroups(groupsData?.data.data)
-  
     }
 
     getData()
   },[])
+
   return (
     <View style={styles.container}>
       <View style={styles.containerLeft}>
         <Navbar />
-        <NavChat groups={groups}/>
+        <NavGroup groups={groups} onSelectGroup={setSelectedGroup}/>
       </View>
       <View style={styles.containerRight}>
-        <ChatBox />
+        <ChatBox group={selectedGroup}/>
       </View>
     </View>
   );

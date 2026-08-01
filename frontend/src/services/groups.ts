@@ -13,7 +13,6 @@ export const createGroup = async (name: string, description: string) => {
             }
         )
 
-        console.log(response)
     } catch (error) {
         console.log(error)
     }
@@ -23,8 +22,7 @@ export const createGroup = async (name: string, description: string) => {
 export const getGroups = async () => {
     try {
         const token = await getToken()
-
-        const response = await api.get("/groups/", {
+        const response = await api.get("/groups", {
             headers: {
                 Authorization: `Bearer ${token}`
             }

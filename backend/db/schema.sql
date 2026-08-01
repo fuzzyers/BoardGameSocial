@@ -82,6 +82,12 @@ CREATE TABLE IF NOT EXISTS events (
 
 -- Messaging Table
 -- 
+
+CREATE TABLE IF NOT EXISTS group_chats (
+    id SERIAL PRIMARY KEY,
+    group_id INT REFERENCES groups(id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS messages (
     id SERIAL PRIMARY KEY,
     chat_id INT REFERENCES group_chats(id) ON DELETE CASCADE,
@@ -125,7 +131,3 @@ CREATE TABLE IF NOT EXISTS event_games (
     play_order INT
 );
 
-CREATE TABLE IF NOT EXISTS group_chats (
-    id SERIAL PRIMARY KEY,
-    group_id INT REFERENCES groups(id) ON DELETE CASCADE
-);

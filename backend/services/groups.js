@@ -77,3 +77,65 @@ export const getGroupsWithUser = async (userId) => {
 
     return result.rows;
 }
+
+export const getGroupById = async (id) => {
+    const query = `
+        SELECT
+            g.id,
+            g.name,
+            g.description,
+            g.created_at,
+
+            gc.id AS chat_id,
+
+            COALESCE(
+                (
+                    SELECT json_agg(
+                        jsonb_build_object(
+                            'id', u.id,
+                            'name', u.name,
+                            'role', gr.name
+                        )
+                    )
+                    FROM group_members gm
+                    JOIN users u
+                        ON gm.user_id = u.id
+                    JOIN group_roles gr
+                        ON gm.role_id = gr.id
+                    WHERE gm.group_id = g.id
+                ),
+                '[]'
+            ) AS members,
+
+            COALESCE(
+                (
+                    SELECT json_agg(
+                        jsonb_build_object(
+                            'id', m.id,
+                            'message', m.message,
+                            'sender_id', m.user_id,
+                            'sender_name', sender.name,
+                            'created_at', m.created_at
+                        )
+                        ORDER BY m.created_at ASC
+                    )
+                    FROM messages m
+                    JOIN users sender
+                        ON m.user_id = sender.id
+                    WHERE m.chat_id = gc.id
+                ),
+                '[]'
+            ) AS messages
+
+        FROM groups g
+
+        JOIN group_chats gc
+            ON g.id = gc.group_id
+
+        WHERE g.id = $1;
+    `;
+
+    const result = await pool.query(query, [id]);
+
+    return result.rows[0];
+};

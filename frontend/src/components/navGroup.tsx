@@ -1,19 +1,24 @@
-import { createGroup } from "@/services/groups";
 import { View, Text, StyleSheet, useWindowDimensions, Pressable, ScrollView } from "react-native";
 import CreateGroupModal from "./createGroupModal";
 import { useState } from "react";
 
 type Group = {
-    id:number;
+    id: number;
     name: string;
-}
+    description: string;
+    created_at: string;
+    chat_id: number;
+};
 
 type NavChatProps = {
     groups: Group[];
+    onSelectGroup: (group: Group) => void;
 };
 
-export default function NavChat({groups}: NavChatProps) {
+
+const NavGroup = ({groups, onSelectGroup}: NavChatProps) => {
     const [showModal, setShowModal] = useState(false)
+    const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
     const { width, height } = useWindowDimensions();
     const styles = createStyles(width, height)
 
@@ -31,12 +36,22 @@ export default function NavChat({groups}: NavChatProps) {
                     <Text style={styles.navbarButtonText}>Create a Group</Text>
                 </Pressable>
                 <CreateGroupModal visible={showModal} onClose={() => setShowModal(false)}/>
-                 {groups.map((group) => (
+                 {groups?.map((group) => (
                     <Pressable 
                         key={group.id}
-                        style={styles.navbarButton}
+                        style={[
+                            styles.navbarButton,
+                            selectedGroupId === group.id && styles.selectedNavbarButton,
+                        ]}
+                        onPress={() => {
+                            onSelectGroup(group)
+                            setSelectedGroupId(group.id);
+                        }}
                     >
-                        <Text style={styles.navbarButtonText}>
+                        <Text style={[
+                            styles.navbarButtonText,
+                            selectedGroupId === group.id && styles.selectedNavbarButton,
+                            ]}>
                             {group.name}
                         </Text>
                     </Pressable>
@@ -84,4 +99,15 @@ const createStyles = (width: number, height: number) => {
             alignItems: 'center',
             width: '100%',
         },
+        selectedNavbarButton: {
+            backgroundColor: "#007AFF",
+            borderWidth: 2,
+            borderColor: "#005FCC",
+        },
+
+        selectedNavbarButtonText: {
+            color: "#FFFFFF",
+        },
 })}
+
+export default NavGroup;

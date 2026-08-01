@@ -1,3 +1,4 @@
+import { createMessage } from "../services/messages.js"
 
 export const sendMessage = async (req, res) => {
     const { chatId, message } = req.body

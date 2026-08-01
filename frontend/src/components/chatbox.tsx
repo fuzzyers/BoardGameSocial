@@ -1,15 +1,44 @@
+import { getGroupMessages } from "@/services/messages";
+import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TextInput, ScrollView } from "react-native";
+import MessageInput from "./messageInput";
 
-const ChatBox = () => {
+type Group = {
+    id: number;
+    name: string;
+    description: string;
+    created_at: string;
+    chat_id: number;
+};
+
+type ChatBoxProps = {
+    group: Group | null;
+};
+
+type Message = {
+    id: number;
+    sender_name: string;
+    message: string;
+    created_at: Date;
+};
+
+const ChatBox = ({group}: ChatBoxProps) => {
+    const [messages, setMessages] = useState<Message[]>([]);
     const groupName = "Gaming Group";
 
-    const demoMessages = [
-        { id: 1, sender: "Alice", content: "Hello!", timestamp: "10:00 AM" },
-        { id: 2, sender: "Bob", content: "Hi there!", timestamp: "10:02 AM" },
-        { id: 3, sender: "Alice", content: "How are you?", timestamp: "10:03 AM" },
-        { id: 4, sender: "Bob", content: "I'm good, thanks! How about you?", timestamp: "10:05 AM" },
-        { id: 5, sender: "Alice", content: "I'm doing well too!", timestamp: "10:06 AM" },
-    ];
+    useEffect(() => {
+        if (!group) return;
+        console.log(group)
+        const loadMessages = async () => {
+            const response = await getGroupMessages(group.id);
+
+            if (!response) return;
+            console.log(response)
+            setMessages(response.messages);
+        };
+
+        loadMessages();
+    }, [group]);
 
     return (
         <View style={styles.chatContainer}>
@@ -21,25 +50,26 @@ const ChatBox = () => {
                 style={styles.messages}
                 contentContainerStyle={styles.messagesContent}
             >
-                {demoMessages.map((message) => (
+                {messages.map((message) => (
                     <View key={message.id} style={styles.message}>
                         <Text style={styles.sender}>
-                            {message.sender}
+                            {message.sender_name}
                         </Text>
-                        <Text>{message.content}</Text>
+                        <Text>{message.message}</Text>
                         <Text style={styles.timestamp}>
-                            {message.timestamp}
+                            {new Date(message.created_at).toLocaleDateString("en-NZ", {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                            })}
                         </Text>
                     </View>
                 ))}
             </ScrollView>
 
-            <View style={styles.inputContainer}>
-                <TextInput
-                    placeholder="Type a message..."
-                    style={styles.textInput}
-                />
-            </View>
+            <MessageInput chatId={group?.chat_id}/>
         </View>
     );
 };
@@ -102,21 +132,5 @@ const styles = StyleSheet.create({
         marginTop: 4,
         fontSize: 12,
         color: "#777",
-    },
-
-    inputContainer: {
-        borderTopWidth: 1,
-        borderTopColor: "#ddd",
-        padding: 12,
-        backgroundColor: "#fafafa",
-    },
-
-    textInput: {
-        backgroundColor: "#fff",
-        borderWidth: 1,
-        borderColor: "#ddd",
-        borderRadius: 24,
-        paddingHorizontal: 16,
-        paddingVertical: 12,
     },
 });
