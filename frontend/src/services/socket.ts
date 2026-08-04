@@ -13,13 +13,19 @@ let socket: Socket | null = null;
 export const connectSocket = async () => {
     const token = await getToken();
 
-    console.log("Socket token:", token);
-
     socket = io(apiUrl, {
         auth: {
             token
         }
     });
+
+    await new Promise<void>((resolve) => {
+        socket?.on("connect", () => {
+            console.log("Socket connected:", socket?.id);
+            resolve();
+        });
+    });
+
 
     return socket;
 };
@@ -30,4 +36,11 @@ export const getSocket = () => {
     // }
 
     return socket;
+};
+
+export const disconnectSocket = () => {
+    if (socket) {
+        socket.disconnect();
+        socket = null;
+    }
 };

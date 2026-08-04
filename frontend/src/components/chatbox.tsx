@@ -32,21 +32,57 @@ const ChatBox = ({group}: ChatBoxProps) => {
         loadMessages();
     }, [group]);
 
+        useEffect(() => {
+        const socket = getSocket();
+
+        if (!socket || !group) {
+            return;
+        }
+
+        const roomId = `chat-${group.chat_id}`;
+
+        const joinRoom = () => {
+            socket.emit("joinRoom", roomId);
+            console.log("Joined room:", roomId);
+        };
+
+        // Socket is already connected
+        if (socket.connected) {
+            joinRoom();
+        } else {
+            // Wait until it connects
+            socket.on("connect", joinRoom);
+        }
+
+        return () => {
+            socket.off("connect", joinRoom);
+        };
+
+    }, [group]);
+
+
     useEffect(() => {
         const socket = getSocket();
-        if (!socket) return;
+
+        if (!socket) {
+            console.log("No socket");
+            return;
+        }
+
+        console.log("Socket connected:", socket.connected);
 
         socket.on("new_message", (message) => {
-            setMessages((previous) => [
+            console.log("Received:", message);
+
+            setMessages(previous => [
                 ...previous,
                 message
             ]);
-    });
+        });
 
-    return () => {
-        socket.off("new_message");
-    };
-
+        return () => {
+            socket.off("new_message");
+        };
     }, []);
 
     return (

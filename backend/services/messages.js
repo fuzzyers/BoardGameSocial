@@ -9,19 +9,40 @@ export const createMessageBoard = async (client, groupId) => {
 }
 
 export const createMessage = async (chatId, userId, message) => {
-    const query = `
-        INSERT INTO messages
-            (chat_id, user_id, message)
-        VALUES
-            ($1, $2, $3)
-        RETURNING *
+    const insertQuery = `
+        INSERT INTO messages (
+            chat_id,
+            user_id,
+            message
+        )
+        VALUES ($1, $2, $3)
+        RETURNING id;
     `;
 
-    const result = await pool.query(query, [
+    const insertResult = await pool.query(insertQuery, [
         chatId,
         userId,
         message
     ]);
 
-    return result.rows[0];
+    const messageId = insertResult.rows[0].id;
+
+    const getMessageQuery = `
+        SELECT
+            m.id,
+            m.message,
+            m.user_id,
+            m.created_at,
+            u.name AS sender_name
+        FROM messages m
+        JOIN users u
+            ON u.id = m.user_id
+        WHERE m.id = $1;
+    `;
+
+    const messageResult = await pool.query(getMessageQuery, [
+        messageId
+    ]);
+
+    return messageResult.rows[0];
 };
