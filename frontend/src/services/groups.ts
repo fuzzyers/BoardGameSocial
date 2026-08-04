@@ -32,3 +32,17 @@ export const getGroups = async () => {
         console.log(error)
     }
 }
+
+export const addUserToGroup = async (groupId: number, userId: number) => {
+    try {
+        const token = await getToken()
+        const response = await api.put(`/groups/addUser`, { groupId, userId, roleId: 3 }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        return response
+    } catch (error) {
+        console.log(error)
+    }
+}

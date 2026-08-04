@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
   email VARCHAR(255) UNIQUE NOT NULL,
   name VARCHAR(255) NOT NULL,
+  username VARCHAR(255) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL,
   role_id INT NOT NULL REFERENCES roles(id),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -96,13 +97,6 @@ CREATE TABLE IF NOT EXISTS messages (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS game_scores (
-    event_game_id INT REFERENCES event_games(id) ON DELETE CASCADE,
-    user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    score INT NOT NULL,
-    PRIMARY KEY (event_game_id, user_id)
-);
-
 -- connecting table for users and games to show ownership of games by users
 CREATE TABLE IF NOT EXISTS user_games (
   user_id INT REFERENCES users(id) ON DELETE CASCADE,
@@ -131,3 +125,9 @@ CREATE TABLE IF NOT EXISTS event_games (
     play_order INT
 );
 
+CREATE TABLE IF NOT EXISTS game_scores (
+    event_game_id INT REFERENCES event_games(id) ON DELETE CASCADE,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    score INT NOT NULL,
+    PRIMARY KEY (event_game_id, user_id)
+);

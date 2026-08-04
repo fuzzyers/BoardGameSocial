@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import {generateToken} from "../utils/jwt.js";
 
 export const registerUser = async (req, res) => {
-    const { email, name, password, confirmPassword } = req.body;
+    const { email, name, username, password, confirmPassword } = req.body;
     
     try {
         const hashedPassword = await bcrypt.hashSync(password, 10);
@@ -19,8 +19,8 @@ export const registerUser = async (req, res) => {
         }
 
         const result = await pool.query(
-            'INSERT INTO users (email, name, password, role_id) VALUES ($1, $2, $3, $4) RETURNING *',
-            [email, name, hashedPassword, 1]
+            'INSERT INTO users (email, name, username, password, role_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+            [email, name, username, hashedPassword, 1]
         );
 
         const token = generateToken(result.rows[0]); 

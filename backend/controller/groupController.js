@@ -41,21 +41,22 @@ export const createGroup = async (req, res) => {
 
 export const addUserToGroup = async (req, res) => {
     try {
-        const {ownerId, groupId, roleId} = req.body
-        const userId = req.user.id
-
+        const {groupId, userId, roleId} = req.body
+        const ownerId = req.user.id
+        console.log("GroupId: ", groupId, "RoleId: ", roleId, "UserId: ", userId)
         if (![2, 3].includes(roleId)) {
             return res.status(401).json({message: "Invalid Role input"})
         }
 
         const getGroup = await getGroupWithMembers(groupId)
-
-        if (getGroup.members["0"].id !== ownerId){
-            return res.status(401).json({message: "You dont have permissian to add to the group"})
+        console.log(getGroup)
+        // Check if the user is the owner of the group
+        if (getGroup.members[0].id !== ownerId) {
+            return res.status(401).json({message: "You are not the owner of this group"})
         }
 
         const memberExists = getGroup.members.some(member => member.id === userId)
-        console.log(getGroup.members)
+
         if (memberExists){
             return res.status(401).json({message: "This member is already in the group", data: getGroup})
         }

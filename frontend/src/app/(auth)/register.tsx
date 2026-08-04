@@ -8,6 +8,7 @@ export default function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [username, setUsername] = useState("");
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
@@ -16,7 +17,7 @@ export default function Register() {
         setError("");
         setIsLoading(true);
         try {
-            await register(name, email, password, confirmPassword);
+            await register(name, email, username, password, confirmPassword);
 
             router.push("/(app)");
         } catch (error) {
@@ -45,6 +46,14 @@ export default function Register() {
         autoCapitalize="none"
         value={email}
         onChangeText={setEmail}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Username"
+        autoCapitalize="none"
+        value={username}
+        onChangeText={setUsername}
       />
 
       <TextInput

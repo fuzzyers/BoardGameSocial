@@ -1,29 +1,30 @@
 import { View, Text, StyleSheet, useWindowDimensions, Pressable, ScrollView } from "react-native";
 import CreateGroupModal from "./createGroupModal";
 import { useState } from "react";
-
-type Group = {
-    id: number;
-    name: string;
-    description: string;
-    created_at: string;
-    chat_id: number;
-};
+import { Group } from "@/types/apiDataTypes";
+import { getSocket } from "@/services/socket";
 
 type NavChatProps = {
     groups: Group[];
     onSelectGroup: (group: Group) => void;
 };
 
-
 const NavGroup = ({groups, onSelectGroup}: NavChatProps) => {
     const [showModal, setShowModal] = useState(false)
     const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
     const { width, height } = useWindowDimensions();
     const styles = createStyles(width, height)
-
+    
     const setModal = () => {
         setShowModal(!showModal)
+    }
+
+    const handleGroupSelect = (group: Group) => {
+        onSelectGroup(group);
+        setSelectedGroupId(group.id);
+        const socket = getSocket();
+        if (!socket) return;
+        socket.emit("joinRoom", group.chat_id); 
     }
 
     return (
@@ -43,14 +44,11 @@ const NavGroup = ({groups, onSelectGroup}: NavChatProps) => {
                             styles.navbarButton,
                             selectedGroupId === group.id && styles.selectedNavbarButton,
                         ]}
-                        onPress={() => {
-                            onSelectGroup(group)
-                            setSelectedGroupId(group.id);
-                        }}
+                        onPress={() => handleGroupSelect(group)}
                     >
                         <Text style={[
                             styles.navbarButtonText,
-                            selectedGroupId === group.id && styles.selectedNavbarButton,
+                            selectedGroupId === group.id && styles.selectedNavbarButtonText,
                             ]}>
                             {group.name}
                         </Text>
@@ -100,13 +98,14 @@ const createStyles = (width: number, height: number) => {
             width: '100%',
         },
         selectedNavbarButton: {
-            backgroundColor: "#007AFF",
-            borderWidth: 2,
-            borderColor: "#005FCC",
+            backgroundColor: "#F3F9FF",
+            borderLeftWidth: 6,
+            borderLeftColor: "#007AFF",
         },
 
         selectedNavbarButtonText: {
-            color: "#FFFFFF",
+            color: "#005FCC",
+            fontWeight: "700",
         },
 })}
 

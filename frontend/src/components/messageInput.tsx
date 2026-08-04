@@ -1,4 +1,4 @@
-import { sendMessage } from "@/services/messages";
+import { getSocket } from "@/services/socket";
 import { useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 
@@ -8,16 +8,16 @@ type MessageInputProps = {
 
 const MessageInput = ({ chatId }: MessageInputProps) => {
     const [message, setMessage] = useState("");
-
-    const handleSendMessage = async () => {
+    const handleSendMessage = () => {
         if (!chatId || !message.trim()) return;
+        const socket = getSocket();
+        if (!socket) return;
+        socket.emit("send_message", {
+            chatId: chatId,
+            message: message.trim()
+        });
 
-        try {
-            await sendMessage(chatId, message.trim());
-            setMessage("");
-        } catch (error) {
-            console.error("Failed to send message:", error);
-        }
+        setMessage("");
     };
 
     return (
@@ -29,7 +29,6 @@ const MessageInput = ({ chatId }: MessageInputProps) => {
                 onChangeText={setMessage}
                 returnKeyType="send"
                 onSubmitEditing={handleSendMessage}
-                blurOnSubmit={false}
             />
         </View>
     );

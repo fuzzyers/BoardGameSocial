@@ -4,18 +4,24 @@ import ChatBox from '@/components/chatbox';
 import NavGroup from '@/components/navGroup';
 import { useEffect, useState } from 'react';
 import { getGroups } from '@/services/groups';
-
-type Group = {
-    id: number;
-    name: string;
-    description: string;
-    created_at: string;
-    chat_id: number;
-};
+import { connectSocket } from '@/services/socket';
+import { Group } from '@/types/apiDataTypes';
 
 export default function HomeScreen() {
   const [groups, setGroups] = useState([])
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null)
+
+  useEffect(() => {
+      const setupSocket = async () => {
+          const socket = await connectSocket();
+
+          socket.on("connect", () => {
+              console.log("Socket connected:", socket.id);
+          });
+      };
+
+      setupSocket();
+  }, []);
 
   useEffect(() => {
     const getData = async () => {

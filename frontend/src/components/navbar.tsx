@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, useWindowDimensions, Pressable } from "react-native";
 import { useRouter } from "expo-router";
 import { deleteToken } from "@/services/auth";
+import { getSocket } from "@/services/socket";
 
 export default function Navbar() {
     const { width, height } = useWindowDimensions();
@@ -9,6 +10,9 @@ export default function Navbar() {
 
     const handleLogout = async () => {
         await deleteToken(); 
+        const socket = getSocket();
+        if (!socket) return;
+        socket.disconnect();
         router.push("/(auth)/login"); 
     }
 

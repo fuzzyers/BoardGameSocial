@@ -1,49 +1,62 @@
 import { getGroupMessages } from "@/services/messages";
 import { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TextInput, ScrollView } from "react-native";
+import { View, Text, StyleSheet, TextInput, ScrollView, Pressable } from "react-native";
 import MessageInput from "./messageInput";
-
-type Group = {
-    id: number;
-    name: string;
-    description: string;
-    created_at: string;
-    chat_id: number;
-};
+import { Group, Message } from "@/types/apiDataTypes";
+import { getSocket } from "@/services/socket";
+import GroupManagment from "./groupManagment";
 
 type ChatBoxProps = {
     group: Group | null;
 };
 
-type Message = {
-    id: number;
-    sender_name: string;
-    message: string;
-    created_at: Date;
-};
-
 const ChatBox = ({group}: ChatBoxProps) => {
     const [messages, setMessages] = useState<Message[]>([]);
-    const groupName = "Gaming Group";
+    const [showModal, setShowModal] = useState(false);
+    const [groupName, setGroupName] = useState<string>(group?.name || "No Group Selected");
+    const [groupData, setGroupData] = useState<any>(group || null);
 
+    
     useEffect(() => {
         if (!group) return;
-        console.log(group)
+
         const loadMessages = async () => {
             const response = await getGroupMessages(group.id);
 
             if (!response) return;
-            console.log(response)
+            setGroupName(group.name);
             setMessages(response.messages);
+            setGroupData(response);
         };
 
         loadMessages();
     }, [group]);
 
+    useEffect(() => {
+        const socket = getSocket();
+        if (!socket) return;
+
+        socket.on("new_message", (message) => {
+            setMessages((previous) => [
+                ...previous,
+                message
+            ]);
+    });
+
+    return () => {
+        socket.off("new_message");
+    };
+
+    }, []);
+
     return (
         <View style={styles.chatContainer}>
             <View style={styles.header}>
                 <Text style={styles.headerText}>{groupName}</Text>
+                <Pressable style={styles.manageButton} onPress={() => setShowModal(true)}>
+                    <Text style={styles.manageButtonText}>Manage Group</Text>
+                </Pressable>
+                <GroupManagment visible={showModal} onClose={() => setShowModal(false)} groupData={groupData}/>
             </View>
 
             <ScrollView
@@ -100,6 +113,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#007AFF",
         paddingVertical: 18,
         paddingHorizontal: 20,
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
 
     headerText: {
@@ -132,5 +147,19 @@ const styles = StyleSheet.create({
         marginTop: 4,
         fontSize: 12,
         color: "#777",
+    },
+    manageButton: {
+        backgroundColor: "#fff",
+        paddingHorizontal: 14,
+        paddingVertical: 8,
+        borderRadius: 8,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    manageButtonText: {
+        color: "#007AFF",
+        fontWeight: "600",
+        fontSize: 14,
     },
 });

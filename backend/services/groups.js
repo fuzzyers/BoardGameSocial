@@ -9,8 +9,8 @@ export const create = async (client, name, description) => {
     return createGroup.rows["0"]
 }
 
-export const addMemberToGroup = async (client, groupId, userId, roleId) => {
-    await client.query(
+export const addMemberToGroup = async (groupId, userId, roleId) => {
+    await pool.query(
         'INSERT INTO group_members(group_id, user_id, role_id) VALUES($1, $2, $3)',
         [groupId, userId, roleId]
     );
@@ -18,8 +18,9 @@ export const addMemberToGroup = async (client, groupId, userId, roleId) => {
     return
 };
 
-export const getGroupWithMembers = async (client, groupId) => {
-    const result = await client.query(
+export const getGroupWithMembers = async (groupId) => {
+    console.log("Getting group with members for groupId:", groupId);
+    const result = await pool.query(
         `
         SELECT 
             g.id,

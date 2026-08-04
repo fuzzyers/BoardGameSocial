@@ -3,7 +3,6 @@ import { Link, useRouter } from "expo-router";
 import { login } from "../../services/login";
 import { useState } from "react";
 
-
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
