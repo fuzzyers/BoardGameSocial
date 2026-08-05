@@ -1,15 +1,16 @@
-import { View, Text, StyleSheet, useWindowDimensions, Pressable, ScrollView } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native"
 import CreateGroupModal from "./createGroupModal";
-import { useState } from "react";
 import { Group } from "@/types/apiDataTypes";
+import { NavigationOption } from "@/types/navigationProps";
+import { useState } from "react";
 import { getSocket } from "@/services/socket";
 
-type NavChatProps = {
+type NavGroupProps = {
     groups: Group[];
     onSelectGroup: (group: Group) => void;
 };
 
-const NavGroup = ({groups, onSelectGroup}: NavChatProps) => {
+const NavGroups = ({groups, onSelectGroup}: NavGroupProps) => {
     const [showModal, setShowModal] = useState(false)
     const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
     const { width, height } = useWindowDimensions();
@@ -28,47 +29,37 @@ const NavGroup = ({groups, onSelectGroup}: NavChatProps) => {
     }
 
     return (
-        <View style={styles.navbar}>
-            <ScrollView
-                showsVerticalScrollIndicator={true}
-                contentContainerStyle={styles.navbarContent}
-            >
-                <Pressable style={styles.navbarButton} onPress={() => setModal()}>
-                    <Text style={styles.navbarButtonText}>Create a Group</Text>
+        <ScrollView
+            showsVerticalScrollIndicator={true}
+            contentContainerStyle={styles.navbarContent}
+        >
+            <Pressable style={styles.navbarButton} onPress={() => setModal()}>
+                <Text style={styles.navbarButtonText}>Create a Group</Text>
+            </Pressable>
+            <CreateGroupModal visible={showModal} onClose={() => setShowModal(false)}/>
+                {groups?.map((group) => (
+                <Pressable 
+                    key={group.id}
+                    style={[
+                        styles.navbarButton,
+                        selectedGroupId === group.id && styles.selectedNavbarButton,
+                    ]}
+                    onPress={() => handleGroupSelect(group)}
+                >
+                    <Text style={[
+                        styles.navbarButtonText,
+                        selectedGroupId === group.id && styles.selectedNavbarButtonText,
+                        ]}>
+                        {group.name}
+                    </Text>
                 </Pressable>
-                <CreateGroupModal visible={showModal} onClose={() => setShowModal(false)}/>
-                 {groups?.map((group) => (
-                    <Pressable 
-                        key={group.id}
-                        style={[
-                            styles.navbarButton,
-                            selectedGroupId === group.id && styles.selectedNavbarButton,
-                        ]}
-                        onPress={() => handleGroupSelect(group)}
-                    >
-                        <Text style={[
-                            styles.navbarButtonText,
-                            selectedGroupId === group.id && styles.selectedNavbarButtonText,
-                            ]}>
-                            {group.name}
-                        </Text>
-                    </Pressable>
-                ))}
-            </ScrollView>
-        </View>
-    );
+            ))}
+        </ScrollView>
+    )
 }
 
 const createStyles = (width: number, height: number) => {
     return StyleSheet.create({
-        navbar: {
-            flexDirection: 'column',
-            alignItems: 'center',
-            padding: 16,
-            backgroundColor: '#f0f0f0',
-            width:"50%",
-            height: "100%"
-        },
         navbarButton: {
             alignItems: 'center',
             justifyContent: "center",
@@ -109,4 +100,4 @@ const createStyles = (width: number, height: number) => {
         },
 })}
 
-export default NavGroup;
+export default NavGroups

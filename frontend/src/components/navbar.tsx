@@ -2,8 +2,12 @@ import { View, Text, StyleSheet, useWindowDimensions, Pressable } from "react-na
 import { useRouter } from "expo-router";
 import { deleteToken } from "@/services/auth";
 import { getSocket } from "@/services/socket";
+import { NavigationOption } from "@/types/navigationProps";
 
-export default function Navbar() {
+type NavBarProps = {
+    onSetSelected: (button: NavigationOption) => void;
+}
+export default function Navbar({onSetSelected}: NavBarProps) {
     const { width, height } = useWindowDimensions();
     const styles = createStyles(width, height)
     const router = useRouter();
@@ -16,21 +20,26 @@ export default function Navbar() {
         router.push("/(auth)/login"); 
     }
 
+    const handleNavSelect = (navigate : NavigationOption) => {
+        console.log("navigate", navigate)
+        onSetSelected(navigate)
+    }
+
     return (
         <View style={styles.navbar}>
-            <Pressable style={styles.navbarButton}>
+            <Pressable style={styles.navbarButton} onPress={() => handleNavSelect("Group")}>
                 <Text style={styles.navbarButtonText}>Groups</Text>
             </Pressable>
-            <Pressable style={styles.navbarButton}>
+            <Pressable style={styles.navbarButton} onPress={() => handleNavSelect("Friend")}>
                 <Text style={styles.navbarButtonText}>Friends</Text>
             </Pressable>
-            <Pressable style={styles.navbarButton}>
+            <Pressable style={styles.navbarButton} onPress={() => handleNavSelect("Profile")}>
                 <Text style={styles.navbarButtonText}>Profile</Text>
             </Pressable>
-            <Pressable style={styles.navbarButton}>
+            <Pressable style={styles.navbarButton} onPress={() => handleNavSelect("Games")}>
                 <Text style={styles.navbarButtonText}>Games</Text>
             </Pressable>
-            <Pressable style={styles.navbarButton}>
+            <Pressable style={styles.navbarButton} onPress={() => handleNavSelect("Setting")}>
                 <Text style={styles.navbarButtonText}>Settings</Text>
             </Pressable>
             {/* Move function from text to button later */}
@@ -50,7 +59,7 @@ const createStyles = (width:number, height:number) => {
             alignItems: 'center',
             padding: 16,
             backgroundColor: '#f0f0f0',
-            width:"50%",
+            width:250,
             height: "100%"
         },
         navbarButton: {

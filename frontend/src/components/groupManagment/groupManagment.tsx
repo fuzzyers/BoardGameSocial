@@ -1,7 +1,7 @@
 import { Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native"
-import GroupDetailsSection from "./groupManagment/GroupDetailsSection";
-import MemberList from "./groupManagment/memberList";
-import UserSearch from "./groupManagment/userSearch";
+import GroupDetailsSection from "./GroupDetailsSection";
+import MemberList from "./memberList";
+import UserSearch from "./userSearch";
 
 type CreateGroupModalProps = {
     visible: boolean;

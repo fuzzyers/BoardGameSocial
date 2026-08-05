@@ -1,14 +1,17 @@
 import { StyleSheet, Text, View } from 'react-native';
 import Navbar from "@/components/navbar";
-import ChatBox from '@/components/chatbox';
-import NavGroup from '@/components/navGroup';
+import ChatBox from '@/components/groupManagment/chatbox';
+import NavSideBar from '@/components/navSideBar';
 import { useEffect, useState } from 'react';
 import { getGroups } from '@/services/groups';
 import { Group } from '@/types/apiDataTypes';
+import FriendsListContainer from '@/components/friendsList/friendsListContainer';
+import { NavigationOption } from '@/types/navigationProps';
 
 export default function HomeScreen() {
   const [groups, setGroups] = useState([])
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null)
+  const [selectedButton, setSelectedButton] = useState<NavigationOption>("Group")
 
   useEffect(() => {
     const getData = async () => {
@@ -22,43 +25,37 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.containerLeft}>
-        <Navbar />
-        <NavGroup groups={groups} onSelectGroup={setSelectedGroup}/>
-      </View>
-      <View style={styles.containerRight}>
-        <ChatBox group={selectedGroup}/>
-      </View>
+        <Navbar onSetSelected={setSelectedButton}/>
+
+        {selectedButton === "Group" && (
+            <NavSideBar 
+                groups={groups}
+                onSelectGroup={setSelectedGroup}
+                selectedButton={selectedButton}
+            />
+        )}
+
+        <View style={styles.containerRight}>
+            {selectedButton === "Group" && (
+                <ChatBox group={selectedGroup}/>
+            )}
+
+            {selectedButton === "Friend" && (
+                <FriendsListContainer />
+            )}
+        </View>
     </View>
-  );
+);
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    flexDirection: 'row',
-    padding: 24,
+      flex: 1,
+      flexDirection: "row",
+      padding: 24,
   },
-  containerLeft: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent:"center",
-    alignItems: "center"
-  },
+
   containerRight: {
-    flex: 1,
-    justifyContent:"center",
-    alignItems: "center"
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '700',
-    marginBottom: 16,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-  },
+      flex: 1,
+  }
 });
