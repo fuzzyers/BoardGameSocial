@@ -1,6 +1,7 @@
+import { deleteGroup } from "@/services/groups";
 import { GroupDetails } from "@/types/apiDataTypes";
 import { useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 type GroupDetailsSectionProps = {
   groupData: GroupDetails | null;
@@ -16,6 +17,14 @@ const GroupDetailsSection = ({ groupData }: GroupDetailsSectionProps) => {
     }
   }, [groupData]);
 
+  const handleDeleteGroup = () => {
+    console.log(groupData?.id)
+
+    if(!groupData?.id) return
+    
+    deleteGroup(groupData?.id)
+  }
+
   return (
     <View style={styles.container}>
         <Text style={styles.title}>Group Details</Text>
@@ -26,6 +35,11 @@ const GroupDetailsSection = ({ groupData }: GroupDetailsSectionProps) => {
         <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Created On:</Text>
             <Text style={styles.detailValue}>{groupData?.created_at ? new Date(groupData.created_at).toLocaleDateString() : "N/A"}</Text>
+        </View>
+        <View>
+          <Pressable style={styles.button} onPress={() => handleDeleteGroup()}>
+            <Text>Delete Group</Text>
+          </Pressable>
         </View>
     </View>
   );
@@ -59,6 +73,11 @@ const styles = StyleSheet.create({
     detailValue: {
     color: '#555',
     },
+    button: {
+    backgroundColor: '#ff4d4d',
+    paddingVertical: 8,
+  
+    }
 });
 
 export default GroupDetailsSection;

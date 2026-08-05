@@ -5,7 +5,6 @@ const registerSockets = (io) => {
   io.use(socketAuthentication);
 
     io.on("connection", (socket) => {
-        console.log(socket.id);
 
         registerChatSocket(io, socket);
     });

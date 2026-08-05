@@ -1,4 +1,4 @@
-import { addMemberToGroup, create, getGroupById, getGroupsWithUser, getGroupWithMembers } from "../services/groups.js";
+import { addMemberToGroup, create, deleteGroupQuery, getGroupById, getGroupsWithUser, getGroupWithMembers, removeMemberFromGroup } from "../services/groups.js";
 import pool from "../db/db.js";
 import { createMessageBoard } from "../services/messages.js";
 
@@ -17,13 +17,12 @@ export const createGroup = async (req, res) => {
 
     try {
         await client.query("BEGIN")
-
-        const createResult = await create(client, name, description)
-        await addMemberToGroup(client, createResult.id, userId, 1)
-        const finalResult = await getGroupWithMembers(client, createResult.id)
-        const createMessageBoardData = await createMessageBoard(client, createResult.id)
+        const createResult = await create(name, description, client)
+        await addMemberToGroup(createResult.id, userId, 1, client)
+        const finalResult = await getGroupWithMembers(createResult.id, client)
+        const createMessageBoardData = await createMessageBoard(createResult.id, client)
         await client.query("COMMIT");
-        console.log(createMessageBoardData)
+
         res.status(201).json(finalResult)
     } catch (error) {
         console.error(error);
@@ -92,5 +91,48 @@ export const getAllGroupByIdData = async (req, res) => {
         res.status(200).json(response)
     } catch (error) {
         console.log(error)
+    }
+}
+
+export const removeUserFromGroup = async (req, res) => {
+    try {
+        const {groupId, userId} = req.body
+        const ownerId = req.user.id
+
+        const getGroup = await getGroupWithMembers(groupId)
+        // Check if the user is the owner of the group
+        if (getGroup.members[0].id !== ownerId) {
+            return res.status(401).json({message: "You are not the owner of this group"})
+        }
+
+        const memberExists = getGroup.members.some(member => member.id === userId)
+
+        if (!memberExists){
+            return res.status(401).json({message: "This member is not in the group", data: getGroup})
+        }
+
+        const removedUser = await removeMemberFromGroup(groupId, userId)
+
+        res.status(201).json({message: "success", results: removedUser})
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({
+            error: "Internal Server Error",
+            errorDetails: error.message
+        })
+    }
+}
+
+export const deleteGroup = async (req, res) => {
+    const {id} = req.params
+    try {
+        const response = await deleteGroupQuery(id)
+
+        res.status(201).json({message: "success", results: response})
+    } catch (error) {
+        res.status(500).json({
+            error: "Internal Server Error",
+            errorDetails: error.message
+        })
     }
 }

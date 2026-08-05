@@ -1,6 +1,6 @@
 import pool from "../db/db.js";
 
-export const create = async (client, name, description) => {
+export const create = async ( name, description, client=pool) => {
     const createGroup = await client.query(
         'INSERT INTO groups (name, description) VALUES ($1, $2) RETURNING *', 
         [name, description]
@@ -9,8 +9,8 @@ export const create = async (client, name, description) => {
     return createGroup.rows["0"]
 }
 
-export const addMemberToGroup = async (groupId, userId, roleId) => {
-    await pool.query(
+export const addMemberToGroup = async ( groupId, userId, roleId, client=pool) => {
+    await client.query(
         'INSERT INTO group_members(group_id, user_id, role_id) VALUES($1, $2, $3)',
         [groupId, userId, roleId]
     );
@@ -18,9 +18,8 @@ export const addMemberToGroup = async (groupId, userId, roleId) => {
     return
 };
 
-export const getGroupWithMembers = async (groupId) => {
-    console.log("Getting group with members for groupId:", groupId);
-    const result = await pool.query(
+export const getGroupWithMembers = async (groupId, client=pool) => {
+    const result = await client.query(
         `
         SELECT 
             g.id,
@@ -139,4 +138,28 @@ export const getGroupById = async (id) => {
     const result = await pool.query(query, [id]);
 
     return result.rows[0];
+};
+
+export const removeMemberFromGroup = async (groupId, userId, client = pool) => {
+    await client.query(
+        `
+        DELETE FROM group_members
+        WHERE group_id = $1
+          AND user_id = $2
+        `,
+        [groupId, userId]
+    );
+};
+
+export const deleteGroupQuery = async (groupId, client = pool) => {
+    const result = await client.query(
+        `
+        DELETE FROM groups
+        WHERE id = $1
+        RETURNING *
+        `,
+        [groupId]
+    );
+
+    return result.rows[0] ?? null;
 };

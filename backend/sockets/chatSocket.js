@@ -3,7 +3,6 @@ import { createMessage } from '../services/messages.js';
 const registerChatSocket = (io, socket) => {
   socket.on('joinRoom', (roomId) => {
     socket.join(roomId);
-    console.log(`Socket ${socket.id} joined room ${roomId}`);
   });
 
   socket.on("send_message", async (data) => {

@@ -1,6 +1,6 @@
 import pool from "../db/db.js"
 
-export const createMessageBoard = async (client, groupId) => {
+export const createMessageBoard = async (groupId, client=pool) => {
     const createMessageGroup = await client.query(
         `
         INSERT INTO group_chats(group_id) VALUES($1)
@@ -8,7 +8,7 @@ export const createMessageBoard = async (client, groupId) => {
     )
 }
 
-export const createMessage = async (chatId, userId, message) => {
+export const createMessage = async (chatId, userId, message, client=pool) => {
     const insertQuery = `
         INSERT INTO messages (
             chat_id,
@@ -19,7 +19,7 @@ export const createMessage = async (chatId, userId, message) => {
         RETURNING id;
     `;
 
-    const insertResult = await pool.query(insertQuery, [
+    const insertResult = await client.query(insertQuery, [
         chatId,
         userId,
         message
@@ -40,7 +40,7 @@ export const createMessage = async (chatId, userId, message) => {
         WHERE m.id = $1;
     `;
 
-    const messageResult = await pool.query(getMessageQuery, [
+    const messageResult = await client.query(getMessageQuery, [
         messageId
     ]);
 

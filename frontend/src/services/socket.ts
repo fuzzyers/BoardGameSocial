@@ -11,6 +11,10 @@ if (!apiUrl) {
 let socket: Socket | null = null;
 
 export const connectSocket = async () => {
+    if (socket?.connected) {
+        return socket;
+    }
+
     const token = await getToken();
 
     socket = io(apiUrl, {
@@ -21,7 +25,6 @@ export const connectSocket = async () => {
 
     await new Promise<void>((resolve) => {
         socket?.on("connect", () => {
-            console.log("Socket connected:", socket?.id);
             resolve();
         });
     });

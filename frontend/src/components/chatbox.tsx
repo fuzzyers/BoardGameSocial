@@ -69,10 +69,7 @@ const ChatBox = ({group}: ChatBoxProps) => {
             return;
         }
 
-        console.log("Socket connected:", socket.connected);
-
         socket.on("new_message", (message) => {
-            console.log("Received:", message);
 
             setMessages(previous => [
                 ...previous,
