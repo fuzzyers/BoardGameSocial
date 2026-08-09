@@ -3,7 +3,7 @@ import { saveToken } from "./auth";
 
 export const register = async (name: string, email: string, username: string, password: string, confirmPassword: string) => {
     try {
-        const response = await api.post("/auth/register", { name, email, username, password, confirmPassword });
+        const response = await api.post("/auth/register", { name, email, username, password, confirmPassword, role_id:1 });
         
         await saveToken(response.headers.authorization);
 
