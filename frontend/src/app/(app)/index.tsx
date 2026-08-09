@@ -7,6 +7,7 @@ import { getGroups } from '@/services/groups';
 import { Group } from '@/types/apiDataTypes';
 import FriendsListContainer from '@/components/friendsList/friendsListContainer';
 import { NavigationOption } from '@/types/navigationProps';
+import GamesContainer from '@/components/gamesList/gamesContainer';
 
 export default function HomeScreen() {
   const [groups, setGroups] = useState([])
@@ -42,6 +43,9 @@ export default function HomeScreen() {
 
             {selectedButton === "Friend" && (
                 <FriendsListContainer />
+            )}
+            {selectedButton === "Games" && (
+                <GamesContainer />
             )}
         </View>
     </View>

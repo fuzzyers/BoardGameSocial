@@ -2,6 +2,17 @@ DROP TABLE IF EXISTS
     game_scores,
     event_games,
     event_players,
+    game_images,
+    game_versions,
+    game_expansions,
+    game_publishers,
+    publishers,
+    game_designers,
+    designers,
+    game_mechanics,
+    mechanics,
+    game_categories,
+    categories,
     messages,
     group_chats,
     group_members,
@@ -9,125 +20,416 @@ DROP TABLE IF EXISTS
     events,
     groups,
     games,
-    users
+    users,
+    group_roles,
+    roles
 CASCADE;
+
+
+-- =========================
+-- User Roles
+-- =========================
 
 CREATE TABLE roles (
     id SERIAL PRIMARY KEY,
     name VARCHAR(50) UNIQUE NOT NULL
 );
 
-INSERT INTO roles (name)
+INSERT INTO roles(name)
 VALUES
-    ('user'),
-    ('admin');
+('user'),
+('admin');
+
 
 CREATE TABLE group_roles (
     id SERIAL PRIMARY KEY,
     name VARCHAR(50) UNIQUE NOT NULL
 );
 
-INSERT INTO group_roles (name)
+INSERT INTO group_roles(name)
 VALUES
-    ('owner'),
-    ('admin'),
-    ('member');
-
-CREATE TABLE IF NOT EXISTS users (
-  id SERIAL PRIMARY KEY,
-  email VARCHAR(255) UNIQUE NOT NULL,
-  name VARCHAR(255) NOT NULL,
-  username VARCHAR(255) UNIQUE NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  role_id INT NOT NULL REFERENCES roles(id),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS games (
-  id SERIAL PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  description TEXT,
-  min_players INT NOT NULL,
-  max_players INT NOT NULL,
-  min_play_time INT NOT NULL,
-  max_play_time INT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Groups table to allow users to create groups and invite other users to join
--- A groups table will have a name and a description, and a created_at timestamp.
--- A group can have many users, and a user can belong to many groups. This is a many-to-many relationship, so we will need a connecting table for groups and users.
--- A groups table will also have events, which will be stored in a separate table. An event will have a name, a description, a date and time, and a location. An event can have many users, and a user can belong to many events. This is also a many-to-many relationship, so we will need a connecting table for events and users.
--- A group will also have group messaging
-CREATE TABLE IF NOT EXISTS groups (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  description TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+('owner'),
+('admin'),
+('member');
 
 
--- Events Table
--- An Event will consist of a group of players
--- 1 or More Games
--- Scores for those Games
-CREATE TABLE IF NOT EXISTS events (
-  id SERIAL PRIMARY KEY,
-  group_id INT NOT NULL REFERENCES groups(id) ON DELETE CASCADE,
-  name VARCHAR(255) NOT NULL,
-  description TEXT,
-  location VARCHAR(255),
-  event_date TIMESTAMP NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+-- =========================
+-- Users
+-- =========================
 
--- Messaging Table
--- 
-
-CREATE TABLE IF NOT EXISTS group_chats (
+CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    group_id INT REFERENCES groups(id) ON DELETE CASCADE
+
+    email VARCHAR(255) UNIQUE NOT NULL,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    name VARCHAR(255) NOT NULL,
+
+    password VARCHAR(255) NOT NULL,
+
+    role_id INT NOT NULL REFERENCES roles(id),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS messages (
+
+
+-- =========================
+-- Games
+-- =========================
+
+CREATE TABLE games (
     id SERIAL PRIMARY KEY,
-    chat_id INT REFERENCES group_chats(id) ON DELETE CASCADE,
+
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+
+    bgg_id INT UNIQUE,
+
+    year_published INT,
+
+    min_players INT NOT NULL,
+    max_players INT NOT NULL,
+
+    min_play_time INT NOT NULL,
+    max_play_time INT NOT NULL,
+
+    min_age INT,
+
+    primary_image_url TEXT,
+
+
+    -- Moderation
+
+    review_status VARCHAR(30)
+        DEFAULT 'pending'
+        CHECK (
+            review_status IN
+            (
+                'pending',
+                'approved',
+                'rejected',
+                'imported'
+            )
+        ),
+
+    submitted_by INT REFERENCES users(id),
+    reviewed_by INT REFERENCES users(id),
+
+    reviewed_at TIMESTAMP,
+
+
+    -- External syncing
+
+    last_synced TIMESTAMP,
+
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+-- =========================
+-- Expansions
+-- =========================
+
+CREATE TABLE game_expansions (
+    base_game_id INT REFERENCES games(id) ON DELETE CASCADE,
+    expansion_id INT REFERENCES games(id) ON DELETE CASCADE,
+
+    PRIMARY KEY(base_game_id, expansion_id),
+
+    CHECK(base_game_id <> expansion_id)
+);
+
+
+
+-- =========================
+-- Game Images
+-- =========================
+
+CREATE TABLE game_images (
+    id SERIAL PRIMARY KEY,
+
+    game_id INT REFERENCES games(id) ON DELETE CASCADE,
+
+    url TEXT NOT NULL,
+
+    caption TEXT,
+
+    sort_order INT DEFAULT 0
+);
+
+
+
+-- =========================
+-- Game Versions
+-- =========================
+
+CREATE TABLE game_versions (
+    id SERIAL PRIMARY KEY,
+
+    game_id INT REFERENCES games(id) ON DELETE CASCADE,
+
+    publisher VARCHAR(255),
+
+    language VARCHAR(50),
+
+    release_year INT,
+
+    bgg_version_id INT UNIQUE
+);
+
+
+
+-- =========================
+-- Designers
+-- =========================
+
+CREATE TABLE designers (
+    id SERIAL PRIMARY KEY,
+
+    name VARCHAR(255) UNIQUE NOT NULL
+);
+
+
+CREATE TABLE game_designers (
+    game_id INT REFERENCES games(id) ON DELETE CASCADE,
+    designer_id INT REFERENCES designers(id) ON DELETE CASCADE,
+
+    PRIMARY KEY(game_id, designer_id)
+);
+
+
+
+-- =========================
+-- Publishers
+-- =========================
+
+CREATE TABLE publishers (
+    id SERIAL PRIMARY KEY,
+
+    name VARCHAR(255) UNIQUE NOT NULL
+);
+
+
+CREATE TABLE game_publishers (
+    game_id INT REFERENCES games(id) ON DELETE CASCADE,
+    publisher_id INT REFERENCES publishers(id) ON DELETE CASCADE,
+
+    PRIMARY KEY(game_id, publisher_id)
+);
+
+
+
+-- =========================
+-- Mechanics
+-- =========================
+
+CREATE TABLE mechanics (
+    id SERIAL PRIMARY KEY,
+
+    name VARCHAR(100) UNIQUE NOT NULL
+);
+
+
+CREATE TABLE game_mechanics (
+    game_id INT REFERENCES games(id) ON DELETE CASCADE,
+    mechanic_id INT REFERENCES mechanics(id) ON DELETE CASCADE,
+
+    PRIMARY KEY(game_id, mechanic_id)
+);
+
+
+
+-- =========================
+-- Categories
+-- =========================
+
+CREATE TABLE categories (
+    id SERIAL PRIMARY KEY,
+
+    name VARCHAR(100) UNIQUE NOT NULL
+);
+
+
+CREATE TABLE game_categories (
+    game_id INT REFERENCES games(id) ON DELETE CASCADE,
+    category_id INT REFERENCES categories(id) ON DELETE CASCADE,
+
+    PRIMARY KEY(game_id, category_id)
+);
+
+
+
+-- =========================
+-- User Collections
+-- =========================
+
+CREATE TABLE user_games (
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    message TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+    game_id INT REFERENCES games(id) ON DELETE CASCADE,
+
+
+    collection_status VARCHAR(30)
+        DEFAULT 'owned'
+        CHECK(
+            collection_status IN
+            (
+                'owned',
+                'wishlist',
+                'played',
+                'sold'
+            )
+        ),
+
+
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+
+    PRIMARY KEY(user_id, game_id)
 );
 
--- connecting table for users and games to show ownership of games by users
-CREATE TABLE IF NOT EXISTS user_games (
-  user_id INT REFERENCES users(id) ON DELETE CASCADE,
-  game_id INT REFERENCES games(id) ON DELETE CASCADE,
-  PRIMARY KEY (user_id, game_id)
+
+
+-- =========================
+-- Groups
+-- =========================
+
+CREATE TABLE groups (
+    id SERIAL PRIMARY KEY,
+
+    name VARCHAR(255) NOT NULL,
+
+    description TEXT,
+
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
 
 CREATE TABLE group_members (
     group_id INT REFERENCES groups(id) ON DELETE CASCADE,
+
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
+
+
     role_id INT NOT NULL REFERENCES group_roles(id),
+
+
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (group_id, user_id)
+
+
+    PRIMARY KEY(group_id,user_id)
 );
 
-CREATE TABLE IF NOT EXISTS event_players (
-    event_id INT REFERENCES events(id) ON DELETE CASCADE,
-    user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    PRIMARY KEY (event_id, user_id)
-);
 
-CREATE TABLE IF NOT EXISTS event_games (
+
+-- =========================
+-- Chat
+-- =========================
+
+CREATE TABLE group_chats (
     id SERIAL PRIMARY KEY,
-    event_id INT REFERENCES events(id) ON DELETE CASCADE,
-    game_id INT REFERENCES games(id) ON DELETE CASCADE,
+
+    group_id INT UNIQUE REFERENCES groups(id)
+    ON DELETE CASCADE
+);
+
+
+
+CREATE TABLE messages (
+    id SERIAL PRIMARY KEY,
+
+
+    chat_id INT REFERENCES group_chats(id)
+    ON DELETE CASCADE,
+
+
+    user_id INT REFERENCES users(id)
+    ON DELETE CASCADE,
+
+
+    message TEXT NOT NULL,
+
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+-- =========================
+-- Events / Game Nights
+-- =========================
+
+CREATE TABLE events (
+    id SERIAL PRIMARY KEY,
+
+
+    group_id INT REFERENCES groups(id)
+    ON DELETE CASCADE,
+
+
+    name VARCHAR(255) NOT NULL,
+
+    description TEXT,
+
+    location VARCHAR(255),
+
+    event_date TIMESTAMP NOT NULL,
+
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+CREATE TABLE event_players (
+    event_id INT REFERENCES events(id)
+    ON DELETE CASCADE,
+
+
+    user_id INT REFERENCES users(id)
+    ON DELETE CASCADE,
+
+
+    PRIMARY KEY(event_id,user_id)
+);
+
+
+
+CREATE TABLE event_games (
+    id SERIAL PRIMARY KEY,
+
+
+    event_id INT REFERENCES events(id)
+    ON DELETE CASCADE,
+
+
+    game_id INT REFERENCES games(id)
+    ON DELETE CASCADE,
+
+
     play_order INT
 );
 
-CREATE TABLE IF NOT EXISTS game_scores (
-    event_game_id INT REFERENCES event_games(id) ON DELETE CASCADE,
-    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+
+
+CREATE TABLE game_scores (
+    event_game_id INT REFERENCES event_games(id)
+    ON DELETE CASCADE,
+
+
+    user_id INT REFERENCES users(id)
+    ON DELETE CASCADE,
+
+
     score INT NOT NULL,
-    PRIMARY KEY (event_game_id, user_id)
+
+
+    PRIMARY KEY(event_game_id,user_id)
 );

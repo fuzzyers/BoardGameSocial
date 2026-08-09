@@ -32,3 +32,17 @@ export type GroupDetails = {
     members: User[];
     messages: Message[];
 };
+
+export type Game = {
+    id: number;
+    title: string;
+    description: string | null;
+    bgg_id: number | null;
+    year_published: number | null;
+    min_players: number;
+    max_players: number;
+    min_play_time: number;
+    max_play_time: number;
+    min_age: number | null;
+    review_status: string;
+};

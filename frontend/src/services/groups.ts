@@ -4,7 +4,7 @@ import { getToken } from "./auth"
 export const createGroup = async (name: string, description: string) => {
     try {
         const token = await getToken()
-        console.log("Token:", token)
+
         const response = await api.post("/groups/create", {name, description},
             {
                 headers: {
@@ -12,7 +12,6 @@ export const createGroup = async (name: string, description: string) => {
                 }
             }
         )
-        console.log("Response:", response)
         return response
     } catch (error) {
         console.log(error)

@@ -13,7 +13,6 @@ export const authentication = (req, res, next) => {
 
     try {
         const decoded = verifyToken(token)
-
         req.user = decoded
 
         next()

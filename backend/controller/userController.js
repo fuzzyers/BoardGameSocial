@@ -3,8 +3,6 @@ import { searchUsersByName } from "../services/users.js";
 export const getUserByName = async (req, res) => {
     const { name, groupId } = req.query;
 
-    console.log('Received name:', name);
-    console.log('Received groupId:', groupId);
     try {
         const users = await searchUsersByName(name, groupId);
         res.status(200).json(users);
