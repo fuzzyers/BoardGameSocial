@@ -1,43 +1,75 @@
-import { getAllGames } from "@/services/games";
-import { Game } from "@/types/apiDataTypes";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 
 type GamesHeaderProps = {
     selectedTab: "collection" | "database" | "add";
     onSelectTab: (tab: "collection" | "database" | "add") => void;
 };
 
-const GamesControllerHeader = ({selectedTab, onSelectTab}: GamesHeaderProps) => {
+const GamesControllerHeader = ({
+    selectedTab,
+    onSelectTab,
+}: GamesHeaderProps) => {
+    const { width } = useWindowDimensions();
+    const isMobile = width < 768;
 
-    const handleSelect = async (category: "collection" | "database" | "add") => {
-        onSelectTab(category)
-    }
+    const handleSelect = (
+        category: "collection" | "database" | "add"
+    ) => {
+        onSelectTab(category);
+    };
 
     return (
-        <View style={styles.header}>
+        <View style={[styles.header, isMobile && styles.mobileHeader]}>
             <Pressable
-                style={[styles.tabButton, selectedTab === "collection" && styles.activeTab]} 
+                style={[
+                    styles.tabButton,
+                    isMobile && styles.mobileTabButton,
+                    selectedTab === "collection" && styles.activeTab,
+                ]}
                 onPress={() => handleSelect("collection")}
             >
-                <Text style={[styles.tabText, selectedTab === "collection" && styles.activeTabText]}>
+                <Text
+                    style={[
+                        styles.tabText,
+                        selectedTab === "collection" && styles.activeTabText,
+                    ]}
+                >
                     My Collection
                 </Text>
             </Pressable>
 
             <Pressable
-                style={[styles.tabButton, selectedTab === "database" && styles.activeTab]}
+                style={[
+                    styles.tabButton,
+                    isMobile && styles.mobileTabButton,
+                    selectedTab === "database" && styles.activeTab,
+                ]}
                 onPress={() => handleSelect("database")}
             >
-                <Text style={[styles.tabText, selectedTab === "database" && styles.activeTabText]}>
+                <Text
+                    style={[
+                        styles.tabText,
+                        selectedTab === "database" && styles.activeTabText,
+                    ]}
+                >
                     All Games
                 </Text>
             </Pressable>
 
             <Pressable
-                style={[styles.tabButton, selectedTab === "add" && styles.activeTab]}
+                style={[
+                    styles.tabButton,
+                    isMobile && styles.mobileTabButton,
+                    selectedTab === "add" && styles.activeTab,
+                ]}
                 onPress={() => handleSelect("add")}
             >
-                <Text style={[styles.tabText, selectedTab === "add" && styles.activeTabText]}>
+                <Text
+                    style={[
+                        styles.tabText,
+                        selectedTab === "add" && styles.activeTabText,
+                    ]}
+                >
                     Add Game
                 </Text>
             </Pressable>
@@ -51,10 +83,19 @@ const styles = StyleSheet.create({
         backgroundColor: "#f4f4f4",
     },
 
+    mobileHeader: {
+        flexWrap: "wrap",
+    },
+
     tabButton: {
         flex: 1,
         paddingVertical: 14,
         alignItems: "center",
+        justifyContent: "center",
+    },
+
+    mobileTabButton: {
+        minWidth: "33.33%",
     },
 
     activeTab: {
@@ -64,6 +105,7 @@ const styles = StyleSheet.create({
     tabText: {
         fontWeight: "600",
         color: "#555",
+        textAlign: "center",
     },
 
     activeTabText: {

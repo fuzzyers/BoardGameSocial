@@ -1,5 +1,5 @@
 import { connectSocket, disconnectSocket} from '@/services/socket';
-import { Stack } from 'expo-router';
+import { Tabs } from 'expo-router';
 import { useEffect, useState } from 'react';
 
 export default function AppLayout() {
@@ -18,9 +18,35 @@ export default function AppLayout() {
     return null; // or a loading indicator
   }
 
-  return (
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-    </Stack>
-  );
+    return (
+        <Tabs>
+            <Tabs.Screen
+                name="index"
+                options={{
+                    title: "Home",
+                }}
+            />
+
+            <Tabs.Screen
+                name="games"
+                options={{
+                    title: "Games",
+                }}
+            />
+
+            <Tabs.Screen
+                name="groups"
+                options={{
+                    title: "Groups",
+                }}
+            />
+
+            <Tabs.Screen
+                name="events"
+                options={{
+                    title: "Events",
+                }}
+            />
+        </Tabs>
+    );
 }

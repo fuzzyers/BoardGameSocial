@@ -7,7 +7,7 @@ const registerChatSocket = (io, socket) => {
 
   socket.on("send_message", async (data) => {
     try {
-      const savedMessage = await createMessage(
+      const savedMessage = await create8Message(
         data.chatId,
         socket.user.id,
         data.message

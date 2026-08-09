@@ -23,6 +23,9 @@ export const createGroup = async (req, res) => {
         const createMessageBoardData = await createMessageBoard(createResult.id, client)
         await client.query("COMMIT");
 
+        const io = req.app.get("io");
+        io.emit("group_created");
+
         res.status(201).json(finalResult)
     } catch (error) {
         console.error(error);

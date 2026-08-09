@@ -1,49 +1,79 @@
 import { useEffect, useState } from "react";
-import {StyleSheet, View,} from "react-native";
+import {
+    StyleSheet,
+    useWindowDimensions,
+    View,
+} from "react-native";
 import GamesControllerHeader from "./gamesControllerHeader";
 import GamesList from "./gamesList";
 import { Game } from "@/types/apiDataTypes";
-import { getAllCollectionGames, getAllGames } from "@/services/games";
+import {
+    getAllCollectionGames,
+    getAllGames,
+} from "@/services/games";
 import AddGameForm from "./addGamesForm";
 
 const GamesContainer = () => {
-    const [selectedTab, setSelectedTab] = useState<"collection" | "database" | "add">("collection");
-    const [games, setGames] = useState<Game[]>([])
+    const [selectedTab, setSelectedTab] = useState<
+        "collection" | "database" | "add"
+    >("collection");
+
+    const [games, setGames] = useState<Game[]>([]);
+
+    const { width } = useWindowDimensions();
+    const isMobile = width < 768;
 
     const onSelect = async () => {
-        let data:Game[] = [];
+        let data: Game[] = [];
 
-            if (selectedTab === "collection"){
-                data = await getAllCollectionGames()
-            }
+        if (selectedTab === "collection") {
+            data = await getAllCollectionGames();
+        }
 
-            if (selectedTab === "database"){
-                data = await getAllGames()
-            }
+        if (selectedTab === "database") {
+            data = await getAllGames();
+        }
 
-            if (selectedTab === "add") return
+        if (selectedTab === "add") return;
 
-        setGames(data)
-    }
+        setGames(data);
+    };
 
     useEffect(() => {
-        onSelect()
-    },[selectedTab])
+        onSelect();
+    }, [selectedTab]);
 
     return (
-        <View style={styles.container}>
-           <GamesControllerHeader selectedTab={selectedTab} onSelectTab={setSelectedTab}/>
-            {selectedTab === "collection" && (
-                <GamesList games={games} selectedTab={selectedTab}/>
-            )}
+        <View
+            style={[
+                styles.container,
+                isMobile && styles.mobileContainer,
+            ]}
+        >
+            <GamesControllerHeader
+                selectedTab={selectedTab}
+                onSelectTab={setSelectedTab}
+            />
 
-            {selectedTab === "database" && (
-                <GamesList games={games} selectedTab={selectedTab}/>
-            )}
+            <View style={styles.content}>
+                {selectedTab === "collection" && (
+                    <GamesList
+                        games={games}
+                        selectedTab={selectedTab}
+                    />
+                )}
 
-            {selectedTab === "add" && (
-                <AddGameForm />
-            )}
+                {selectedTab === "database" && (
+                    <GamesList
+                        games={games}
+                        selectedTab={selectedTab}
+                    />
+                )}
+
+                {selectedTab === "add" && (
+                    <AddGameForm />
+                )}
+            </View>
         </View>
     );
 };
@@ -51,7 +81,10 @@ const GamesContainer = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        margin: 20,
+        width: "100%",
+        maxWidth: 1200,
+        alignSelf: "center",
+
         backgroundColor: "#fff",
         borderRadius: 12,
         overflow: "hidden",
@@ -64,8 +97,16 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.15,
         shadowRadius: 8,
         elevation: 6,
+    },
 
-        width: "100%",
+    mobileContainer: {
+        borderRadius: 0,
+        shadowOpacity: 0,
+        elevation: 0,
+    },
+
+    content: {
+        flex: 1,
     },
 });
 

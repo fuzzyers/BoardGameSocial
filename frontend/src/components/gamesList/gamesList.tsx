@@ -13,10 +13,16 @@ const GamesList = ({ games, selectedTab }: GamesListProps) => {
             data={games}
             keyExtractor={(game) => game.id.toString()}
             renderItem={({ item }) => (
-                <GameCard game={item} selectedTab={selectedTab} />
+                <GameCard
+                    game={item}
+                    selectedTab={selectedTab}
+                />
             )}
+            contentContainerStyle={{
+                paddingVertical: 8,
+            }}
         />
     );
 };
 
-export default GamesList
+export default GamesList;

@@ -17,6 +17,8 @@ const io = new Server(server, {
   },
 });
 
+app.set("io", io);
+
 registerSockets(io);
 
 server.listen(port, () => {

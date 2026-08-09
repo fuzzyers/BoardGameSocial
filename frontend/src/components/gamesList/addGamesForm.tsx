@@ -8,6 +8,7 @@ import {
     Text,
     TextInput,
     View,
+    useWindowDimensions,
 } from "react-native";
 
 type AddGameFormProps = {
@@ -27,6 +28,9 @@ const AddGameForm = ({ onGameAdded }: AddGameFormProps) => {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [success, setSuccess] = useState(false);
+
+    const { width } = useWindowDimensions();
+    const isMobile = width < 600;
 
     const handleSubmit = async () => {
         if (loading) return;
@@ -69,136 +73,190 @@ const AddGameForm = ({ onGameAdded }: AddGameFormProps) => {
             style={styles.container}
             contentContainerStyle={styles.content}
             showsVerticalScrollIndicator={true}
+            keyboardShouldPersistTaps="handled"
         >
-            <Text style={styles.heading}>Add New Game</Text>
+            <View
+                style={[
+                    styles.form,
+                    isMobile && styles.mobileForm,
+                ]}
+            >
+                <Text style={styles.heading}>
+                    Add New Game
+                </Text>
 
-            <Text style={styles.label}>Game Title</Text>
-            <TextInput
-                style={styles.input}
-                value={title}
-                onChangeText={setTitle}
-                placeholder="e.g. Catan"
-            />
+                <Text style={styles.label}>
+                    Game Title
+                </Text>
 
-            <Text style={styles.label}>Description</Text>
-            <TextInput
-                style={[styles.input, styles.descriptionInput]}
-                value={description}
-                onChangeText={setDescription}
-                placeholder="Enter a description..."
-                multiline
-                textAlignVertical="top"
-            />
-
-            <View style={styles.row}>
-                <View style={styles.halfInput}>
-                    <Text style={styles.label}>Min Players</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={minPlayers}
-                        onChangeText={setMinPlayers}
-                        placeholder="2"
-                        keyboardType="numeric"
-                    />
-                </View>
-
-                <View style={styles.halfInput}>
-                    <Text style={styles.label}>Max Players</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={maxPlayers}
-                        onChangeText={setMaxPlayers}
-                        placeholder="4"
-                        keyboardType="numeric"
-                    />
-                </View>
-            </View>
-
-            <View style={styles.row}>
-                <View style={styles.halfInput}>
-                    <Text style={styles.label}>Min Play Time</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={minPlayTime}
-                        onChangeText={setMinPlayTime}
-                        placeholder="30"
-                        keyboardType="numeric"
-                    />
-                </View>
-
-                <View style={styles.halfInput}>
-                    <Text style={styles.label}>Max Play Time</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={maxPlayTime}
-                        onChangeText={setMaxPlayTime}
-                        placeholder="90"
-                        keyboardType="numeric"
-                    />
-                </View>
-            </View>
-
-            <Text style={styles.label}>Minimum Age</Text>
-            <TextInput
-                style={styles.input}
-                value={minAge}
-                onChangeText={setMinAge}
-                placeholder="10"
-                keyboardType="numeric"
-            />
-
-            <View style={styles.collectionRow}>
-                <View style={styles.collectionText}>
-                    <Text style={styles.collectionTitle}>
-                        Add to my collection
-                    </Text>
-
-                    <Text style={styles.collectionDescription}>
-                        Add this game to your collection after creating it.
-                    </Text>
-                </View>
-
-                <Switch
-                    value={addToCollection}
-                    onValueChange={setAddToCollection}
-                    disabled={loading}
+                <TextInput
+                    style={styles.input}
+                    value={title}
+                    onChangeText={setTitle}
+                    placeholder="e.g. Catan"
+                    editable={!loading}
                 />
-            </View>
 
-            {message !== "" && (
+                <Text style={styles.label}>
+                    Description
+                </Text>
+
+                <TextInput
+                    style={[
+                        styles.input,
+                        styles.descriptionInput,
+                    ]}
+                    value={description}
+                    onChangeText={setDescription}
+                    placeholder="Enter a description..."
+                    multiline
+                    textAlignVertical="top"
+                    editable={!loading}
+                />
+
                 <View
                     style={[
-                        styles.message,
-                        success
-                            ? styles.successMessage
-                            : styles.errorMessage,
+                        styles.row,
+                        isMobile && styles.mobileRow,
                     ]}
                 >
-                    <Text
+                    <View style={styles.halfInput}>
+                        <Text style={styles.label}>
+                            Min Players
+                        </Text>
+
+                        <TextInput
+                            style={styles.input}
+                            value={minPlayers}
+                            onChangeText={setMinPlayers}
+                            placeholder="2"
+                            keyboardType="numeric"
+                            editable={!loading}
+                        />
+                    </View>
+
+                    <View style={styles.halfInput}>
+                        <Text style={styles.label}>
+                            Max Players
+                        </Text>
+
+                        <TextInput
+                            style={styles.input}
+                            value={maxPlayers}
+                            onChangeText={setMaxPlayers}
+                            placeholder="4"
+                            keyboardType="numeric"
+                            editable={!loading}
+                        />
+                    </View>
+                </View>
+
+                <View
+                    style={[
+                        styles.row,
+                        isMobile && styles.mobileRow,
+                    ]}
+                >
+                    <View style={styles.halfInput}>
+                        <Text style={styles.label}>
+                            Min Play Time
+                        </Text>
+
+                        <TextInput
+                            style={styles.input}
+                            value={minPlayTime}
+                            onChangeText={setMinPlayTime}
+                            placeholder="30"
+                            keyboardType="numeric"
+                            editable={!loading}
+                        />
+                    </View>
+
+                    <View style={styles.halfInput}>
+                        <Text style={styles.label}>
+                            Max Play Time
+                        </Text>
+
+                        <TextInput
+                            style={styles.input}
+                            value={maxPlayTime}
+                            onChangeText={setMaxPlayTime}
+                            placeholder="90"
+                            keyboardType="numeric"
+                            editable={!loading}
+                        />
+                    </View>
+                </View>
+
+                <Text style={styles.label}>
+                    Minimum Age
+                </Text>
+
+                <TextInput
+                    style={styles.input}
+                    value={minAge}
+                    onChangeText={setMinAge}
+                    placeholder="10"
+                    keyboardType="numeric"
+                    editable={!loading}
+                />
+
+                <View style={styles.collectionRow}>
+                    <View style={styles.collectionText}>
+                        <Text style={styles.collectionTitle}>
+                            Add to my collection
+                        </Text>
+
+                        <Text style={styles.collectionDescription}>
+                            Add this game to your collection
+                            after creating it.
+                        </Text>
+                    </View>
+
+                    <Switch
+                        value={addToCollection}
+                        onValueChange={setAddToCollection}
+                        disabled={loading}
+                    />
+                </View>
+
+                {message !== "" && (
+                    <View
                         style={[
-                            styles.messageText,
+                            styles.message,
                             success
-                                ? styles.successText
-                                : styles.errorText,
+                                ? styles.successMessage
+                                : styles.errorMessage,
                         ]}
                     >
-                        {message}
-                    </Text>
-                </View>
-            )}
+                        <Text
+                            style={[
+                                styles.messageText,
+                                success
+                                    ? styles.successText
+                                    : styles.errorText,
+                            ]}
+                        >
+                            {message}
+                        </Text>
+                    </View>
+                )}
 
-            <Pressable
-                style={[
-                    styles.submitButton,
-                    loading && styles.disabledButton,
-                ]}
-                onPress={handleSubmit}
-                disabled={loading}
-            >
-                <Text style={styles.submitButtonText}>
-                    {loading ? "Adding..." : "Add Game"}
-                </Text>
-            </Pressable>
+                <Pressable
+                    style={[
+                        styles.submitButton,
+                        loading && styles.disabledButton,
+                    ]}
+                    onPress={handleSubmit}
+                    disabled={loading}
+                >
+                    <Text style={styles.submitButtonText}>
+                        {loading
+                            ? "Adding..."
+                            : "Add Game"}
+                    </Text>
+                </Pressable>
+            </View>
         </ScrollView>
     );
 };
@@ -210,6 +268,16 @@ const styles = StyleSheet.create({
 
     content: {
         padding: 20,
+        alignItems: "center",
+    },
+
+    form: {
+        width: "100%",
+        maxWidth: 700,
+    },
+
+    mobileForm: {
+        maxWidth: undefined,
     },
 
     heading: {
@@ -244,6 +312,11 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: "row",
         gap: 12,
+    },
+
+    mobileRow: {
+        flexDirection: "column",
+        gap: 0,
     },
 
     halfInput: {

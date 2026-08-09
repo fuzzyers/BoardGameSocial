@@ -27,7 +27,7 @@ export const getGroups = async () => {
                 Authorization: `Bearer ${token}`
             }
         })
-        return response
+        return response.data.data
     } catch (error) {
         console.log(error)
     }

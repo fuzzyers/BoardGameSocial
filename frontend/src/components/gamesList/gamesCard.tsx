@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+    Pressable,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native";
 import { Game } from "@/types/apiDataTypes";
 
 type GamesCardProps = {
@@ -8,7 +13,11 @@ type GamesCardProps = {
     selectedTab: "collection" | "database" | "add";
 };
 
-const GamesCard = ({ game, onAddToCollection, selectedTab }: GamesCardProps) => {
+const GamesCard = ({
+    game,
+    onAddToCollection,
+    selectedTab,
+}: GamesCardProps) => {
     const [expanded, setExpanded] = useState(false);
 
     return (
@@ -27,24 +36,54 @@ const GamesCard = ({ game, onAddToCollection, selectedTab }: GamesCardProps) => 
                         </Text>
 
                         {game.review_status === "approved" && (
-                            <View style={[styles.reviewTag, styles.verifiedTag]}>
-                                <Text style={[styles.reviewText, styles.verifiedText]}>
+                            <View
+                                style={[
+                                    styles.reviewTag,
+                                    styles.verifiedTag,
+                                ]}
+                            >
+                                <Text
+                                    style={[
+                                        styles.reviewText,
+                                        styles.verifiedText,
+                                    ]}
+                                >
                                     ✓ Verified
                                 </Text>
                             </View>
                         )}
 
                         {game.review_status === "pending" && (
-                            <View style={[styles.reviewTag, styles.pendingTag]}>
-                                <Text style={[styles.reviewText, styles.pendingText]}>
+                            <View
+                                style={[
+                                    styles.reviewTag,
+                                    styles.pendingTag,
+                                ]}
+                            >
+                                <Text
+                                    style={[
+                                        styles.reviewText,
+                                        styles.pendingText,
+                                    ]}
+                                >
                                     ⚠ Not Verified
                                 </Text>
                             </View>
                         )}
 
                         {game.review_status === "rejected" && (
-                            <View style={[styles.reviewTag, styles.rejectedTag]}>
-                                <Text style={[styles.reviewText, styles.rejectedText]}>
+                            <View
+                                style={[
+                                    styles.reviewTag,
+                                    styles.rejectedTag,
+                                ]}
+                            >
+                                <Text
+                                    style={[
+                                        styles.reviewText,
+                                        styles.rejectedText,
+                                    ]}
+                                >
                                     ✕ Rejected
                                 </Text>
                             </View>
@@ -93,17 +132,18 @@ const GamesCard = ({ game, onAddToCollection, selectedTab }: GamesCardProps) => 
                         </Text>
                     )}
 
-                    {
-                        selectedTab === "database" &&
+                    {selectedTab === "database" && (
                         <Pressable
                             style={styles.collectionButton}
-                            onPress={() => onAddToCollection?.(game)}
+                            onPress={() =>
+                                onAddToCollection?.(game)
+                            }
                         >
                             <Text style={styles.collectionButtonText}>
                                 Add to Collection
                             </Text>
                         </Pressable>
-                    }
+                    )}
                 </View>
             )}
         </View>
@@ -132,17 +172,19 @@ const styles = StyleSheet.create({
 
     header: {
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "flex-start",
         padding: 14,
     },
 
     titleContainer: {
         flex: 1,
+        minWidth: 0,
     },
 
     titleRow: {
         flexDirection: "row",
         alignItems: "center",
+        flexWrap: "wrap",
         gap: 8,
     },
 
@@ -154,9 +196,9 @@ const styles = StyleSheet.create({
     },
 
     reviewTag: {
-    paddingHorizontal: 7,
-    paddingVertical: 3,
-    borderRadius: 6,
+        paddingHorizontal: 7,
+        paddingVertical: 3,
+        borderRadius: 6,
     },
 
     reviewText: {
@@ -195,14 +237,16 @@ const styles = StyleSheet.create({
     },
 
     arrow: {
-        marginLeft: 10,
+        marginLeft: 8,
+        marginTop: 2,
         fontSize: 14,
         color: "#777",
     },
 
     quickInfo: {
         flexDirection: "row",
-        gap: 14,
+        flexWrap: "wrap",
+        gap: 10,
         paddingHorizontal: 14,
         paddingBottom: 12,
     },

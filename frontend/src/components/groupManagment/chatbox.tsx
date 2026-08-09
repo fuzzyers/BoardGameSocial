@@ -1,6 +1,13 @@
 import { getGroupMessages } from "@/services/messages";
 import { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TextInput, ScrollView, Pressable } from "react-native";
+import {
+    View,
+    Text,
+    StyleSheet,
+    ScrollView,
+    Pressable,
+} from "react-native";
+
 import MessageInput from "./messageInput";
 import { Group, Message } from "@/types/apiDataTypes";
 import { getSocket } from "@/services/socket";
@@ -8,15 +15,17 @@ import GroupManagment from "./groupManagment";
 
 type ChatBoxProps = {
     group: Group | null;
+    onBack: () => void;
 };
 
-const ChatBox = ({group}: ChatBoxProps) => {
+const ChatBox = ({ group, onBack }: ChatBoxProps) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [showModal, setShowModal] = useState(false);
-    const [groupName, setGroupName] = useState<string>(group?.name || "No Group Selected");
-    const [groupData, setGroupData] = useState<any>(group || null);
+    const [groupName, setGroupName] = useState(
+        group?.name || "No Group Selected"
+    );
+    const [groupData, setGroupData] = useState<Group | null>(group);
 
-    
     useEffect(() => {
         if (!group) return;
 
@@ -24,6 +33,7 @@ const ChatBox = ({group}: ChatBoxProps) => {
             const response = await getGroupMessages(group.id);
 
             if (!response) return;
+
             setGroupName(group.name);
             setMessages(response.messages);
             setGroupData(response);
@@ -32,7 +42,7 @@ const ChatBox = ({group}: ChatBoxProps) => {
         loadMessages();
     }, [group]);
 
-        useEffect(() => {
+    useEffect(() => {
         const socket = getSocket();
 
         if (!socket || !group) {
@@ -46,20 +56,16 @@ const ChatBox = ({group}: ChatBoxProps) => {
             console.log("Joined room:", roomId);
         };
 
-        // Socket is already connected
         if (socket.connected) {
             joinRoom();
         } else {
-            // Wait until it connects
             socket.on("connect", joinRoom);
         }
 
         return () => {
             socket.off("connect", joinRoom);
         };
-
     }, [group]);
-
 
     useEffect(() => {
         const socket = getSocket();
@@ -69,27 +75,54 @@ const ChatBox = ({group}: ChatBoxProps) => {
             return;
         }
 
-        socket.on("new_message", (message) => {
-
-            setMessages(previous => [
+        const handleNewMessage = (message: Message) => {
+            setMessages((previous) => [
                 ...previous,
-                message
+                message,
             ]);
-        });
+        };
+
+        socket.on("new_message", handleNewMessage);
 
         return () => {
-            socket.off("new_message");
+            socket.off("new_message", handleNewMessage);
         };
     }, []);
 
     return (
         <View style={styles.chatContainer}>
             <View style={styles.header}>
-                <Text style={styles.headerText}>{groupName}</Text>
-                <Pressable style={styles.manageButton} onPress={() => setShowModal(true)}>
-                    <Text style={styles.manageButtonText}>Manage Group</Text>
+
+                <Pressable
+                    style={styles.backButton}
+                    onPress={onBack}
+                >
+                    <Text style={styles.backButtonText}>
+                        ←
+                    </Text>
                 </Pressable>
-                <GroupManagment visible={showModal} onClose={() => setShowModal(false)} groupData={groupData}/>
+
+                <Text
+                    style={styles.headerText}
+                    numberOfLines={1}
+                >
+                    {groupName}
+                </Text>
+
+                <Pressable
+                    style={styles.manageButton}
+                    onPress={() => setShowModal(true)}
+                >
+                    <Text style={styles.manageButtonText}>
+                        Manage
+                    </Text>
+                </Pressable>
+
+                <GroupManagment
+                    visible={showModal}
+                    onClose={() => setShowModal(false)}
+                    groupData={groupData}
+                />
             </View>
 
             <ScrollView
@@ -97,13 +130,22 @@ const ChatBox = ({group}: ChatBoxProps) => {
                 contentContainerStyle={styles.messagesContent}
             >
                 {messages.map((message) => (
-                    <View key={message.id} style={styles.message}>
+                    <View
+                        key={message.id}
+                        style={styles.message}
+                    >
                         <Text style={styles.sender}>
                             {message.sender_name}
                         </Text>
-                        <Text>{message.message}</Text>
+
+                        <Text>
+                            {message.message}
+                        </Text>
+
                         <Text style={styles.timestamp}>
-                            {new Date(message.created_at).toLocaleDateString("en-NZ", {
+                            {new Date(
+                                message.created_at
+                            ).toLocaleDateString("en-NZ", {
                                 year: "numeric",
                                 month: "short",
                                 day: "numeric",
@@ -115,7 +157,7 @@ const ChatBox = ({group}: ChatBoxProps) => {
                 ))}
             </ScrollView>
 
-            <MessageInput chatId={group?.chat_id}/>
+            <MessageInput chatId={group?.chat_id} />
         </View>
     );
 };
@@ -125,7 +167,7 @@ export default ChatBox;
 const styles = StyleSheet.create({
     chatContainer: {
         flex: 1,
-        margin: 20,
+        margin: 10,
         backgroundColor: "#fff",
         borderRadius: 12,
 
@@ -139,21 +181,52 @@ const styles = StyleSheet.create({
         elevation: 6,
 
         overflow: "hidden",
-        width: "100%"
     },
 
     header: {
         backgroundColor: "#007AFF",
-        paddingVertical: 18,
-        paddingHorizontal: 20,
+        paddingVertical: 12,
+        paddingHorizontal: 12,
+
         flexDirection: "row",
-        justifyContent: "space-between",
+        alignItems: "center",
+    },
+
+    backButton: {
+        width: 40,
+        height: 40,
+        justifyContent: "center",
+        alignItems: "center",
+        marginRight: 4,
+    },
+
+    backButtonText: {
+        color: "#fff",
+        fontSize: 28,
+        fontWeight: "500",
     },
 
     headerText: {
+        flex: 1,
         color: "#fff",
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: "700",
+        marginHorizontal: 8,
+    },
+
+    manageButton: {
+        backgroundColor: "#fff",
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        borderRadius: 8,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    manageButtonText: {
+        color: "#007AFF",
+        fontWeight: "600",
+        fontSize: 13,
     },
 
     messages: {
@@ -180,19 +253,5 @@ const styles = StyleSheet.create({
         marginTop: 4,
         fontSize: 12,
         color: "#777",
-    },
-    manageButton: {
-        backgroundColor: "#fff",
-        paddingHorizontal: 14,
-        paddingVertical: 8,
-        borderRadius: 8,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-
-    manageButtonText: {
-        color: "#007AFF",
-        fontWeight: "600",
-        fontSize: 14,
     },
 });
