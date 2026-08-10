@@ -1,12 +1,18 @@
 import GamesContainer from "@/components/gamesList/gamesContainer";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 const Games = () => {
     return (
-    <View>
-        <GamesContainer />
-    </View>
-    )
+        <View style={styles.container}>
+            <GamesContainer />
+        </View>
+    );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+});
 
 export default Games;

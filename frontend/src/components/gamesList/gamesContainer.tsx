@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.15,
         shadowRadius: 8,
         elevation: 6,
+        minHeight: 0,
     },
 
     mobileContainer: {

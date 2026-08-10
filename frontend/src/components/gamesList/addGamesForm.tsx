@@ -73,7 +73,7 @@ const AddGameForm = ({ onGameAdded }: AddGameFormProps) => {
             style={styles.container}
             contentContainerStyle={styles.content}
             showsVerticalScrollIndicator={true}
-            keyboardShouldPersistTaps="handled"
+            // keyboardShouldPersistTaps="handled"
         >
             <View
                 style={[
