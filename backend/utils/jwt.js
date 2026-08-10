@@ -12,6 +12,8 @@ export const verifyToken = (token) => {
         const secret = process.env.JWT_SECRET;
         return jwt.verify(token, secret);
     } catch (error) {
+        console.error("verifyToken error:", error);
+
         return null;
     }
 };

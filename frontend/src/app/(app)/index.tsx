@@ -1,7 +1,24 @@
-import { StyleSheet, View } from "react-native";
+import { deleteToken } from "@/services/auth";
+import { getSocket } from "@/services/socket";
+import { router } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function HomeScreen() {
-    return <View style={styles.container}></View>;
+    const handleLogout = async () => {
+        await deleteToken();
+        const socket = getSocket();
+        if (!socket) return;
+        socket.disconnect();
+        router.push("/(auth)/login");
+    };
+
+    return (
+        <View style={styles.container}>
+            <Pressable onPress={handleLogout}>
+                <Text>Logout</Text>
+            </Pressable>
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({

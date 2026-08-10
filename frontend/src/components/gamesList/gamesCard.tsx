@@ -1,54 +1,114 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Game } from "@/types/apiDataTypes";
+import { addToCollection } from "@/services/games";
 
 type GamesCardProps = {
     game: Game;
-    onAddToCollection?: (game: Game) => void;
     selectedTab: "collection" | "database" | "add";
 };
 
-const GamesCard = ({ game, onAddToCollection, selectedTab }: GamesCardProps) => {
+const GamesCard = ({ game, selectedTab }: GamesCardProps) => {
     const [expanded, setExpanded] = useState(false);
+    const [adding, setAdding] = useState(false);
+    const [addStatus, setAddStatus] = useState<"success" | "error" | null>(null);
+
+    const handleAddToCollection = async () => {
+        try {
+            setAdding(true);
+            setAddStatus(null);
+
+            await addToCollection(game.id);
+
+            setAddStatus("success");
+        } catch (error) {
+            console.error("Failed to add game to collection:", error);
+            setAddStatus("error");
+        } finally {
+            setAdding(false);
+        }
+    };
 
     return (
         <View style={styles.card}>
-            <Pressable style={styles.header} onPress={() => setExpanded(!expanded)}>
+            <Pressable
+                style={styles.header}
+                onPress={() => setExpanded(!expanded)}
+            >
                 <View style={styles.titleContainer}>
                     <View style={styles.titleRow}>
-                        <Text style={styles.title} numberOfLines={expanded ? undefined : 1}>
+                        <Text
+                            style={styles.title}
+                            numberOfLines={expanded ? undefined : 1}
+                        >
                             {game.title}
                         </Text>
 
                         {game.review_status === "approved" && (
-                            <View style={[styles.reviewTag, styles.verifiedTag]}>
-                                <Text style={[styles.reviewText, styles.verifiedText]}>
+                            <View
+                                style={[
+                                    styles.reviewTag,
+                                    styles.verifiedTag,
+                                ]}
+                            >
+                                <Text
+                                    style={[
+                                        styles.reviewText,
+                                        styles.verifiedText,
+                                    ]}
+                                >
                                     ✓ Verified
                                 </Text>
                             </View>
                         )}
 
                         {game.review_status === "pending" && (
-                            <View style={[styles.reviewTag, styles.pendingTag]}>
-                                <Text style={[styles.reviewText, styles.pendingText]}>
+                            <View
+                                style={[
+                                    styles.reviewTag,
+                                    styles.pendingTag,
+                                ]}
+                            >
+                                <Text
+                                    style={[
+                                        styles.reviewText,
+                                        styles.pendingText,
+                                    ]}
+                                >
                                     ⚠ Not Verified
                                 </Text>
                             </View>
                         )}
 
                         {game.review_status === "rejected" && (
-                            <View style={[styles.reviewTag, styles.rejectedTag]}>
-                                <Text style={[styles.reviewText, styles.rejectedText]}>
+                            <View
+                                style={[
+                                    styles.reviewTag,
+                                    styles.rejectedTag,
+                                ]}
+                            >
+                                <Text
+                                    style={[
+                                        styles.reviewText,
+                                        styles.rejectedText,
+                                    ]}
+                                >
                                     ✕ Rejected
                                 </Text>
                             </View>
                         )}
                     </View>
 
-                    {game.year_published && <Text style={styles.year}>{game.year_published}</Text>}
+                    {game.year_published && (
+                        <Text style={styles.year}>
+                            {game.year_published}
+                        </Text>
+                    )}
                 </View>
 
-                <Text style={styles.arrow}>{expanded ? "▲" : "▼"}</Text>
+                <Text style={styles.arrow}>
+                    {expanded ? "▲" : "▼"}
+                </Text>
             </Pressable>
 
             <View style={styles.quickInfo}>
@@ -60,22 +120,66 @@ const GamesCard = ({ game, onAddToCollection, selectedTab }: GamesCardProps) => 
                     ⏱ {game.min_play_time}-{game.max_play_time} min
                 </Text>
 
-                {game.min_age && <Text style={styles.info}>{game.min_age}+</Text>}
+                {game.min_age && (
+                    <Text style={styles.info}>
+                        {game.min_age}+
+                    </Text>
+                )}
             </View>
 
             {expanded && (
                 <View style={styles.expandedContent}>
-                    {game.description && <Text style={styles.description}>{game.description}</Text>}
+                    {game.description && (
+                        <Text style={styles.description}>
+                            {game.description}
+                        </Text>
+                    )}
 
-                    {game.bgg_id && <Text style={styles.bgg}>BGG ID: {game.bgg_id}</Text>}
+                    {game.bgg_id && (
+                        <Text style={styles.bgg}>
+                            BGG ID: {game.bgg_id}
+                        </Text>
+                    )}
 
                     {selectedTab === "database" && (
-                        <Pressable
-                            style={styles.collectionButton}
-                            onPress={() => onAddToCollection?.(game)}
-                        >
-                            <Text style={styles.collectionButtonText}>Add to Collection</Text>
-                        </Pressable>
+                        <>
+                            <Pressable
+                                style={[
+                                    styles.collectionButton,
+                                    adding &&
+                                        styles.collectionButtonDisabled,
+                                ]}
+                                onPress={handleAddToCollection}
+                                disabled={adding}
+                            >
+                                <Text
+                                    style={
+                                        styles.collectionButtonText
+                                    }
+                                >
+                                    {adding
+                                        ? "Adding..."
+                                        : addStatus === "success"
+                                          ? "✓ Added to Collection"
+                                          : addStatus === "error"
+                                            ? "✕ Failed — Try Again"
+                                            : "Add to Collection"}
+                                </Text>
+                            </Pressable>
+
+                            {addStatus === "success" && (
+                                <Text style={styles.successMessage}>
+                                    ✓ Added to your collection
+                                </Text>
+                            )}
+
+                            {addStatus === "error" && (
+                                <Text style={styles.errorMessage}>
+                                    ✕ Could not add this game. Please try
+                                    again.
+                                </Text>
+                            )}
+                        </>
                     )}
                 </View>
             )}
@@ -216,9 +320,29 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
 
+    collectionButtonDisabled: {
+        opacity: 0.6,
+    },
+
     collectionButtonText: {
         color: "#fff",
         fontWeight: "700",
+    },
+
+    successMessage: {
+        marginTop: 8,
+        color: "#2e7d32",
+        fontSize: 13,
+        fontWeight: "600",
+        textAlign: "center",
+    },
+
+    errorMessage: {
+        marginTop: 8,
+        color: "#c62828",
+        fontSize: 13,
+        fontWeight: "600",
+        textAlign: "center",
     },
 });
 

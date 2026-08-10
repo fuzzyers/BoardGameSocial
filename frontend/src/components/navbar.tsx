@@ -12,14 +12,6 @@ export default function Navbar({ onSetSelected }: NavBarProps) {
     const styles = createStyles(width, height);
     const router = useRouter();
 
-    const handleLogout = async () => {
-        await deleteToken();
-        const socket = getSocket();
-        if (!socket) return;
-        socket.disconnect();
-        router.push("/(auth)/login");
-    };
-
     const handleNavSelect = (navigate: NavigationOption) => {
         console.log("navigate", navigate);
         onSetSelected(navigate);
@@ -43,9 +35,6 @@ export default function Navbar({ onSetSelected }: NavBarProps) {
                 <Text style={styles.navbarButtonText}>Settings</Text>
             </Pressable>
             {/* Move function from text to button later */}
-            <Pressable style={styles.navbarButton} onPress={handleLogout}>
-                <Text style={styles.navbarButtonText}>Logout</Text>
-            </Pressable>
         </View>
     );
 }

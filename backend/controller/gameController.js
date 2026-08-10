@@ -88,11 +88,13 @@ export const addGameToCollection = async (req, res) => {
     try {
         const { game_id } = req.body;
         const user_id = req.user.id;
+        // console.log(user_id)
 
         const game = await gamesService.addGameToCollection(user_id, game_id);
 
         res.status(201).json({ data: game });
     } catch (error) {
+        console.log(error)
         res.status(500).json({ message: error });
     }
 };
