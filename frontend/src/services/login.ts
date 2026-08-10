@@ -8,7 +8,6 @@ export const login = async (email: string, password: string) => {
         await saveToken(response.headers.authorization);
 
         return response.data;
-
     } catch (error) {
         console.error("Login error:", error);
         throw error;

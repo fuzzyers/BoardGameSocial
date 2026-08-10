@@ -5,16 +5,11 @@ type GamesHeaderProps = {
     onSelectTab: (tab: "collection" | "database" | "add") => void;
 };
 
-const GamesControllerHeader = ({
-    selectedTab,
-    onSelectTab,
-}: GamesHeaderProps) => {
+const GamesControllerHeader = ({ selectedTab, onSelectTab }: GamesHeaderProps) => {
     const { width } = useWindowDimensions();
     const isMobile = width < 768;
 
-    const handleSelect = (
-        category: "collection" | "database" | "add"
-    ) => {
+    const handleSelect = (category: "collection" | "database" | "add") => {
         onSelectTab(category);
     };
 
@@ -29,10 +24,7 @@ const GamesControllerHeader = ({
                 onPress={() => handleSelect("collection")}
             >
                 <Text
-                    style={[
-                        styles.tabText,
-                        selectedTab === "collection" && styles.activeTabText,
-                    ]}
+                    style={[styles.tabText, selectedTab === "collection" && styles.activeTabText]}
                 >
                     My Collection
                 </Text>
@@ -46,12 +38,7 @@ const GamesControllerHeader = ({
                 ]}
                 onPress={() => handleSelect("database")}
             >
-                <Text
-                    style={[
-                        styles.tabText,
-                        selectedTab === "database" && styles.activeTabText,
-                    ]}
-                >
+                <Text style={[styles.tabText, selectedTab === "database" && styles.activeTabText]}>
                     All Games
                 </Text>
             </Pressable>
@@ -64,12 +51,7 @@ const GamesControllerHeader = ({
                 ]}
                 onPress={() => handleSelect("add")}
             >
-                <Text
-                    style={[
-                        styles.tabText,
-                        selectedTab === "add" && styles.activeTabText,
-                    ]}
-                >
+                <Text style={[styles.tabText, selectedTab === "add" && styles.activeTabText]}>
                     Add Game
                 </Text>
             </Pressable>

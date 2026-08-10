@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native"
+import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import CreateGroupModal from "./createGroupModal";
 import { Group } from "@/types/apiDataTypes";
 import { NavigationOption } from "@/types/navigationProps";
@@ -10,23 +10,23 @@ type NavGroupProps = {
     onSelectGroup: (group: Group) => void;
 };
 
-const NavGroups = ({groups, onSelectGroup}: NavGroupProps) => {
-    const [showModal, setShowModal] = useState(false)
+const NavGroups = ({ groups, onSelectGroup }: NavGroupProps) => {
+    const [showModal, setShowModal] = useState(false);
     const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
     const { width, height } = useWindowDimensions();
-    const styles = createStyles(width, height)
-    
+    const styles = createStyles(width, height);
+
     const setModal = () => {
-        setShowModal(!showModal)
-    }
+        setShowModal(!showModal);
+    };
 
     const handleGroupSelect = (group: Group) => {
         onSelectGroup(group);
         setSelectedGroupId(group.id);
         const socket = getSocket();
         if (!socket) return;
-        socket.emit("joinRoom", group.chat_id); 
-    }
+        socket.emit("joinRoom", group.chat_id);
+    };
 
     return (
         <ScrollView
@@ -36,9 +36,9 @@ const NavGroups = ({groups, onSelectGroup}: NavGroupProps) => {
             <Pressable style={styles.navbarButton} onPress={() => setModal()}>
                 <Text style={styles.navbarButtonText}>Create a Group</Text>
             </Pressable>
-            <CreateGroupModal visible={showModal} onClose={() => setShowModal(false)}/>
-                {groups?.map((group) => (
-                <Pressable 
+            <CreateGroupModal visible={showModal} onClose={() => setShowModal(false)} />
+            {groups?.map((group) => (
+                <Pressable
                     key={group.id}
                     style={[
                         styles.navbarButton,
@@ -46,30 +46,32 @@ const NavGroups = ({groups, onSelectGroup}: NavGroupProps) => {
                     ]}
                     onPress={() => handleGroupSelect(group)}
                 >
-                    <Text style={[
-                        styles.navbarButtonText,
-                        selectedGroupId === group.id && styles.selectedNavbarButtonText,
-                        ]}>
+                    <Text
+                        style={[
+                            styles.navbarButtonText,
+                            selectedGroupId === group.id && styles.selectedNavbarButtonText,
+                        ]}
+                    >
                         {group.name}
                     </Text>
                 </Pressable>
             ))}
         </ScrollView>
-    )
-}
+    );
+};
 
 const createStyles = (width: number, height: number) => {
     return StyleSheet.create({
         navbarButton: {
-            alignItems: 'center',
+            alignItems: "center",
             justifyContent: "center",
-            width:"100%",
+            width: "100%",
             marginVertical: 8,
             paddingVertical: 12,
             paddingHorizontal: 24,
-            backgroundColor: '#ffffff',
+            backgroundColor: "#ffffff",
             borderRadius: 8,
-            shadowColor: '#000',
+            shadowColor: "#000",
             shadowOffset: {
                 width: 0,
                 height: 2,
@@ -77,16 +79,16 @@ const createStyles = (width: number, height: number) => {
             shadowOpacity: 0.25,
             shadowRadius: 3.84,
             elevation: 5,
-            height: 100
+            height: 100,
         },
         navbarButtonText: {
-            color: '#007AFF',
+            color: "#007AFF",
             fontSize: Math.min(width, height) * 0.04,
-            fontWeight: '600',
+            fontWeight: "600",
         },
         navbarContent: {
-            alignItems: 'center',
-            width: '100%',
+            alignItems: "center",
+            width: "100%",
         },
         selectedNavbarButton: {
             backgroundColor: "#F3F9FF",
@@ -98,6 +100,7 @@ const createStyles = (width: number, height: number) => {
             color: "#005FCC",
             fontWeight: "700",
         },
-})}
+    });
+};
 
-export default NavGroups
+export default NavGroups;

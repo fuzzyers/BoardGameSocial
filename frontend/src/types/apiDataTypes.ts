@@ -20,7 +20,7 @@ export type User = {
     name: string;
     email: string;
     username: string;
-    role: string; 
+    role: string;
 };
 
 export type GroupDetails = {

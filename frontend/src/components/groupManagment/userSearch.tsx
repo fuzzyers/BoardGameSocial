@@ -1,15 +1,15 @@
-import { GroupDetails, User } from '@/types/apiDataTypes';
-import { useEffect, useState } from 'react';
-import { View, TextInput, FlatList, Text, Pressable, StyleSheet } from 'react-native';
-import searchUsers from '@/services/users';
-import AddUserButton from './addUserButton';
+import { GroupDetails, User } from "@/types/apiDataTypes";
+import { useEffect, useState } from "react";
+import { View, TextInput, FlatList, Text, Pressable, StyleSheet } from "react-native";
+import searchUsers from "@/services/users";
+import AddUserButton from "./addUserButton";
 
 type UserSearchProps = {
     groupData: GroupDetails | null;
 };
 
 const UserSearch = ({ groupData }: UserSearchProps) => {
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -19,7 +19,7 @@ const UserSearch = ({ groupData }: UserSearchProps) => {
             return;
         }
         if (!groupData) {
-            console.error('Group data is null');
+            console.error("Group data is null");
             return;
         }
 
@@ -27,7 +27,7 @@ const UserSearch = ({ groupData }: UserSearchProps) => {
             setLoading(true);
 
             const users = await searchUsers(searchQuery, groupData?.id);
-            console.log('Fetched users:', users);
+            console.log("Fetched users:", users);
             setSearchResults(users);
             setLoading(false);
         }, 300);
@@ -56,14 +56,14 @@ const UserSearch = ({ groupData }: UserSearchProps) => {
             />
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
         padding: 16,
-        backgroundColor: '#f9f9f9',
+        backgroundColor: "#f9f9f9",
         borderRadius: 8,
-        shadowColor: '#000',
+        shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
@@ -71,15 +71,15 @@ const styles = StyleSheet.create({
     },
     input: {
         borderWidth: 1,
-        borderColor: '#ccc',
+        borderColor: "#ccc",
         borderRadius: 8,
         padding: 12,
         marginBottom: 12,
     },
     userRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
         marginBottom: 8,
     },
     userName: {

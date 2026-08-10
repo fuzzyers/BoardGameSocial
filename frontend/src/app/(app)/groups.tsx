@@ -47,15 +47,9 @@ const Groups = () => {
     return (
         <View style={styles.container}>
             {selectedGroup === null ? (
-                <NavGroups
-                    groups={groups}
-                    onSelectGroup={setSelectedGroup}
-                />
+                <NavGroups groups={groups} onSelectGroup={setSelectedGroup} />
             ) : (
-                <ChatBox
-                    group={selectedGroup}
-                    onBack={() => setSelectedGroup(null)}
-                />
+                <ChatBox group={selectedGroup} onBack={() => setSelectedGroup(null)} />
             )}
         </View>
     );

@@ -9,9 +9,9 @@ const SearchUsers = async (searchTerm: string, groupId: number): Promise<User[]>
 
         return data;
     } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error("Error fetching users:", error);
         return [];
-    }   
+    }
 };
 
 export default SearchUsers;

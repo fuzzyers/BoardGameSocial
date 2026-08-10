@@ -1,14 +1,15 @@
-import pool from "../db/db.js"
+import pool from "../db/db.js";
 
-export const createMessageBoard = async (groupId, client=pool) => {
+export const createMessageBoard = async (groupId, client = pool) => {
     const createMessageGroup = await client.query(
         `
         INSERT INTO group_chats(group_id) VALUES($1)
-        `,[groupId]
-    )
-}
+        `,
+        [groupId]
+    );
+};
 
-export const createMessage = async (chatId, userId, message, client=pool) => {
+export const createMessage = async (chatId, userId, message, client = pool) => {
     const insertQuery = `
         INSERT INTO messages (
             chat_id,
@@ -19,11 +20,7 @@ export const createMessage = async (chatId, userId, message, client=pool) => {
         RETURNING id;
     `;
 
-    const insertResult = await client.query(insertQuery, [
-        chatId,
-        userId,
-        message
-    ]);
+    const insertResult = await client.query(insertQuery, [chatId, userId, message]);
 
     const messageId = insertResult.rows[0].id;
 
@@ -40,9 +37,7 @@ export const createMessage = async (chatId, userId, message, client=pool) => {
         WHERE m.id = $1;
     `;
 
-    const messageResult = await client.query(getMessageQuery, [
-        messageId
-    ]);
+    const messageResult = await client.query(getMessageQuery, [messageId]);
 
     return messageResult.rows[0];
 };

@@ -1,12 +1,6 @@
 import { getGroupMessages } from "@/services/messages";
 import { useEffect, useState } from "react";
-import {
-    View,
-    Text,
-    StyleSheet,
-    ScrollView,
-    Pressable,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 
 import MessageInput from "./messageInput";
 import { Group, Message } from "@/types/apiDataTypes";
@@ -21,9 +15,7 @@ type ChatBoxProps = {
 const ChatBox = ({ group, onBack }: ChatBoxProps) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [showModal, setShowModal] = useState(false);
-    const [groupName, setGroupName] = useState(
-        group?.name || "No Group Selected"
-    );
+    const [groupName, setGroupName] = useState(group?.name || "No Group Selected");
     const [groupData, setGroupData] = useState<Group | null>(group);
 
     useEffect(() => {
@@ -76,10 +68,7 @@ const ChatBox = ({ group, onBack }: ChatBoxProps) => {
         }
 
         const handleNewMessage = (message: Message) => {
-            setMessages((previous) => [
-                ...previous,
-                message,
-            ]);
+            setMessages((previous) => [...previous, message]);
         };
 
         socket.on("new_message", handleNewMessage);
@@ -92,30 +81,16 @@ const ChatBox = ({ group, onBack }: ChatBoxProps) => {
     return (
         <View style={styles.chatContainer}>
             <View style={styles.header}>
-
-                <Pressable
-                    style={styles.backButton}
-                    onPress={onBack}
-                >
-                    <Text style={styles.backButtonText}>
-                        ←
-                    </Text>
+                <Pressable style={styles.backButton} onPress={onBack}>
+                    <Text style={styles.backButtonText}>←</Text>
                 </Pressable>
 
-                <Text
-                    style={styles.headerText}
-                    numberOfLines={1}
-                >
+                <Text style={styles.headerText} numberOfLines={1}>
                     {groupName}
                 </Text>
 
-                <Pressable
-                    style={styles.manageButton}
-                    onPress={() => setShowModal(true)}
-                >
-                    <Text style={styles.manageButtonText}>
-                        Manage
-                    </Text>
+                <Pressable style={styles.manageButton} onPress={() => setShowModal(true)}>
+                    <Text style={styles.manageButtonText}>Manage</Text>
                 </Pressable>
 
                 <GroupManagment
@@ -125,27 +100,15 @@ const ChatBox = ({ group, onBack }: ChatBoxProps) => {
                 />
             </View>
 
-            <ScrollView
-                style={styles.messages}
-                contentContainerStyle={styles.messagesContent}
-            >
+            <ScrollView style={styles.messages} contentContainerStyle={styles.messagesContent}>
                 {messages.map((message) => (
-                    <View
-                        key={message.id}
-                        style={styles.message}
-                    >
-                        <Text style={styles.sender}>
-                            {message.sender_name}
-                        </Text>
+                    <View key={message.id} style={styles.message}>
+                        <Text style={styles.sender}>{message.sender_name}</Text>
 
-                        <Text>
-                            {message.message}
-                        </Text>
+                        <Text>{message.message}</Text>
 
                         <Text style={styles.timestamp}>
-                            {new Date(
-                                message.created_at
-                            ).toLocaleDateString("en-NZ", {
+                            {new Date(message.created_at).toLocaleDateString("en-NZ", {
                                 year: "numeric",
                                 month: "short",
                                 day: "numeric",

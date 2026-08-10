@@ -1,7 +1,6 @@
 import { io, Socket } from "socket.io-client";
 import { getToken } from "./auth";
 
-
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 if (!apiUrl) {
@@ -19,8 +18,8 @@ export const connectSocket = async () => {
 
     socket = io(apiUrl, {
         auth: {
-            token
-        }
+            token,
+        },
     });
 
     await new Promise<void>((resolve) => {
@@ -28,7 +27,6 @@ export const connectSocket = async () => {
             resolve();
         });
     });
-
 
     return socket;
 };

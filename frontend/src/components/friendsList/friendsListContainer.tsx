@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, Text, View } from "react-native";
 
 const FriendsListContainer = () => {
     return (
@@ -12,13 +12,11 @@ const FriendsListContainer = () => {
                 <View style={[styles.stripe, styles.stripe6]} />
                 <View style={[styles.stripe, styles.stripe7]} />
 
-                <Text style={styles.tapeText}>
-                    WHY ARE YOU LOOKING AT THIS ITS NOT READY YET
-                </Text>
+                <Text style={styles.tapeText}>WHY ARE YOU LOOKING AT THIS ITS NOT READY YET</Text>
             </View>
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -53,9 +51,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
 
-        transform: [
-            { rotate: "-25deg" }
-        ],
+        transform: [{ rotate: "-25deg" }],
 
         overflow: "hidden",
     },
@@ -74,9 +70,7 @@ const styles = StyleSheet.create({
         width: 40,
         height: "250%",
         backgroundColor: "#111",
-        transform: [
-            { rotate: "35deg" }
-        ],
+        transform: [{ rotate: "35deg" }],
         opacity: 0.9,
     },
 
@@ -109,4 +103,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default FriendsListContainer
+export default FriendsListContainer;

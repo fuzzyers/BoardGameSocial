@@ -1,22 +1,13 @@
 import { useEffect, useState } from "react";
-import {
-    StyleSheet,
-    useWindowDimensions,
-    View,
-} from "react-native";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 import GamesControllerHeader from "./gamesControllerHeader";
 import GamesList from "./gamesList";
 import { Game } from "@/types/apiDataTypes";
-import {
-    getAllCollectionGames,
-    getAllGames,
-} from "@/services/games";
+import { getAllCollectionGames, getAllGames } from "@/services/games";
 import AddGameForm from "./addGamesForm";
 
 const GamesContainer = () => {
-    const [selectedTab, setSelectedTab] = useState<
-        "collection" | "database" | "add"
-    >("collection");
+    const [selectedTab, setSelectedTab] = useState<"collection" | "database" | "add">("collection");
 
     const [games, setGames] = useState<Game[]>([]);
 
@@ -44,35 +35,19 @@ const GamesContainer = () => {
     }, [selectedTab]);
 
     return (
-        <View
-            style={[
-                styles.container,
-                isMobile && styles.mobileContainer,
-            ]}
-        >
-            <GamesControllerHeader
-                selectedTab={selectedTab}
-                onSelectTab={setSelectedTab}
-            />
+        <View style={[styles.container, isMobile && styles.mobileContainer]}>
+            <GamesControllerHeader selectedTab={selectedTab} onSelectTab={setSelectedTab} />
 
             <View style={styles.content}>
                 {selectedTab === "collection" && (
-                    <GamesList
-                        games={games}
-                        selectedTab={selectedTab}
-                    />
+                    <GamesList games={games} selectedTab={selectedTab} />
                 )}
 
                 {selectedTab === "database" && (
-                    <GamesList
-                        games={games}
-                        selectedTab={selectedTab}
-                    />
+                    <GamesList games={games} selectedTab={selectedTab} />
                 )}
 
-                {selectedTab === "add" && (
-                    <AddGameForm />
-                )}
+                {selectedTab === "add" && <AddGameForm />}
             </View>
         </View>
     );

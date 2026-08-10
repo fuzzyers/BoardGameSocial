@@ -1,4 +1,4 @@
-import { Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native"
+import { Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import GroupDetailsSection from "./GroupDetailsSection";
 import MemberList from "./memberList";
 import UserSearch from "./userSearch";
@@ -11,37 +11,25 @@ type CreateGroupModalProps = {
 
 const GroupManagment = ({ visible, onClose, groupData }: CreateGroupModalProps) => {
     return (
-        <Modal
-            visible={visible}
-            transparent
-            animationType="fade"
-            onRequestClose={onClose}
-        >
+        <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
             <View style={styles.overlay}>
                 <View style={styles.modal}>
-                    <Text style={styles.title}>
-                        Manage Group
-                    </Text>
+                    <Text style={styles.title}>Manage Group</Text>
 
                     <GroupDetailsSection groupData={groupData} />
                     <MemberList groupData={groupData} />
                     <UserSearch groupData={groupData} />
 
                     <View style={styles.buttons}>
-                        <Pressable
-                            style={[styles.button, styles.closeButton]}
-                            onPress={onClose}
-                        >
-                            <Text>
-                                Close
-                            </Text>
+                        <Pressable style={[styles.button, styles.closeButton]} onPress={onClose}>
+                            <Text>Close</Text>
                         </Pressable>
                     </View>
                 </View>
             </View>
         </Modal>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     overlay: {
@@ -106,4 +94,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default GroupManagment
+export default GroupManagment;

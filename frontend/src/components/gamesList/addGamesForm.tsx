@@ -1,15 +1,6 @@
 import { createGame } from "@/services/games";
 import { useState } from "react";
-import {
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Switch,
-    Text,
-    TextInput,
-    View,
-    useWindowDimensions,
-} from "react-native";
+import {Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View, useWindowDimensions} from "react-native";
 
 type AddGameFormProps = {
     onGameAdded?: () => void;
@@ -75,19 +66,10 @@ const AddGameForm = ({ onGameAdded }: AddGameFormProps) => {
             showsVerticalScrollIndicator={true}
             // keyboardShouldPersistTaps="handled"
         >
-            <View
-                style={[
-                    styles.form,
-                    isMobile && styles.mobileForm,
-                ]}
-            >
-                <Text style={styles.heading}>
-                    Add New Game
-                </Text>
+            <View style={[styles.form, isMobile && styles.mobileForm]}>
+                <Text style={styles.heading}>Add New Game</Text>
 
-                <Text style={styles.label}>
-                    Game Title
-                </Text>
+                <Text style={styles.label}>Game Title</Text>
 
                 <TextInput
                     style={styles.input}
@@ -97,15 +79,10 @@ const AddGameForm = ({ onGameAdded }: AddGameFormProps) => {
                     editable={!loading}
                 />
 
-                <Text style={styles.label}>
-                    Description
-                </Text>
+                <Text style={styles.label}>Description</Text>
 
                 <TextInput
-                    style={[
-                        styles.input,
-                        styles.descriptionInput,
-                    ]}
+                    style={[styles.input, styles.descriptionInput]}
                     value={description}
                     onChangeText={setDescription}
                     placeholder="Enter a description..."
@@ -114,16 +91,9 @@ const AddGameForm = ({ onGameAdded }: AddGameFormProps) => {
                     editable={!loading}
                 />
 
-                <View
-                    style={[
-                        styles.row,
-                        isMobile && styles.mobileRow,
-                    ]}
-                >
+                <View style={[styles.row, isMobile && styles.mobileRow]}>
                     <View style={styles.halfInput}>
-                        <Text style={styles.label}>
-                            Min Players
-                        </Text>
+                        <Text style={styles.label}>Min Players</Text>
 
                         <TextInput
                             style={styles.input}
@@ -136,9 +106,7 @@ const AddGameForm = ({ onGameAdded }: AddGameFormProps) => {
                     </View>
 
                     <View style={styles.halfInput}>
-                        <Text style={styles.label}>
-                            Max Players
-                        </Text>
+                        <Text style={styles.label}>Max Players</Text>
 
                         <TextInput
                             style={styles.input}
@@ -151,16 +119,9 @@ const AddGameForm = ({ onGameAdded }: AddGameFormProps) => {
                     </View>
                 </View>
 
-                <View
-                    style={[
-                        styles.row,
-                        isMobile && styles.mobileRow,
-                    ]}
-                >
+                <View style={[styles.row, isMobile && styles.mobileRow]}>
                     <View style={styles.halfInput}>
-                        <Text style={styles.label}>
-                            Min Play Time
-                        </Text>
+                        <Text style={styles.label}>Min Play Time</Text>
 
                         <TextInput
                             style={styles.input}
@@ -173,9 +134,7 @@ const AddGameForm = ({ onGameAdded }: AddGameFormProps) => {
                     </View>
 
                     <View style={styles.halfInput}>
-                        <Text style={styles.label}>
-                            Max Play Time
-                        </Text>
+                        <Text style={styles.label}>Max Play Time</Text>
 
                         <TextInput
                             style={styles.input}
@@ -188,9 +147,7 @@ const AddGameForm = ({ onGameAdded }: AddGameFormProps) => {
                     </View>
                 </View>
 
-                <Text style={styles.label}>
-                    Minimum Age
-                </Text>
+                <Text style={styles.label}>Minimum Age</Text>
 
                 <TextInput
                     style={styles.input}
@@ -203,13 +160,10 @@ const AddGameForm = ({ onGameAdded }: AddGameFormProps) => {
 
                 <View style={styles.collectionRow}>
                     <View style={styles.collectionText}>
-                        <Text style={styles.collectionTitle}>
-                            Add to my collection
-                        </Text>
+                        <Text style={styles.collectionTitle}>Add to my collection</Text>
 
                         <Text style={styles.collectionDescription}>
-                            Add this game to your collection
-                            after creating it.
+                            Add this game to your collection after creating it.
                         </Text>
                     </View>
 
@@ -224,17 +178,13 @@ const AddGameForm = ({ onGameAdded }: AddGameFormProps) => {
                     <View
                         style={[
                             styles.message,
-                            success
-                                ? styles.successMessage
-                                : styles.errorMessage,
+                            success ? styles.successMessage : styles.errorMessage,
                         ]}
                     >
                         <Text
                             style={[
                                 styles.messageText,
-                                success
-                                    ? styles.successText
-                                    : styles.errorText,
+                                success ? styles.successText : styles.errorText,
                             ]}
                         >
                             {message}
@@ -243,17 +193,12 @@ const AddGameForm = ({ onGameAdded }: AddGameFormProps) => {
                 )}
 
                 <Pressable
-                    style={[
-                        styles.submitButton,
-                        loading && styles.disabledButton,
-                    ]}
+                    style={[styles.submitButton, loading && styles.disabledButton]}
                     onPress={handleSubmit}
                     disabled={loading}
                 >
                     <Text style={styles.submitButtonText}>
-                        {loading
-                            ? "Adding..."
-                            : "Add Game"}
+                        {loading ? "Adding..." : "Add Game"}
                     </Text>
                 </Pressable>
             </View>

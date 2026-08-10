@@ -12,12 +12,7 @@ const GamesList = ({ games, selectedTab }: GamesListProps) => {
         <FlatList
             data={games}
             keyExtractor={(game) => game.id.toString()}
-            renderItem={({ item }) => (
-                <GameCard
-                    game={item}
-                    selectedTab={selectedTab}
-                />
-            )}
+            renderItem={({ item }) => <GameCard game={item} selectedTab={selectedTab} />}
             contentContainerStyle={{
                 paddingVertical: 8,
             }}

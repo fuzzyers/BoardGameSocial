@@ -21,7 +21,9 @@ const MemberList = ({ groupData }: MemberListProps) => {
             if (response && response.status === 201) {
                 // remove the user from the local state to update the UI
                 if (groupDataState) {
-                    const updatedMembers = groupDataState.members.filter(member => member.id !== userId);
+                    const updatedMembers = groupDataState.members.filter(
+                        (member) => member.id !== userId
+                    );
                     setGroupDataState({ ...groupDataState, members: updatedMembers });
                 }
             }
@@ -38,7 +40,10 @@ const MemberList = ({ groupData }: MemberListProps) => {
                     <Text style={styles.memberName}>{member.name}</Text>
                     <Text style={styles.roleText}>{member.role}</Text>
                     {member.role !== "owner" && (
-                        <Pressable style={styles.removeButton} onPress={() => handleRemoveUser(groupDataState?.id, member.id)}>
+                        <Pressable
+                            style={styles.removeButton}
+                            onPress={() => handleRemoveUser(groupDataState?.id, member.id)}
+                        >
                             <Text style={styles.removeButtonText}>Remove</Text>
                         </Pressable>
                     )}
@@ -46,14 +51,14 @@ const MemberList = ({ groupData }: MemberListProps) => {
             ))}
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
         padding: 16,
-        backgroundColor: '#f9f9f9',
+        backgroundColor: "#f9f9f9",
         borderRadius: 8,
-        shadowColor: '#000',
+        shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
@@ -61,36 +66,36 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 18,
-        fontWeight: 'bold',
+        fontWeight: "bold",
         marginBottom: 12,
     },
     memberRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
         marginBottom: 8,
     },
     memberName: {
         fontSize: 16,
     },
     removeButton: {
-        backgroundColor: '#ff4d4d',
+        backgroundColor: "#ff4d4d",
         paddingVertical: 4,
         paddingHorizontal: 8,
         borderRadius: 4,
-        shadowColor: '#000',
+        shadowColor: "#000",
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.2,
         shadowRadius: 1.41,
         elevation: 2,
     },
     removeButtonText: {
-        color: '#fff',
+        color: "#fff",
         fontSize: 14,
     },
     roleText: {
         fontSize: 14,
-        color: '#555',
+        color: "#555",
     },
 });
 

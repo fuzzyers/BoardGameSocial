@@ -1,24 +1,24 @@
-import jwt from "jsonwebtoken"
-import { verifyToken } from "../utils/jwt.js"
+import jwt from "jsonwebtoken";
+import { verifyToken } from "../utils/jwt.js";
 
 export const authentication = (req, res, next) => {
-    const authHeader = req.headers.authorization
-    if (!authHeader){
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
         return res.status(401).json({
-            message: "No Token Provided"
-        })
+            message: "No Token Provided",
+        });
     }
 
-    const token = authHeader.split(" ")[1]
+    const token = authHeader.split(" ")[1];
 
     try {
-        const decoded = verifyToken(token)
-        req.user = decoded
+        const decoded = verifyToken(token);
+        req.user = decoded;
 
-        next()
-    } catch (error){
+        next();
+    } catch (error) {
         return res.status(401).json({
-            message: "Invalid Token"
-        })
+            message: "Invalid Token",
+        });
     }
-}
+};

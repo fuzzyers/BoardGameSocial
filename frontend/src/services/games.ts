@@ -1,28 +1,26 @@
-import { api } from "./api"
-import { getToken } from "./auth"
+import { api } from "./api";
+import { getToken } from "./auth";
 
 export const getAllGames = async () => {
-    const response = await api.get("/games/")
+    const response = await api.get("/games/");
 
-    return response.data
-}
+    return response.data;
+};
 
 export const getAllCollectionGames = async () => {
     try {
-        const token = await getToken()
-        const response = await api.get("/games/collection/me", 
-        {
+        const token = await getToken();
+        const response = await api.get("/games/collection/me", {
             headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+                Authorization: `Bearer ${token}`,
+            },
+        });
 
-        return response.data.data
+        return response.data.data;
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
-
-}
+};
 
 export const createGame = async (game: any) => {
     try {

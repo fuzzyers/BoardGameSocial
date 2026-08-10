@@ -1,6 +1,6 @@
 import * as gamesService from "../services/games.js";
 
-export const createGame = async(req,res)=>{
+export const createGame = async (req, res) => {
     const {
         title,
         description,
@@ -12,9 +12,9 @@ export const createGame = async(req,res)=>{
         max_play_time,
         min_age,
     } = req.body.game;
-    const submitted_by = req.user.id
+    const submitted_by = req.user.id;
 
-    try{
+    try {
         const game = await gamesService.createGame(
             title,
             description,
@@ -29,73 +29,73 @@ export const createGame = async(req,res)=>{
         );
 
         res.status(201).json(game);
-    }catch(error){
+    } catch (error) {
         res.status(500).json({
-            message:error.message
+            message: error.message,
         });
     }
 };
 
-export const getGames = async(req,res)=>{
+export const getGames = async (req, res) => {
     const games = await gamesService.getGames();
 
     res.json(games);
 };
 
-export const getGame = async(req,res)=>{
+export const getGame = async (req, res) => {
     const game = await gamesService.getGameById(req.params.id);
 
     res.json(game);
 };
 
-export const searchGames = async(req,res)=>{
-    const games = await gamesService.searchGames( req.query.q);
-    
+export const searchGames = async (req, res) => {
+    const games = await gamesService.searchGames(req.query.q);
+
     res.json(games);
 };
 
-export const updateGame = async(req,res)=>{
+export const updateGame = async (req, res) => {
     const game = await gamesService.updateGame(req.params.id, req.body);
 
     res.json(game);
 };
 
-export const deleteGame = async(req,res)=>{
+export const deleteGame = async (req, res) => {
     await gamesService.deleteGame(req.params.id);
 
     res.sendStatus(204);
 };
 
-export const approveGame = async(req,res)=>{
+export const approveGame = async (req, res) => {
     const game = await gamesService.approveGame(req.params.id, req.user.id);
 
     res.json(game);
 };
 
-export const getCollection = async(req,res)=>{
+export const getCollection = async (req, res) => {
     try {
-        const user_id = req.user.id
+        const user_id = req.user.id;
 
         const games = await gamesService.getUserCollection(user_id);
 
-        res.status(201).json({data: games})
+        res.status(201).json({ data: games });
     } catch (error) {
-        res.status(500).json({message: error})
+        res.status(500).json({ message: error });
     }
 };
 
 export const addGameToCollection = async (req, res) => {
     try {
-        const {game_id} = req.body
-        const user_id = req.user.id
+        const { game_id } = req.body;
+        const user_id = req.user.id;
 
-        const game = await gamesService.addGameToCollection(user_id, game_id)
-        
-        res.status(201).json({data: game})
+        const game = await gamesService.addGameToCollection(user_id, game_id);
+
+        res.status(201).json({ data: game });
     } catch (error) {
-        res.status(500).json({message: error})
+        res.status(500).json({ message: error });
     }
-}
+};
 
 export const createExpansion = async (req, res) => {
     try {
@@ -110,7 +110,7 @@ export const createExpansion = async (req, res) => {
             max_players,
             min_play_time,
             max_play_time,
-            min_age
+            min_age,
         } = req.body;
 
         const submitted_by = req.user.id;
@@ -126,16 +126,15 @@ export const createExpansion = async (req, res) => {
             min_play_time,
             max_play_time,
             min_age,
-            submitted_by
+            submitted_by,
         });
 
         res.status(201).json({
-            data: expansion
+            data: expansion,
         });
-
     } catch (error) {
         res.status(500).json({
-            message: error.message
+            message: error.message,
         });
     }
 };

@@ -1,6 +1,1 @@
-export type NavigationOption = 
-  | "Group"
-  | "Friend"
-  | "Profile"
-  | "Games"
-  | "Setting";
+export type NavigationOption = "Group" | "Friend" | "Profile" | "Games" | "Setting";

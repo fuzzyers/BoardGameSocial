@@ -8,25 +8,25 @@ This repository is split into two parts:
 ## Frontend Setup
 
 1. Change into the frontend folder:
-   ```bash
-   cd frontend
-   ```
+    ```bash
+    cd frontend
+    ```
 2. Install dependencies:
-   ```bash
-   npm install
-   ```
+    ```bash
+    npm install
+    ```
 3. Start the development server:
-   ```bash
-   npm start
-   ```
+    ```bash
+    npm start
+    ```
 4. Run on Android:
-   ```bash
-   npm run android
-   ```
+    ```bash
+    npm run android
+    ```
 5. Run on iOS:
-   ```bash
-   npm run ios
-   ```
+    ```bash
+    npm run ios
+    ```
 
 ## Notes
 

@@ -1,6 +1,5 @@
 import pool from "../db/db.js";
 
-
 // =======================
 // CREATE GAME
 // =======================
@@ -16,8 +15,7 @@ export const createGame = async (
     max_play_time,
     min_age,
     submitted_by
-    ) => {
-
+) => {
     const result = await pool.query(
         `
         INSERT INTO games
@@ -47,21 +45,18 @@ export const createGame = async (
             min_play_time,
             max_play_time,
             min_age,
-            submitted_by
+            submitted_by,
         ]
     );
 
     return result.rows[0];
 };
 
-
-
 // =======================
 // GET ALL GAMES
 // =======================
 
 export const getGames = async () => {
-
     const result = await pool.query(
         `
         SELECT *
@@ -73,14 +68,11 @@ export const getGames = async () => {
     return result.rows;
 };
 
-
-
 // =======================
 // GET GAME BY ID
 // =======================
 
 export const getGameById = async (id) => {
-
     const result = await pool.query(
         `
         SELECT *
@@ -90,18 +82,14 @@ export const getGameById = async (id) => {
         [id]
     );
 
-
     return result.rows[0];
 };
-
-
 
 // =======================
 // SEARCH
 // =======================
 
 export const searchGames = async (query) => {
-
     const result = await pool.query(
         `
         SELECT *
@@ -114,18 +102,14 @@ export const searchGames = async (query) => {
         [query]
     );
 
-
     return result.rows;
 };
-
-
 
 // =======================
 // UPDATE GAME
 // =======================
 
 export const updateGame = async (id, data) => {
-
     const result = await pool.query(
         `
         UPDATE games
@@ -148,22 +132,18 @@ export const updateGame = async (id, data) => {
             data.max_players,
             data.min_play_time,
             data.max_play_time,
-            id
+            id,
         ]
     );
 
-
     return result.rows[0];
 };
-
-
 
 // =======================
 // DELETE GAME
 // =======================
 
-export const deleteGame = async(id)=>{
-
+export const deleteGame = async (id) => {
     await pool.query(
         `
         DELETE FROM games
@@ -171,18 +151,13 @@ export const deleteGame = async(id)=>{
         `,
         [id]
     );
-
-
 };
-
-
 
 // =======================
 // REVIEW SYSTEM
 // =======================
 
-export const approveGame = async(id,userId)=>{
-
+export const approveGame = async (id, userId) => {
     const result = await pool.query(
         `
         UPDATE games
@@ -194,21 +169,13 @@ export const approveGame = async(id,userId)=>{
 
         RETURNING *
         `,
-        [
-            id,
-            userId
-        ]
+        [id, userId]
     );
 
-
     return result.rows[0];
-
 };
 
-
-
-export const rejectGame = async(id,userId)=>{
-
+export const rejectGame = async (id, userId) => {
     const result = await pool.query(
         `
         UPDATE games
@@ -220,18 +187,11 @@ export const rejectGame = async(id,userId)=>{
 
         RETURNING *
         `,
-        [
-            id,
-            userId
-        ]
+        [id, userId]
     );
 
-
     return result.rows[0];
-
 };
-
-
 
 // =======================
 // EXPANSIONS
@@ -294,7 +254,7 @@ export const createExpansion = async (game) => {
                 game.min_play_time,
                 game.max_play_time,
                 game.min_age,
-                game.submitted_by
+                game.submitted_by,
             ]
         );
 
@@ -308,33 +268,25 @@ export const createExpansion = async (game) => {
             )
             VALUES ($1, $2)
             `,
-            [
-                game.base_game_id,
-                expansion.id
-            ]
+            [game.base_game_id, expansion.id]
         );
 
         await client.query("COMMIT");
 
         return expansion;
-
     } catch (error) {
-
         await client.query("ROLLBACK");
         throw error;
-
     } finally {
         client.release();
     }
 };
 
-
 // =======================
 // COLLECTION
 // =======================
 
-
-export const addGameToCollection = async(userId, gameId)=>{
+export const addGameToCollection = async (userId, gameId) => {
     await pool.query(
         `
         INSERT INTO user_games
@@ -345,38 +297,22 @@ export const addGameToCollection = async(userId, gameId)=>{
         VALUES($1,$2)
         ON CONFLICT DO NOTHING
         `,
-        [
-            userId,
-            gameId
-        ]
+        [userId, gameId]
     );
 };
 
-
-
-export const removeGameFromCollection = async(
-    userId,
-    gameId
-)=>{
-
+export const removeGameFromCollection = async (userId, gameId) => {
     await pool.query(
         `
         DELETE FROM user_games
         WHERE user_id=$1
         AND game_id=$2
         `,
-        [
-            userId,
-            gameId
-        ]
+        [userId, gameId]
     );
-
 };
 
-
-
-export const getUserCollection = async(userId)=>{
-
+export const getUserCollection = async (userId) => {
     const result = await pool.query(
         `
         SELECT g.*
@@ -389,12 +325,8 @@ export const getUserCollection = async(userId)=>{
 
         ORDER BY g.title
         `,
-        [
-            userId
-        ]
+        [userId]
     );
 
-
     return result.rows;
-
 };

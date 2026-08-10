@@ -14,7 +14,7 @@ const MessageInput = ({ chatId }: MessageInputProps) => {
         if (!socket) return;
         socket.emit("send_message", {
             chatId: chatId,
-            message: message.trim()
+            message: message.trim(),
         });
 
         setMessage("");

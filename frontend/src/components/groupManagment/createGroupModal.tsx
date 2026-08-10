@@ -12,7 +12,7 @@ const CreateGroupModal = ({ visible, onClose }: CreateGroupModalProps) => {
     const [description, setDescription] = useState("");
 
     const handleCreate = () => {
-        createGroup(name, description)
+        createGroup(name, description);
 
         setName("");
         setDescription("");
@@ -20,17 +20,10 @@ const CreateGroupModal = ({ visible, onClose }: CreateGroupModalProps) => {
     };
 
     return (
-        <Modal
-            visible={visible}
-            transparent
-            animationType="fade"
-            onRequestClose={onClose}
-        >
+        <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
             <View style={styles.overlay}>
                 <View style={styles.modal}>
-                    <Text style={styles.title}>
-                        Create Group
-                    </Text>
+                    <Text style={styles.title}>Create Group</Text>
 
                     <TextInput
                         style={styles.input}
@@ -48,22 +41,15 @@ const CreateGroupModal = ({ visible, onClose }: CreateGroupModalProps) => {
                     />
 
                     <View style={styles.buttons}>
-                        <Pressable
-                            style={[styles.button, styles.cancelButton]}
-                            onPress={onClose}
-                        >
-                            <Text>
-                                Cancel
-                            </Text>
+                        <Pressable style={[styles.button, styles.cancelButton]} onPress={onClose}>
+                            <Text>Cancel</Text>
                         </Pressable>
 
                         <Pressable
                             style={[styles.button, styles.createButton]}
                             onPress={handleCreate}
                         >
-                            <Text style={styles.createText}>
-                                Create
-                            </Text>
+                            <Text style={styles.createText}>Create</Text>
                         </Pressable>
                     </View>
                 </View>
@@ -73,7 +59,6 @@ const CreateGroupModal = ({ visible, onClose }: CreateGroupModalProps) => {
 };
 
 export default CreateGroupModal;
-
 
 const styles = StyleSheet.create({
     overlay: {

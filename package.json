@@ -1,0 +1,26 @@
+{
+    "devDependencies": {
+        "prettier": "^3.9.6"
+    },
+    "name": "boardgamesocial",
+    "version": "1.0.0",
+    "description": "This repository is split into two parts:",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "format": "prettier --write .",
+        "format:check": "prettier --check ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/fuzzyers/BoardGameSocial.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs",
+    "bugs": {
+        "url": "https://github.com/fuzzyers/BoardGameSocial/issues"
+    },
+    "homepage": "https://github.com/fuzzyers/BoardGameSocial#readme"
+}

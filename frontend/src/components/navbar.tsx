@@ -6,24 +6,24 @@ import { NavigationOption } from "@/types/navigationProps";
 
 type NavBarProps = {
     onSetSelected: (button: NavigationOption) => void;
-}
-export default function Navbar({onSetSelected}: NavBarProps) {
+};
+export default function Navbar({ onSetSelected }: NavBarProps) {
     const { width, height } = useWindowDimensions();
-    const styles = createStyles(width, height)
+    const styles = createStyles(width, height);
     const router = useRouter();
 
     const handleLogout = async () => {
-        await deleteToken(); 
+        await deleteToken();
         const socket = getSocket();
         if (!socket) return;
         socket.disconnect();
-        router.push("/(auth)/login"); 
-    }
+        router.push("/(auth)/login");
+    };
 
-    const handleNavSelect = (navigate : NavigationOption) => {
-        console.log("navigate", navigate)
-        onSetSelected(navigate)
-    }
+    const handleNavSelect = (navigate: NavigationOption) => {
+        console.log("navigate", navigate);
+        onSetSelected(navigate);
+    };
 
     return (
         <View style={styles.navbar}>
@@ -44,35 +44,33 @@ export default function Navbar({onSetSelected}: NavBarProps) {
             </Pressable>
             {/* Move function from text to button later */}
             <Pressable style={styles.navbarButton} onPress={handleLogout}>
-                <Text style={styles.navbarButtonText}>
-                    Logout
-                </Text>
+                <Text style={styles.navbarButtonText}>Logout</Text>
             </Pressable>
         </View>
     );
 }
-const createStyles = (width:number, height:number) => {
+const createStyles = (width: number, height: number) => {
     return StyleSheet.create({
         navbar: {
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            flexDirection: "column",
+            justifyContent: "space-between",
+            alignItems: "center",
             padding: 16,
-            backgroundColor: '#f0f0f0',
-            width:250,
-            height: "100%"
+            backgroundColor: "#f0f0f0",
+            width: 250,
+            height: "100%",
         },
         navbarButton: {
             flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            width:"90%",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "90%",
             marginVertical: 8,
             paddingVertical: 12,
             paddingHorizontal: 24,
-            backgroundColor: '#ffffff',
+            backgroundColor: "#ffffff",
             borderRadius: 8,
-            shadowColor: '#000',
+            shadowColor: "#000",
             shadowOffset: {
                 width: 0,
                 height: 2,
@@ -82,9 +80,9 @@ const createStyles = (width:number, height:number) => {
             elevation: 5,
         },
         navbarButtonText: {
-            color: '#007AFF',
+            color: "#007AFF",
             fontSize: Math.min(width, height) * 0.04,
-            fontWeight: '600',
+            fontWeight: "600",
         },
     });
-}
+};

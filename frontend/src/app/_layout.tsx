@@ -5,27 +5,27 @@ import { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 
 export default function Layout() {
-  useEffect(() => {
-    const checkAuth = async () => {
-      const token = await getToken();
-      if (!token) {
-        router.push("/(auth)/login");
-      }
-    };
-    checkAuth();
-  }, []);
-  const segments = useSegments();
+    useEffect(() => {
+        const checkAuth = async () => {
+            const token = await getToken();
+            if (!token) {
+                router.push("/(auth)/login");
+            }
+        };
+        checkAuth();
+    }, []);
+    const segments = useSegments();
 
-  return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <Slot />
-    </View>
-  );
+    return (
+        <View style={styles.container}>
+            <StatusBar style="auto" />
+            <Slot />
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+    container: {
+        flex: 1,
+    },
 });
