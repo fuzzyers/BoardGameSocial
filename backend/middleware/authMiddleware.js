@@ -13,7 +13,6 @@ export const authentication = async (req, res, next) => {
 
     try {
         const decoded = await verifyToken(token);
-        console.log("token:", token)
         if (!decoded) {
             return res.status(401).json({
                 message: "Invalid token",
@@ -21,7 +20,7 @@ export const authentication = async (req, res, next) => {
         }
 
         req.user = decoded;
-        console.log("req.user", req.user)
+
         next();
     } catch (error) {
         return res.status(401).json({

@@ -22,5 +22,8 @@
     "bugs": {
         "url": "https://github.com/fuzzyers/BoardGameSocial/issues"
     },
-    "homepage": "https://github.com/fuzzyers/BoardGameSocial#readme"
+    "homepage": "https://github.com/fuzzyers/BoardGameSocial#readme",
+    "dependencies": {
+        "@react-native-vector-icons/ionicons": "^13.1.2"
+    }
 }

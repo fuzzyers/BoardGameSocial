@@ -1,11 +1,10 @@
-import { getGroupMessages } from "@/services/messages";
-import { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
-
+import { useState } from "react";
+import { View, Text, StyleSheet, ScrollView, Pressable} from "react-native";
 import MessageInput from "./messageInput";
-import { Group, Message } from "@/types/apiDataTypes";
-import { getSocket } from "@/services/socket";
+import { Group } from "@/types/apiDataTypes";
 import GroupManagment from "./groupManagment";
+import CreateEventModal from "./newEventModal";
+import { useGroupChat } from "@/hooks/useGroupChat";
 
 type ChatBoxProps = {
     group: Group | null;
@@ -13,183 +12,203 @@ type ChatBoxProps = {
 };
 
 const ChatBox = ({ group, onBack }: ChatBoxProps) => {
-    const [messages, setMessages] = useState<Message[]>([]);
     const [showModal, setShowModal] = useState(false);
-    const [groupName, setGroupName] = useState(group?.name || "No Group Selected");
-    const [groupData, setGroupData] = useState<Group | null>(group);
+    const [showEventModal, setShowEventModal] = useState(false);
+    const {messages, groupData, loading} = useGroupChat(group);
 
-    useEffect(() => {
-        if (!group) return;
-
-        const loadMessages = async () => {
-            const response = await getGroupMessages(group.id);
-
-            if (!response) return;
-
-            setGroupName(group.name);
-            setMessages(response.messages);
-            setGroupData(response);
-        };
-
-        loadMessages();
-    }, [group]);
-
-    useEffect(() => {
-        const socket = getSocket();
-
-        if (!socket || !group) {
-            return;
-        }
-
-        const roomId = `chat-${group.chat_id}`;
-
-        const joinRoom = () => {
-            socket.emit("joinRoom", roomId);
-            console.log("Joined room:", roomId);
-        };
-
-        if (socket.connected) {
-            joinRoom();
-        } else {
-            socket.on("connect", joinRoom);
-        }
-
-        return () => {
-            socket.off("connect", joinRoom);
-        };
-    }, [group]);
-
-    useEffect(() => {
-        const socket = getSocket();
-
-        if (!socket) {
-            console.log("No socket");
-            return;
-        }
-
-        const handleNewMessage = (message: Message) => {
-            setMessages((previous) => [...previous, message]);
-        };
-
-        socket.on("new_message", handleNewMessage);
-
-        return () => {
-            socket.off("new_message", handleNewMessage);
-        };
-    }, []);
+    if (!group) {
+        return null;
+    }
 
     return (
         <View style={styles.chatContainer}>
+
+            {/* HEADER */}
             <View style={styles.header}>
-                <Pressable style={styles.backButton} onPress={onBack}>
-                    <Text style={styles.backButtonText}>←</Text>
+
+                <Pressable
+                    style={styles.backButton}
+                    onPress={onBack}
+                >
+                    <Text style={styles.backButtonText}>
+                        ←
+                    </Text>
                 </Pressable>
 
-                <Text style={styles.headerText} numberOfLines={1}>
-                    {groupName}
-                </Text>
+                <View style={styles.groupHeaderInfo}>
+                    <Text
+                        style={styles.headerText}
+                        numberOfLines={1}
+                    >
+                        {group.name}
+                    </Text>
 
-                <Pressable style={styles.manageButton} onPress={() => setShowModal(true)}>
-                    <Text style={styles.manageButtonText}>Manage</Text>
+                    {group.description && (
+                        <Text
+                            style={styles.headerDescription}
+                            numberOfLines={1}
+                        >
+                            {group.description}
+                        </Text>
+                    )}
+                </View>
+
+                <Pressable
+                    style={styles.eventButton}
+                    onPress={() => setShowEventModal(true)}
+                >
+                    <Text style={styles.eventButtonText}>
+                        + Event
+                    </Text>
                 </Pressable>
 
-                <GroupManagment
-                    visible={showModal}
-                    onClose={() => setShowModal(false)}
-                    groupData={groupData}
-                />
+                <Pressable
+                    style={styles.manageButton}
+                    onPress={() => setShowModal(true)}
+                >
+                    <Text style={styles.manageButtonText}>
+                        Manage
+                    </Text>
+                </Pressable>
+
             </View>
 
-            <ScrollView style={styles.messages} contentContainerStyle={styles.messagesContent}>
-                {messages.map((message) => (
-                    <View key={message.id} style={styles.message}>
-                        <Text style={styles.sender}>{message.sender_name}</Text>
+            {/* MODALS */}
 
-                        <Text>{message.message}</Text>
+            <CreateEventModal
+                visible={showEventModal}
+                onClose={() => setShowEventModal(false)}
+                groupId={group.id}
+            />
 
-                        <Text style={styles.timestamp}>
-                            {new Date(message.created_at).toLocaleDateString("en-NZ", {
-                                year: "numeric",
-                                month: "short",
-                                day: "numeric",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                            })}
-                        </Text>
-                    </View>
-                ))}
+            <GroupManagment
+                visible={showModal}
+                onClose={() => setShowModal(false)}
+                groupData={groupData}
+            />
+
+            {/* MESSAGES */}
+
+            <ScrollView
+                style={styles.messages}
+                contentContainerStyle={styles.messagesContent}
+            >
+                {loading ? (
+                    <Text>Loading messages...</Text>
+                ) : (
+                    messages.map((message) => (
+                        <View
+                            key={message.id}
+                            style={styles.message}
+                        >
+                            <View style={styles.messageHeader}>
+                                <Text style={styles.sender}>
+                                    {message.sender_name}
+                                </Text>
+
+                                <Text style={styles.timestamp}>
+                                    {new Date(
+                                        message.created_at
+                                    ).toLocaleDateString("en-NZ", {
+                                        year: "numeric",
+                                        month: "short",
+                                        day: "numeric",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                    })}
+                                </Text>
+                            </View>
+
+                            <Text style={styles.messageText}>
+                                {message.message}
+                            </Text>
+                        </View>
+                    ))
+                )}
             </ScrollView>
 
-            <MessageInput chatId={group?.chat_id} />
+            {/* INPUT */}
+
+            <View style={styles.inputContainer}>
+                <MessageInput chatId={group.chat_id} />
+            </View>
+
         </View>
     );
 };
 
-export default ChatBox;
-
 const styles = StyleSheet.create({
     chatContainer: {
         flex: 1,
-        margin: 10,
-        backgroundColor: "#fff",
+        backgroundColor: "#FFFFFF",
         borderRadius: 12,
+        overflow: "hidden",
 
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 3,
+            height: 2,
         },
-        shadowOpacity: 0.15,
-        shadowRadius: 8,
-        elevation: 6,
-
-        overflow: "hidden",
+        shadowOpacity: 0.08,
+        shadowRadius: 6,
+        elevation: 3,
     },
 
     header: {
-        backgroundColor: "#007AFF",
-        paddingVertical: 12,
-        paddingHorizontal: 12,
-
+        minHeight: 72,
         flexDirection: "row",
         alignItems: "center",
+        paddingHorizontal: 16,
+
+        backgroundColor: "#FFFFFF",
+
+        borderBottomWidth: 1,
+        borderBottomColor: "#E5E7EB",
     },
 
     backButton: {
         width: 40,
         height: 40,
-        justifyContent: "center",
         alignItems: "center",
-        marginRight: 4,
+        justifyContent: "center",
+        marginRight: 8,
+        borderRadius: 20,
     },
 
     backButtonText: {
-        color: "#fff",
-        fontSize: 28,
-        fontWeight: "500",
+        fontSize: 26,
+        color: "#374151",
+    },
+
+    groupHeaderInfo: {
+        flex: 1,
+        minWidth: 0,
     },
 
     headerText: {
-        flex: 1,
-        color: "#fff",
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: "700",
-        marginHorizontal: 8,
+        color: "#111827",
+    },
+
+    headerDescription: {
+        marginTop: 2,
+        fontSize: 12,
+        color: "#6B7280",
     },
 
     manageButton: {
-        backgroundColor: "#fff",
-        paddingHorizontal: 12,
+        marginLeft: 12,
+        paddingHorizontal: 14,
         paddingVertical: 8,
         borderRadius: 8,
-        justifyContent: "center",
-        alignItems: "center",
+        backgroundColor: "#F3F4F6",
     },
 
     manageButtonText: {
-        color: "#007AFF",
-        fontWeight: "600",
+        color: "#374151",
         fontSize: 13,
+        fontWeight: "600",
     },
 
     messages: {
@@ -197,24 +216,59 @@ const styles = StyleSheet.create({
     },
 
     messagesContent: {
-        padding: 16,
+        padding: 20,
     },
 
     message: {
-        marginBottom: 16,
-        paddingBottom: 12,
-        borderBottomWidth: 1,
-        borderBottomColor: "#eee",
+        marginBottom: 18,
     },
 
-    sender: {
-        fontWeight: "600",
+    messageHeader: {
+        flexDirection: "row",
+        alignItems: "baseline",
         marginBottom: 4,
     },
 
+    sender: {
+        fontSize: 14,
+        fontWeight: "700",
+        color: "#111827",
+    },
+
     timestamp: {
-        marginTop: 4,
-        fontSize: 12,
-        color: "#777",
+        marginLeft: 8,
+        fontSize: 11,
+        color: "#9CA3AF",
+    },
+
+    messageText: {
+        fontSize: 15,
+        lineHeight: 21,
+        color: "#374151",
+    },
+
+    inputContainer: {
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+        borderTopWidth: 1,
+        borderTopColor: "#E5E7EB",
+        backgroundColor: "#FFFFFF",
+    },
+    eventButton: {
+        marginLeft: 8,
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        borderRadius: 8,
+        backgroundColor: "#F3F8FF",
+        borderWidth: 1,
+        borderColor: "#D6E9FF",
+    },
+
+    eventButtonText: {
+        color: "#007AFF",
+        fontSize: 13,
+        fontWeight: "600",
     },
 });
+
+export default ChatBox;
