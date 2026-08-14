@@ -2,7 +2,7 @@ import { api } from "./api";
 
 export const createGroup = async (name: string, description: string) => {
     try {
-        const response = await api.post("/groups/create",{ name, description });
+        const response = await api.post("/groups/create", { name, description });
         return response;
     } catch (error) {
         console.log(error);
@@ -30,7 +30,7 @@ export const addUserToGroup = async (groupId: number, userId: number) => {
 
 export const removeUserFromGroup = async (groupId: number, userId: number) => {
     try {
-        const response = await api.put(`/groups/removeUser`,{ groupId, userId });
+        const response = await api.put(`/groups/removeUser`, { groupId, userId });
         return response;
     } catch (error) {
         console.log(error);

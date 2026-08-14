@@ -4,8 +4,7 @@ import GamesControllerHeader from "./gamesControllerHeader";
 import GamesList from "./gamesList";
 import { Game } from "@/types/apiDataTypes";
 import { getAllCollectionGames, getAllGames } from "@/services/games";
-import AddGameForm from "./addGamesForm";
-import SearchBGG from "./searchBgg";
+import SearchBGG from "./BGG/searchBgg";
 
 const GamesContainer = () => {
     const [selectedTab, setSelectedTab] = useState<"collection" | "database" | "add">("collection");
@@ -44,7 +43,7 @@ const GamesContainer = () => {
 
                 {selectedTab === "database" && <GamesList games={games} selectedTab={selectedTab} />}
 
-                {selectedTab === "add" && <SearchBGG />}
+                {selectedTab === "add" && <SearchBGG/>}
             </View>
         </View>
     );

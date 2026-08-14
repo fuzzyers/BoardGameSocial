@@ -5,6 +5,7 @@ export const searchBGGGame = async (search) => {
     const response = await bggApi.get("/search", {
         params: {
             query: search,
+            type: "boardgame",
         },
     });
 

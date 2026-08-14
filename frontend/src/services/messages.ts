@@ -2,12 +2,10 @@ import { api } from "./api";
 // Send Messages
 export const sendMessage = async (chatId: number, message: string) => {
     try {
-        const response = await api.post(`/messaging/create`,
-            {
-                chatId: chatId,
-                message: message,
-            }
-        );
+        const response = await api.post(`/messaging/create`, {
+            chatId: chatId,
+            message: message,
+        });
 
         return response.data;
     } catch (error) {
@@ -23,7 +21,6 @@ export const getGroupMessages = async (groupId: number) => {
 
         return response.data;
     } catch (error) {
-
         throw error;
     }
 };
