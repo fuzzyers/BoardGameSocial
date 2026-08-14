@@ -1,11 +1,4 @@
-import {
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    useWindowDimensions,
-    View,
-} from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { useState } from "react";
 import CreateGroupModal from "./createGroupModal";
 import { Group } from "@/types/apiDataTypes";
@@ -18,9 +11,7 @@ type NavGroupProps = {
 
 const NavGroups = ({ groups, onSelectGroup }: NavGroupProps) => {
     const [showModal, setShowModal] = useState(false);
-    const [selectedGroupId, setSelectedGroupId] = useState<number | null>(
-        null
-    );
+    const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
 
     const { width } = useWindowDimensions();
     const isMobile = width < 600;
@@ -46,52 +37,23 @@ const NavGroups = ({ groups, onSelectGroup }: NavGroupProps) => {
                     </Text>
                 </View>
 
-                <Pressable
-                    style={styles.createButton}
-                    onPress={() => setShowModal(true)}
-                >
+                <Pressable style={styles.createButton} onPress={() => setShowModal(true)}>
                     <Text style={styles.createButtonText}>+</Text>
-                    {!isMobile && (
-                        <Text style={styles.createButtonLabel}>
-                            Create Group
-                        </Text>
-                    )}
+                    {!isMobile && <Text style={styles.createButtonLabel}>Create Group</Text>}
                 </Pressable>
             </View>
 
-            <CreateGroupModal
-                visible={showModal}
-                onClose={() => setShowModal(false)}
-            />
+            <CreateGroupModal visible={showModal} onClose={() => setShowModal(false)} />
 
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.groupList}
-            >
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.groupList}>
                 {groups.map((group) => (
                     <Pressable
                         key={group.id}
-                        style={[
-                            styles.groupItem,
-                            selectedGroupId === group.id &&
-                                styles.selectedGroupItem,
-                        ]}
+                        style={[styles.groupItem, selectedGroupId === group.id && styles.selectedGroupItem]}
                         onPress={() => handleGroupSelect(group)}
                     >
-                        <View
-                            style={[
-                                styles.groupIcon,
-                                selectedGroupId === group.id &&
-                                    styles.selectedGroupIcon,
-                            ]}
-                        >
-                            <Text
-                                style={[
-                                    styles.groupIconText,
-                                    selectedGroupId === group.id &&
-                                        styles.selectedGroupIconText,
-                                ]}
-                            >
+                        <View style={[styles.groupIcon, selectedGroupId === group.id && styles.selectedGroupIcon]}>
+                            <Text style={[styles.groupIconText, selectedGroupId === group.id && styles.selectedGroupIconText]}>
                                 {group.name.charAt(0).toUpperCase()}
                             </Text>
                         </View>
@@ -99,20 +61,13 @@ const NavGroups = ({ groups, onSelectGroup }: NavGroupProps) => {
                         <View style={styles.groupInfo}>
                             <Text
                                 numberOfLines={1}
-                                style={[
-                                    styles.groupName,
-                                    selectedGroupId === group.id &&
-                                        styles.selectedGroupName,
-                                ]}
+                                style={[styles.groupName, selectedGroupId === group.id && styles.selectedGroupName]}
                             >
                                 {group.name}
                             </Text>
 
                             {group.description && (
-                                <Text
-                                    numberOfLines={1}
-                                    style={styles.groupDescription}
-                                >
+                                <Text numberOfLines={1} style={styles.groupDescription}>
                                     {group.description}
                                 </Text>
                             )}

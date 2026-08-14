@@ -1,11 +1,7 @@
-import { View } from "react-native"
+import { View } from "react-native";
 
 const EventsPage = () => {
-    return (
-        <View>
+    return <View></View>;
+};
 
-        </View>
-    )
-}
-
-export default EventsPage
+export default EventsPage;

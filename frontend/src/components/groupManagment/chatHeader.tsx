@@ -8,52 +8,31 @@ type ChatHeaderProps = {
     onManage: () => void;
 };
 
-const ChatHeader = ({group, onBack, onCreateEvent, onManage}: ChatHeaderProps) => {
+const ChatHeader = ({ group, onBack, onCreateEvent, onManage }: ChatHeaderProps) => {
     return (
         <View style={styles.header}>
-            <Pressable
-                style={styles.backButton}
-                onPress={onBack}
-            >
-                <Text style={styles.backButtonText}>
-                    ←
-                </Text>
+            <Pressable style={styles.backButton} onPress={onBack}>
+                <Text style={styles.backButtonText}>←</Text>
             </Pressable>
 
             <View style={styles.groupHeaderInfo}>
-                <Text
-                    style={styles.headerText}
-                    numberOfLines={1}
-                >
+                <Text style={styles.headerText} numberOfLines={1}>
                     {group.name}
                 </Text>
 
                 {group.description && (
-                    <Text
-                        style={styles.headerDescription}
-                        numberOfLines={1}
-                    >
+                    <Text style={styles.headerDescription} numberOfLines={1}>
                         {group.description}
                     </Text>
                 )}
             </View>
 
-            <Pressable
-                style={styles.eventButton}
-                onPress={onCreateEvent}
-            >
-                <Text style={styles.eventButtonText}>
-                    + Event
-                </Text>
+            <Pressable style={styles.eventButton} onPress={onCreateEvent}>
+                <Text style={styles.eventButtonText}>+ Event</Text>
             </Pressable>
 
-            <Pressable
-                style={styles.manageButton}
-                onPress={onManage}
-            >
-                <Text style={styles.manageButtonText}>
-                    Manage
-                </Text>
+            <Pressable style={styles.manageButton} onPress={onManage}>
+                <Text style={styles.manageButtonText}>Manage</Text>
             </Pressable>
         </View>
     );

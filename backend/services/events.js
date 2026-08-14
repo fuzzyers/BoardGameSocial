@@ -13,13 +13,7 @@ export const createEventQuery = async (group_id, name, description, location, ev
         VALUES ($1, $2, $3, $4, $5)
         RETURNING *
         `,
-        [
-            group_id,
-            name,
-            description,
-            location,
-            event_date,
-        ]
+        [group_id, name, description, location, event_date]
     );
 
     return result.rows[0];

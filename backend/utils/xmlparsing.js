@@ -1,15 +1,15 @@
 import { XMLParser } from "fast-xml-parser";
-import he from "he"
+import he from "he";
 import sanitizeHtml from "sanitize-html";
 
-const { decode } = he
+const { decode } = he;
 
 const parser = new XMLParser({
     ignoreAttributes: false,
-})
+});
 
 export const parseSearchResults = async (data) => {
-    const parsedData = parser.parse(data)
+    const parsedData = parser.parse(data);
 
     const items = parsedData.items?.item ?? [];
 
@@ -18,21 +18,22 @@ export const parseSearchResults = async (data) => {
         title: game.name?.["@_value"],
         year_published: game.yearpublished?.["@_value"] ?? null,
     }));
-}
+};
 
 export const parseSearchByIdResults = async (data) => {
-    const parsedData = parser.parse(data)
- 
+    const parsedData = parser.parse(data);
+
     const items = parsedData.items?.item ?? [];
 
-    const expansions = items.link
-        ?.filter((link) => link["@_type"] === "boardgameexpansion")
-        .map((link) => ({
-            id: link["@_id"],
-            name: link["@_value"],
-        })) ?? [];
+    const expansions =
+        items.link
+            ?.filter((link) => link["@_type"] === "boardgameexpansion")
+            .map((link) => ({
+                id: link["@_id"],
+                name: link["@_value"],
+            })) ?? [];
 
-    const description = await cleanDescriptionData(items.description)
+    const description = await cleanDescriptionData(items.description);
 
     return {
         bggId: items["@_id"],
@@ -44,17 +45,17 @@ export const parseSearchByIdResults = async (data) => {
         year_published: items.yearpublished["@_value"],
         min_players: items.minplayers["@_value"],
         max_players: items.maxplayers["@_value"],
-        expansions
-    }
-}
+        expansions,
+    };
+};
 
 export const cleanDescriptionData = async (description) => {
-    if (!description) return ""
+    if (!description) return "";
 
-    const decoded = decode(description)
+    const decoded = decode(description);
 
     return sanitizeHtml(decoded, {
         allowedTags: [],
         allowedAttributes: {},
-    })
-}
+    });
+};

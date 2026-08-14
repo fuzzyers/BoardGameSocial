@@ -1,13 +1,5 @@
 import { useState } from "react";
-import {
-    Modal,
-    Platform,
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
-} from "react-native";
+import { Modal, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { createEvent } from "@/services/event";
 
@@ -17,11 +9,7 @@ type CreateEventModalProps = {
     groupId: number;
 };
 
-const CreateEventModal = ({
-    visible,
-    onClose,
-    groupId,
-}: CreateEventModalProps) => {
+const CreateEventModal = ({ visible, onClose, groupId }: CreateEventModalProps) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [location, setLocation] = useState("");
@@ -33,10 +21,7 @@ const CreateEventModal = ({
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    const handleDateChange = (
-        event: any,
-        selectedDate?: Date
-    ) => {
+    const handleDateChange = (event: any, selectedDate?: Date) => {
         if (Platform.OS !== "ios") {
             setShowDatePicker(false);
         }
@@ -78,9 +63,7 @@ const CreateEventModal = ({
         } catch (error) {
             console.error("Failed to create event:", error);
 
-            setError(
-                "Failed to create event. Please try again."
-            );
+            setError("Failed to create event. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -99,23 +82,14 @@ const CreateEventModal = ({
     };
 
     return (
-        <Modal
-            visible={visible}
-            transparent
-            animationType="fade"
-            onRequestClose={handleClose}
-        >
+        <Modal visible={visible} transparent animationType="fade" onRequestClose={handleClose}>
             <View style={styles.overlay}>
                 <View style={styles.modal}>
-                    <Text style={styles.title}>
-                        Create Event
-                    </Text>
+                    <Text style={styles.title}>Create Event</Text>
 
                     {/* EVENT NAME */}
 
-                    <Text style={styles.label}>
-                        Event Name
-                    </Text>
+                    <Text style={styles.label}>Event Name</Text>
 
                     <TextInput
                         style={styles.input}
@@ -127,15 +101,10 @@ const CreateEventModal = ({
 
                     {/* DESCRIPTION */}
 
-                    <Text style={styles.label}>
-                        Description
-                    </Text>
+                    <Text style={styles.label}>Description</Text>
 
                     <TextInput
-                        style={[
-                            styles.input,
-                            styles.descriptionInput,
-                        ]}
+                        style={[styles.input, styles.descriptionInput]}
                         value={description}
                         onChangeText={setDescription}
                         placeholder="What's happening?"
@@ -145,9 +114,7 @@ const CreateEventModal = ({
 
                     {/* LOCATION */}
 
-                    <Text style={styles.label}>
-                        Location
-                    </Text>
+                    <Text style={styles.label}>Location</Text>
 
                     <TextInput
                         style={styles.input}
@@ -159,26 +126,17 @@ const CreateEventModal = ({
 
                     {/* DATE */}
 
-                    <Text style={styles.label}>
-                        Event Date
-                    </Text>
+                    <Text style={styles.label}>Event Date</Text>
 
                     {Platform.OS === "web" ? (
                         <input
                             type="datetime-local"
-                            value={
-                                eventDate
-                                    ? formatDateForWeb(eventDate)
-                                    : ""
-                            }
+                            value={eventDate ? formatDateForWeb(eventDate) : ""}
                             onChange={(event) => {
-                                const value =
-                                    event.target.value;
+                                const value = event.target.value;
 
                                 if (value) {
-                                    setEventDate(
-                                        new Date(value)
-                                    );
+                                    setEventDate(new Date(value));
                                 } else {
                                     setEventDate(null);
                                 }
@@ -188,37 +146,18 @@ const CreateEventModal = ({
                         />
                     ) : (
                         <>
-                            <Pressable
-                                style={styles.dateButton}
-                                onPress={() =>
-                                    setShowDatePicker(true)
-                                }
-                                disabled={loading}
-                            >
-                                <Text
-                                    style={
-                                        eventDate
-                                            ? styles.dateText
-                                            : styles.placeholderText
-                                    }
-                                >
-                                    {eventDate
-                                        ? eventDate.toLocaleString()
-                                        : "Select date and time"}
+                            <Pressable style={styles.dateButton} onPress={() => setShowDatePicker(true)} disabled={loading}>
+                                <Text style={eventDate ? styles.dateText : styles.placeholderText}>
+                                    {eventDate ? eventDate.toLocaleString() : "Select date and time"}
                                 </Text>
                             </Pressable>
 
                             {showDatePicker && (
                                 <DateTimePicker
-                                    value={
-                                        eventDate ||
-                                        new Date()
-                                    }
+                                    value={eventDate || new Date()}
                                     mode="datetime"
                                     display="default"
-                                    onChange={
-                                        handleDateChange
-                                    }
+                                    onChange={handleDateChange}
                                 />
                             )}
                         </>
@@ -226,43 +165,25 @@ const CreateEventModal = ({
 
                     {/* ERROR */}
 
-                    {error !== "" && (
-                        <Text style={styles.errorText}>
-                            {error}
-                        </Text>
-                    )}
+                    {error !== "" && <Text style={styles.errorText}>{error}</Text>}
 
                     {/* BUTTONS */}
 
                     <View style={styles.actions}>
                         <Pressable
-                            style={[
-                                styles.cancelButton,
-                                loading &&
-                                    styles.disabledButton,
-                            ]}
+                            style={[styles.cancelButton, loading && styles.disabledButton]}
                             onPress={handleClose}
                             disabled={loading}
                         >
-                            <Text style={styles.cancelText}>
-                                Cancel
-                            </Text>
+                            <Text style={styles.cancelText}>Cancel</Text>
                         </Pressable>
 
                         <Pressable
-                            style={[
-                                styles.createButton,
-                                loading &&
-                                    styles.disabledButton,
-                            ]}
+                            style={[styles.createButton, loading && styles.disabledButton]}
                             onPress={handleCreate}
                             disabled={loading}
                         >
-                            <Text style={styles.createText}>
-                                {loading
-                                    ? "Creating..."
-                                    : "Create Event"}
-                            </Text>
+                            <Text style={styles.createText}>{loading ? "Creating..." : "Create Event"}</Text>
                         </Pressable>
                     </View>
                 </View>
@@ -281,21 +202,13 @@ const CreateEventModal = ({
 const formatDateForWeb = (date: Date) => {
     const year = date.getFullYear();
 
-    const month = String(
-        date.getMonth() + 1
-    ).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
 
-    const day = String(
-        date.getDate()
-    ).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
 
-    const hours = String(
-        date.getHours()
-    ).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
 
-    const minutes = String(
-        date.getMinutes()
-    ).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
 
     return `${year}-${month}-${day}T${hours}:${minutes}`;
 };

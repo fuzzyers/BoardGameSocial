@@ -39,13 +39,9 @@ const GamesContainer = () => {
             <GamesControllerHeader selectedTab={selectedTab} onSelectTab={setSelectedTab} />
 
             <View style={styles.content}>
-                {selectedTab === "collection" && (
-                    <GamesList games={games} selectedTab={selectedTab} />
-                )}
+                {selectedTab === "collection" && <GamesList games={games} selectedTab={selectedTab} />}
 
-                {selectedTab === "database" && (
-                    <GamesList games={games} selectedTab={selectedTab} />
-                )}
+                {selectedTab === "database" && <GamesList games={games} selectedTab={selectedTab} />}
 
                 {selectedTab === "add" && <AddGameForm />}
             </View>

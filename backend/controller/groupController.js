@@ -68,9 +68,7 @@ export const addUserToGroup = async (req, res) => {
         const memberExists = getGroup.members.some((member) => member.id === userId);
 
         if (memberExists) {
-            return res
-                .status(401)
-                .json({ message: "This member is already in the group", data: getGroup });
+            return res.status(401).json({ message: "This member is already in the group", data: getGroup });
         }
         const addedUser = await addMemberToGroup(groupId, userId, roleId);
 
@@ -121,9 +119,7 @@ export const removeUserFromGroup = async (req, res) => {
         const memberExists = getGroup.members.some((member) => member.id === userId);
 
         if (!memberExists) {
-            return res
-                .status(401)
-                .json({ message: "This member is not in the group", data: getGroup });
+            return res.status(401).json({ message: "This member is not in the group", data: getGroup });
         }
 
         const removedUser = await removeMemberFromGroup(groupId, userId);

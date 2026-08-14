@@ -7,23 +7,13 @@ type MessageListProps = {
     loading: boolean;
 };
 
-const MessageList = ({messages, loading}: MessageListProps) => {
+const MessageList = ({ messages, loading }: MessageListProps) => {
     return (
-        <ScrollView
-            style={styles.messages}
-            contentContainerStyle={styles.messagesContent}
-        >
+        <ScrollView style={styles.messages} contentContainerStyle={styles.messagesContent}>
             {loading ? (
-                <Text style={styles.loading}>
-                    Loading messages...
-                </Text>
+                <Text style={styles.loading}>Loading messages...</Text>
             ) : (
-                messages.map((message) => (
-                    <MessageItem
-                        key={message.id}
-                        message={message}
-                    />
-                ))
+                messages.map((message) => <MessageItem key={message.id} message={message} />)
             )}
         </ScrollView>
     );

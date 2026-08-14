@@ -16,44 +16,24 @@ const GamesControllerHeader = ({ selectedTab, onSelectTab }: GamesHeaderProps) =
     return (
         <View style={[styles.header, isMobile && styles.mobileHeader]}>
             <Pressable
-                style={[
-                    styles.tabButton,
-                    isMobile && styles.mobileTabButton,
-                    selectedTab === "collection" && styles.activeTab,
-                ]}
+                style={[styles.tabButton, isMobile && styles.mobileTabButton, selectedTab === "collection" && styles.activeTab]}
                 onPress={() => handleSelect("collection")}
             >
-                <Text
-                    style={[styles.tabText, selectedTab === "collection" && styles.activeTabText]}
-                >
-                    My Collection
-                </Text>
+                <Text style={[styles.tabText, selectedTab === "collection" && styles.activeTabText]}>My Collection</Text>
             </Pressable>
 
             <Pressable
-                style={[
-                    styles.tabButton,
-                    isMobile && styles.mobileTabButton,
-                    selectedTab === "database" && styles.activeTab,
-                ]}
+                style={[styles.tabButton, isMobile && styles.mobileTabButton, selectedTab === "database" && styles.activeTab]}
                 onPress={() => handleSelect("database")}
             >
-                <Text style={[styles.tabText, selectedTab === "database" && styles.activeTabText]}>
-                    All Games
-                </Text>
+                <Text style={[styles.tabText, selectedTab === "database" && styles.activeTabText]}>All Games</Text>
             </Pressable>
 
             <Pressable
-                style={[
-                    styles.tabButton,
-                    isMobile && styles.mobileTabButton,
-                    selectedTab === "add" && styles.activeTab,
-                ]}
+                style={[styles.tabButton, isMobile && styles.mobileTabButton, selectedTab === "add" && styles.activeTab]}
                 onPress={() => handleSelect("add")}
             >
-                <Text style={[styles.tabText, selectedTab === "add" && styles.activeTabText]}>
-                    Add Game
-                </Text>
+                <Text style={[styles.tabText, selectedTab === "add" && styles.activeTabText]}>Add Game</Text>
             </Pressable>
         </View>
     );

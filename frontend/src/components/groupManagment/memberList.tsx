@@ -21,9 +21,7 @@ const MemberList = ({ groupData }: MemberListProps) => {
             if (response && response.status === 201) {
                 // remove the user from the local state to update the UI
                 if (groupDataState) {
-                    const updatedMembers = groupDataState.members.filter(
-                        (member) => member.id !== userId
-                    );
+                    const updatedMembers = groupDataState.members.filter((member) => member.id !== userId);
                     setGroupDataState({ ...groupDataState, members: updatedMembers });
                 }
             }
@@ -40,10 +38,7 @@ const MemberList = ({ groupData }: MemberListProps) => {
                     <Text style={styles.memberName}>{member.name}</Text>
                     <Text style={styles.roleText}>{member.role}</Text>
                     {member.role !== "owner" && (
-                        <Pressable
-                            style={styles.removeButton}
-                            onPress={() => handleRemoveUser(groupDataState?.id, member.id)}
-                        >
+                        <Pressable style={styles.removeButton} onPress={() => handleRemoveUser(groupDataState?.id, member.id)}>
                             <Text style={styles.removeButtonText}>Remove</Text>
                         </Pressable>
                     )}

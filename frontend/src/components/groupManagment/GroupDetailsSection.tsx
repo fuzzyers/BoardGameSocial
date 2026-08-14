@@ -34,9 +34,7 @@ const GroupDetailsSection = ({ groupData }: GroupDetailsSectionProps) => {
             <View style={styles.detailRow}>
                 <Text style={styles.detailLabel}>Created On:</Text>
                 <Text style={styles.detailValue}>
-                    {groupData?.created_at
-                        ? new Date(groupData.created_at).toLocaleDateString()
-                        : "N/A"}
+                    {groupData?.created_at ? new Date(groupData.created_at).toLocaleDateString() : "N/A"}
                 </Text>
             </View>
             <View>

@@ -6,23 +6,23 @@ type MessageItemProps = {
 };
 
 const MessageItem = ({ message }: MessageItemProps) => {
-    const timestamp = new Date(message.created_at).toLocaleDateString("en-NZ", {year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit"});
-    
+    const timestamp = new Date(message.created_at).toLocaleDateString("en-NZ", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+    });
+
     return (
         <View style={styles.message}>
             <View style={styles.messageHeader}>
-                <Text style={styles.sender}>
-                    {message.sender_name}
-                </Text>
+                <Text style={styles.sender}>{message.sender_name}</Text>
 
-                <Text style={styles.timestamp}>
-                    {timestamp}
-                </Text>
+                <Text style={styles.timestamp}>{timestamp}</Text>
             </View>
 
-            <Text style={styles.messageText}>
-                {message.message}
-            </Text>
+            <Text style={styles.messageText}>{message.message}</Text>
         </View>
     );
 };

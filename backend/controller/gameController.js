@@ -1,17 +1,8 @@
 import * as gamesService from "../services/games.js";
 
 export const createGame = async (req, res) => {
-    const {
-        title,
-        description,
-        bgg_id,
-        year_published,
-        min_players,
-        max_players,
-        min_play_time,
-        max_play_time,
-        min_age,
-    } = req.body.game;
+    const { title, description, bgg_id, year_published, min_players, max_players, min_play_time, max_play_time, min_age } =
+        req.body.game;
     const submitted_by = req.user.id;
 
     try {
@@ -94,7 +85,7 @@ export const addGameToCollection = async (req, res) => {
 
         res.status(201).json({ data: game });
     } catch (error) {
-        console.log(error)
+        console.log(error);
         res.status(500).json({ message: error });
     }
 };
@@ -103,17 +94,8 @@ export const createExpansion = async (req, res) => {
     try {
         const { base_game_id } = req.params;
 
-        const {
-            title,
-            description,
-            bgg_id,
-            year_published,
-            min_players,
-            max_players,
-            min_play_time,
-            max_play_time,
-            min_age,
-        } = req.body;
+        const { title, description, bgg_id, year_published, min_players, max_players, min_play_time, max_play_time, min_age } =
+            req.body;
 
         const submitted_by = req.user.id;
 

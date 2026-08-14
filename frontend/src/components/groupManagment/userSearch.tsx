@@ -37,12 +37,7 @@ const UserSearch = ({ groupData }: UserSearchProps) => {
 
     return (
         <View style={styles.container}>
-            <TextInput
-                style={styles.input}
-                placeholder="Search users..."
-                value={searchQuery}
-                onChangeText={setSearchQuery}
-            />
+            <TextInput style={styles.input} placeholder="Search users..." value={searchQuery} onChangeText={setSearchQuery} />
             <FlatList
                 data={searchResults}
                 keyExtractor={(item) => item.id.toString()}

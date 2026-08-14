@@ -51,9 +51,7 @@ export default function Login() {
                 <Button title="Login" onPress={handleLogin} disabled={isLoading} />
             </View>
 
-            {isLoading ? (
-                <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />
-            ) : null}
+            {isLoading ? <ActivityIndicator size="large" color="#007AFF" style={styles.loader} /> : null}
 
             {error ? <Text style={styles.error}>{error}</Text> : null}
 

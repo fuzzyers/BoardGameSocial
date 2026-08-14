@@ -25,12 +25,7 @@ const CreateGroupModal = ({ visible, onClose }: CreateGroupModalProps) => {
                 <View style={styles.modal}>
                     <Text style={styles.title}>Create Group</Text>
 
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Group Name"
-                        value={name}
-                        onChangeText={setName}
-                    />
+                    <TextInput style={styles.input} placeholder="Group Name" value={name} onChangeText={setName} />
 
                     <TextInput
                         style={[styles.input, styles.description]}
@@ -45,10 +40,7 @@ const CreateGroupModal = ({ visible, onClose }: CreateGroupModalProps) => {
                             <Text>Cancel</Text>
                         </Pressable>
 
-                        <Pressable
-                            style={[styles.button, styles.createButton]}
-                            onPress={handleCreate}
-                        >
+                        <Pressable style={[styles.button, styles.createButton]} onPress={handleCreate}>
                             <Text style={styles.createText}>Create</Text>
                         </Pressable>
                     </View>

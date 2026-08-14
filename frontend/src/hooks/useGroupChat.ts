@@ -77,10 +77,7 @@ export const useGroupChat = (group: Group | null) => {
         }
 
         const handleNewMessage = (message: Message) => {
-            setMessages((previous) => [
-                ...previous,
-                message,
-            ]);
+            setMessages((previous) => [...previous, message]);
         };
 
         socket.on("new_message", handleNewMessage);

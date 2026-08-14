@@ -12,9 +12,7 @@ type NavGroupProps = {
 const NavSideBar = ({ groups, onSelectGroup, selectedButton }: NavGroupProps) => {
     return (
         <View style={styles.navbar}>
-            {selectedButton === "Group" && (
-                <NavGroups groups={groups} onSelectGroup={onSelectGroup} />
-            )}
+            {selectedButton === "Group" && <NavGroups groups={groups} onSelectGroup={onSelectGroup} />}
         </View>
     );
 };

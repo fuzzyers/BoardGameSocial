@@ -56,27 +56,17 @@ const Groups = () => {
         return (
             <View style={styles.desktopContainer}>
                 <View style={styles.sidebar}>
-                    <NavGroups
-                        groups={groups}
-                        onSelectGroup={setSelectedGroup}
-                    />
+                    <NavGroups groups={groups} onSelectGroup={setSelectedGroup} />
                 </View>
 
                 <View style={styles.chatArea}>
                     {selectedGroup ? (
-                        <ChatBox
-                            group={selectedGroup}
-                            onBack={() => setSelectedGroup(null)}
-                        />
+                        <ChatBox group={selectedGroup} onBack={() => setSelectedGroup(null)} />
                     ) : (
                         <View style={styles.emptyState}>
-                            <Text style={styles.emptyTitle}>
-                                Select a group
-                            </Text>
+                            <Text style={styles.emptyTitle}>Select a group</Text>
 
-                            <Text style={styles.emptyText}>
-                                Choose a group from the list to start chatting.
-                            </Text>
+                            <Text style={styles.emptyText}>Choose a group from the list to start chatting.</Text>
                         </View>
                     )}
                 </View>
@@ -93,15 +83,9 @@ const Groups = () => {
     return (
         <View style={styles.mobileContainer}>
             {selectedGroup === null ? (
-                <NavGroups
-                    groups={groups}
-                    onSelectGroup={setSelectedGroup}
-                />
+                <NavGroups groups={groups} onSelectGroup={setSelectedGroup} />
             ) : (
-                <ChatBox
-                    group={selectedGroup}
-                    onBack={() => setSelectedGroup(null)}
-                />
+                <ChatBox group={selectedGroup} onBack={() => setSelectedGroup(null)} />
             )}
         </View>
     );

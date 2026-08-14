@@ -1,20 +1,16 @@
 import pool from "../db/db.js";
 
 export const create = async (name, description, client = pool) => {
-    const createGroup = await client.query(
-        "INSERT INTO groups (name, description) VALUES ($1, $2) RETURNING *",
-        [name, description]
-    );
+    const createGroup = await client.query("INSERT INTO groups (name, description) VALUES ($1, $2) RETURNING *", [
+        name,
+        description,
+    ]);
 
     return createGroup.rows["0"];
 };
 
 export const addMemberToGroup = async (groupId, userId, roleId, client = pool) => {
-    await client.query("INSERT INTO group_members(group_id, user_id, role_id) VALUES($1, $2, $3)", [
-        groupId,
-        userId,
-        roleId,
-    ]);
+    await client.query("INSERT INTO group_members(group_id, user_id, role_id) VALUES($1, $2, $3)", [groupId, userId, roleId]);
 
     return;
 };

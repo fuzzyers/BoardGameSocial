@@ -61,21 +61,22 @@ export const createGame = async (game: any) => {
 
 export const addToCollection = async (game_id: number) => {
     try {
-        const token = await getToken()
-        const response = await api.put("/games/collection/me",
-                {
-                    game_id: game_id,
+        const token = await getToken();
+        const response = await api.put(
+            "/games/collection/me",
+            {
+                game_id: game_id,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
                 },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-        console.log("RESPOSNE:", response)
-        return response
+            }
+        );
+        console.log("RESPOSNE:", response);
+        return response;
     } catch (error) {
         console.log("Failed to add game to collection:", error);
         throw error;
     }
-}
+};

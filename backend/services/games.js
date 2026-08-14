@@ -125,15 +125,7 @@ export const updateGame = async (id, data) => {
 
         RETURNING *
         `,
-        [
-            data.title,
-            data.description,
-            data.min_players,
-            data.max_players,
-            data.min_play_time,
-            data.max_play_time,
-            id,
-        ]
+        [data.title, data.description, data.min_players, data.max_players, data.min_play_time, data.max_play_time, id]
     );
 
     return result.rows[0];

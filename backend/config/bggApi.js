@@ -21,6 +21,5 @@ export const axiosInstance = axios.create({
 });
 
 export const bggApi = {
-    get: (url, config) =>
-        bggQueue.add(() => axiosInstance.get(url, config)),
+    get: (url, config) => bggQueue.add(() => axiosInstance.get(url, config)),
 };

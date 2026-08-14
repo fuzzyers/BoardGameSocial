@@ -16,7 +16,7 @@ type ChatBoxProps = {
 const ChatBox = ({ group, onBack }: ChatBoxProps) => {
     const [showModal, setShowModal] = useState(false);
     const [showEventModal, setShowEventModal] = useState(false);
-    const {messages, groupData, loading} = useGroupChat(group);
+    const { messages, groupData, loading } = useGroupChat(group);
 
     if (!group) {
         return null;
@@ -24,7 +24,6 @@ const ChatBox = ({ group, onBack }: ChatBoxProps) => {
 
     return (
         <View style={styles.chatContainer}>
-
             <ChatHeader
                 group={group}
                 onBack={onBack}
@@ -32,29 +31,15 @@ const ChatBox = ({ group, onBack }: ChatBoxProps) => {
                 onManage={() => setShowModal(true)}
             />
 
-            <MessageList
-                messages={messages}
-                loading={loading}
-            />
+            <MessageList messages={messages} loading={loading} />
 
             <View style={styles.inputContainer}>
-                <MessageInput
-                    chatId={group.chat_id}
-                />
+                <MessageInput chatId={group.chat_id} />
             </View>
 
-            <CreateEventModal
-                visible={showEventModal}
-                onClose={() => setShowEventModal(false)}
-                groupId={group.id}
-            />
+            <CreateEventModal visible={showEventModal} onClose={() => setShowEventModal(false)} groupId={group.id} />
 
-            <GroupManagment
-                visible={showModal}
-                onClose={() => setShowModal(false)}
-                groupData={groupData}
-            />
-
+            <GroupManagment visible={showModal} onClose={() => setShowModal(false)} groupData={groupData} />
         </View>
     );
 };

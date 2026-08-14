@@ -1,6 +1,6 @@
 import { createGame } from "@/services/games";
 import { useState } from "react";
-import {Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View, useWindowDimensions} from "react-native";
+import { Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View, useWindowDimensions } from "react-native";
 
 type AddGameFormProps = {
     onGameAdded?: () => void;
@@ -162,33 +162,15 @@ const AddGameForm = ({ onGameAdded }: AddGameFormProps) => {
                     <View style={styles.collectionText}>
                         <Text style={styles.collectionTitle}>Add to my collection</Text>
 
-                        <Text style={styles.collectionDescription}>
-                            Add this game to your collection after creating it.
-                        </Text>
+                        <Text style={styles.collectionDescription}>Add this game to your collection after creating it.</Text>
                     </View>
 
-                    <Switch
-                        value={addToCollection}
-                        onValueChange={setAddToCollection}
-                        disabled={loading}
-                    />
+                    <Switch value={addToCollection} onValueChange={setAddToCollection} disabled={loading} />
                 </View>
 
                 {message !== "" && (
-                    <View
-                        style={[
-                            styles.message,
-                            success ? styles.successMessage : styles.errorMessage,
-                        ]}
-                    >
-                        <Text
-                            style={[
-                                styles.messageText,
-                                success ? styles.successText : styles.errorText,
-                            ]}
-                        >
-                            {message}
-                        </Text>
+                    <View style={[styles.message, success ? styles.successMessage : styles.errorMessage]}>
+                        <Text style={[styles.messageText, success ? styles.successText : styles.errorText]}>{message}</Text>
                     </View>
                 )}
 
@@ -197,9 +179,7 @@ const AddGameForm = ({ onGameAdded }: AddGameFormProps) => {
                     onPress={handleSubmit}
                     disabled={loading}
                 >
-                    <Text style={styles.submitButtonText}>
-                        {loading ? "Adding..." : "Add Game"}
-                    </Text>
+                    <Text style={styles.submitButtonText}>{loading ? "Adding..." : "Add Game"}</Text>
                 </Pressable>
             </View>
         </ScrollView>

@@ -19,13 +19,8 @@ const router = express.Router();
 
 router.get("/", getGames).post("/", authentication, createGame);
 router.get("/search", searchGames);
-router
-    .get("/:id", getGame)
-    .put("/:id", authentication, updateGame)
-    .delete("/:id", authentication, deleteGame);
-router
-    .get("/collection/me", authentication, getCollection)
-    .put("/collection/me", authentication, addGameToCollection);
+router.get("/:id", getGame).put("/:id", authentication, updateGame).delete("/:id", authentication, deleteGame);
+router.get("/collection/me", authentication, getCollection).put("/collection/me", authentication, addGameToCollection);
 // router.get("/expansion/")
 
 // =======================

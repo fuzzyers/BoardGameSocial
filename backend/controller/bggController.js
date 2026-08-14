@@ -1,10 +1,9 @@
 import { searchBGGGame, searchBGGGameById } from "../services/bgg.js";
 
 export const searchBggForGame = async (req, res) => {
-    const { search } = req.params
-    try {   
-
-        const response = await searchBGGGame(search)
+    const { search } = req.params;
+    try {
+        const response = await searchBGGGame(search);
 
         res.status(201).json({ message: "success", results: response });
     } catch (error) {
@@ -13,12 +12,12 @@ export const searchBggForGame = async (req, res) => {
             errorDetails: error.message,
         });
     }
-}
+};
 
 export const searchBggById = async (req, res) => {
-    const { id } = req.params
+    const { id } = req.params;
     try {
-        const response = await searchBGGGameById(id)
+        const response = await searchBGGGameById(id);
 
         res.status(201).json({ message: "success", results: response });
     } catch (error) {
@@ -27,4 +26,4 @@ export const searchBggById = async (req, res) => {
             errorDetails: error.message,
         });
     }
-}
+};

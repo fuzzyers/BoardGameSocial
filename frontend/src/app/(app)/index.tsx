@@ -16,13 +16,13 @@ export default function HomeScreen() {
 
     useEffect(() => {
         const getData = async () => {
-            const response = await getEvents()
+            const response = await getEvents();
 
-            console.log(response)
-        }
+            console.log(response);
+        };
 
-        getData()
-    },[])
+        getData();
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -30,7 +30,7 @@ export default function HomeScreen() {
                 <Text>Logout</Text>
             </Pressable>
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({

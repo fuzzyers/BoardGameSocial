@@ -31,13 +31,7 @@ export default function Register() {
         <View style={styles.container}>
             <Text style={styles.title}>Create Account</Text>
 
-            <TextInput
-                style={styles.input}
-                placeholder="Name"
-                autoCapitalize="words"
-                value={name}
-                onChangeText={setName}
-            />
+            <TextInput style={styles.input} placeholder="Name" autoCapitalize="words" value={name} onChangeText={setName} />
 
             <TextInput
                 style={styles.input}
@@ -56,13 +50,7 @@ export default function Register() {
                 onChangeText={setUsername}
             />
 
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-            />
+            <TextInput style={styles.input} placeholder="Password" secureTextEntry value={password} onChangeText={setPassword} />
 
             <TextInput
                 style={styles.input}
@@ -76,9 +64,7 @@ export default function Register() {
                 <Button title="Register" onPress={handleRegister} disabled={isLoading} />
             </View>
 
-            {isLoading ? (
-                <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />
-            ) : null}
+            {isLoading ? <ActivityIndicator size="large" color="#007AFF" style={styles.loader} /> : null}
 
             {error ? <Text style={styles.error}>{error}</Text> : null}
 

@@ -10,24 +10,23 @@ type CreateEventData = {
 };
 
 export const createEvent = async (data: CreateEventData) => {
-    const token = await getToken()
+    const token = await getToken();
     const response = await api.post("event/create", data, {
         headers: {
             Authorization: `Bearer ${token}`,
-        }
+        },
     });
 
     return response.data;
 };
 
 export const getEvents = async () => {
-    const token = await getToken()
-    const response = await api.get("events/", 
-    {
+    const token = await getToken();
+    const response = await api.get("events/", {
         headers: {
             Authorization: `Bearer ${token}`,
-        }
+        },
     });
 
     return response.data;
-}
+};
