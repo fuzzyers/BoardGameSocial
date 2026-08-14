@@ -36,7 +36,8 @@
         }
       ],
       "expo-secure-store",
-      "@react-native-vector-icons/ionicons"
+      "@react-native-vector-icons/ionicons",
+      "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": true,

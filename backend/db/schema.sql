@@ -324,7 +324,7 @@ CREATE TABLE group_members (
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
 
-    PRIMARY KEY(group_id,user_id)
+    PRIMARY KEY(group_id, user_id)
 );
 
 
