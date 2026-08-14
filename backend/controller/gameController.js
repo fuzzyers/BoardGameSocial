@@ -6,7 +6,7 @@ export const createGame = async (req, res) => {
     const submitted_by = req.user.id;
 
     try {
-        const game = await gamesService.createGame(
+        const game = await gamesService.createGame({
             title,
             description,
             bgg_id,
@@ -17,10 +17,11 @@ export const createGame = async (req, res) => {
             max_play_time,
             min_age,
             submitted_by
-        );
+        });
 
         res.status(201).json(game);
     } catch (error) {
+        console.log(error)
         res.status(500).json({
             message: error.message,
         });

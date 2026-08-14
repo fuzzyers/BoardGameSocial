@@ -20,9 +20,9 @@ export const createGame = async (game: any) => {
     try {
         const response = await api.post("/games", { game });
 
-        if (game.add_to_collection === true) {
-            await api.put("/games/collection/me", { game_id: response.data.id });
-        }
+        // if (game.add_to_collection === true) {
+        //     await api.put("/games/collection/me", { game_id: response.data.id });
+        // }
 
         return response;
     } catch (error) {

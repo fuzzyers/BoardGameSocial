@@ -11,3 +11,9 @@ export const searchBGGGame = async (search: string) => {
 
     return response.data.results;
 };
+
+export const searchBGGGameByID = async (id: string) => {
+    const response = await api.get(`/bgg/searchById/${id}`);
+
+    return response.data.results;
+};

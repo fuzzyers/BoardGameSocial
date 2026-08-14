@@ -1,12 +1,35 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { BGGSearchResult } from "../../../services/bgg";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import { BGGSearchResult, searchBGGGameByID } from "../../../services/bgg";
+import { useState } from "react";
+import { createGame } from "@/services/games";
 
 type BGGGameCardProps = {
     game: BGGSearchResult;
-    onPress: () => void;
 };
 
-const BGGGameCard = ({ game, onPress }: BGGGameCardProps) => {
+const BGGGameCard = ({ game }: BGGGameCardProps) => {
+    const [loading, setLoading] = useState(false);
+
+    const handleAddGame = async () => {
+        if (loading) return;
+
+        setLoading(true);
+
+        try {
+            const gameById = await searchBGGGameByID(game.bgg_id)
+
+            console.log(gameById)
+
+            const result = await createGame(gameById);
+
+            console.log("Game added:", result);
+        } catch (error) {
+            console.error("Failed to add game:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <View style={styles.card}>
             <View style={styles.info}>
@@ -15,8 +38,14 @@ const BGGGameCard = ({ game, onPress }: BGGGameCardProps) => {
                 {game.year_published && <Text style={styles.year}>{game.year_published}</Text>}
             </View>
 
-            <Pressable style={styles.button} onPress={onPress}>
-                <Text style={styles.buttonText}>Add Game</Text>
+            <Pressable style={styles.button} onPress={() => handleAddGame()}>
+                {loading ? (
+                    <ActivityIndicator color="#fff" />
+                ) : (
+                    <Text style={styles.buttonText}>
+                        Add Game
+                    </Text>
+                )}
             </Pressable>
         </View>
     );

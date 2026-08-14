@@ -4,38 +4,10 @@ import pool from "../db/db.js";
 // CREATE GAME
 // =======================
 
-export const createGame = async (
-    title,
-    description,
-    bgg_id,
-    year_published,
-    min_players,
-    max_players,
-    min_play_time,
-    max_play_time,
-    min_age,
-    submitted_by
-) => {
+export const createGame = async (game, submitted_by) => {
     const result = await pool.query(
         `
-        INSERT INTO games
-        (
-            title,
-            description,
-            bgg_id,
-            year_published,
-            min_players,
-            max_players,
-            min_play_time,
-            max_play_time,
-            min_age,
-            submitted_by
-        )
-        VALUES
-        ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
-        RETURNING *
-        `,
-        [
+        INSERT INTO games (
             title,
             description,
             bgg_id,
@@ -46,8 +18,52 @@ export const createGame = async (
             max_play_time,
             min_age,
             submitted_by,
+            review_status
+        )
+        VALUES (
+            $1,
+            $2,
+            $3,
+            $4,
+            $5,
+            $6,
+            $7,
+            $8,
+            $9,
+            $10,
+            'imported'
+        )
+        ON CONFLICT (bgg_id)
+        DO NOTHING
+        RETURNING *;
+        `,
+        [
+            game.title,
+            game.description,
+            game.bgg_id,
+            game.year_published,
+            game.min_players,
+            game.max_players,
+            game.min_play_time,
+            game.max_play_time,
+            game.min_age,
+            submitted_by,
         ]
     );
+
+    // Game already exists
+    if (result.rows.length === 0) {
+        const existing = await pool.query(
+            `
+            SELECT *
+            FROM games
+            WHERE bgg_id = $1
+            `,
+            [game.bgg_id]
+        );
+
+        return existing.rows[0];
+    }
 
     return result.rows[0];
 };

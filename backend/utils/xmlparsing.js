@@ -36,16 +36,19 @@ export const parseSearchByIdResults = async (data) => {
     const description = await cleanDescriptionData(items.description);
 
     return {
-        bggId: items["@_id"],
+        bgg_id: items["@_id"],
         boardgameType: items["@_type"],
         thumbnail: items.thumbnail,
         image: items.image,
-        name: items.name[0]["@_value"],
+        title: items.name[0]["@_value"],
         description: description,
         year_published: items.yearpublished["@_value"],
         min_players: items.minplayers["@_value"],
         max_players: items.maxplayers["@_value"],
         expansions,
+        min_play_time: items.minplaytime["@_value"],
+        max_play_time: items.maxplaytime["@_value"],
+        min_age: items.minage["@_value"]
     };
 };
 
