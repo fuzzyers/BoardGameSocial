@@ -1,5 +1,4 @@
 import { api } from "./api";
-import { getToken } from "./auth";
 
 export const getAllGames = async () => {
     const response = await api.get("/games/");
@@ -9,12 +8,7 @@ export const getAllGames = async () => {
 
 export const getAllCollectionGames = async () => {
     try {
-        const token = await getToken();
-        const response = await api.get("/games/collection/me", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        const response = await api.get("/games/collection/me");
 
         return response.data.data;
     } catch (error) {
@@ -24,32 +18,10 @@ export const getAllCollectionGames = async () => {
 
 export const createGame = async (game: any) => {
     try {
-        const token = await getToken();
-
-        const response = await api.post(
-            "/games",
-            {
-                game,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
+        const response = await api.post("/games",{game});
 
         if (game.add_to_collection === true) {
-            await api.put(
-                "/games/collection/me",
-                {
-                    game_id: response.data.id,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            await api.put("/games/collection/me",{game_id: response.data.id});
         }
 
         return response;
@@ -61,19 +33,8 @@ export const createGame = async (game: any) => {
 
 export const addToCollection = async (game_id: number) => {
     try {
-        const token = await getToken();
-        const response = await api.put(
-            "/games/collection/me",
-            {
-                game_id: game_id,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-        console.log("RESPOSNE:", response);
+        const response = await api.put("/games/collection/me",{game_id: game_id});
+
         return response;
     } catch (error) {
         console.log("Failed to add game to collection:", error);

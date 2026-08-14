@@ -6,7 +6,7 @@ type SearchGameProps = {
     onGameSelected?: (game: BGGSearchResult) => void;
 };
 
-const SearchGame = ({ onGameSelected }: SearchGameProps) => {
+const SearchBGG = ({ onGameSelected }: SearchGameProps) => {
     const [search, setSearch] = useState("");
     const [results, setResults] = useState<BGGSearchResult[]>([]);
     const [loading, setLoading] = useState(false);
@@ -254,4 +254,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SearchGame;
+export default SearchBGG;
