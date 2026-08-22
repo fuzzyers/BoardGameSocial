@@ -43,7 +43,7 @@ const GamesContainer = () => {
 
                 {selectedTab === "database" && <GamesList games={games} selectedTab={selectedTab} />}
 
-                {selectedTab === "add" && <SearchBGG/>}
+                {selectedTab === "add" && <SearchBGG />}
             </View>
         </View>
     );

@@ -2,6 +2,7 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-nati
 import { BGGSearchResult, searchBGGGameByID } from "../../../services/bgg";
 import { useState } from "react";
 import { createGame } from "@/services/games";
+import ListGamesModal from "./ListGamesModal";
 
 type BGGGameCardProps = {
     game: BGGSearchResult;
@@ -9,6 +10,7 @@ type BGGGameCardProps = {
 
 const BGGGameCard = ({ game }: BGGGameCardProps) => {
     const [loading, setLoading] = useState(false);
+    const [showModal, setShowModal] = useState(false)
 
     const handleAddGame = async () => {
         if (loading) return;
@@ -16,9 +18,9 @@ const BGGGameCard = ({ game }: BGGGameCardProps) => {
         setLoading(true);
 
         try {
-            const gameById = await searchBGGGameByID(game.bgg_id)
+            const gameById = await searchBGGGameByID(game.bgg_id);
 
-            console.log(gameById)
+            console.log(gameById);
 
             const result = await createGame(gameById);
 
@@ -30,6 +32,10 @@ const BGGGameCard = ({ game }: BGGGameCardProps) => {
         }
     };
 
+    const handleAddExpansion = () => {
+        setShowModal(true)
+    }
+
     return (
         <View style={styles.card}>
             <View style={styles.info}>
@@ -39,14 +45,14 @@ const BGGGameCard = ({ game }: BGGGameCardProps) => {
             </View>
 
             <Pressable style={styles.button} onPress={() => handleAddGame()}>
-                {loading ? (
-                    <ActivityIndicator color="#fff" />
-                ) : (
-                    <Text style={styles.buttonText}>
-                        Add Game
-                    </Text>
-                )}
+                {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Add Game</Text>}
             </Pressable>
+
+            <Pressable style={styles.button} onPress={() => handleAddExpansion()}>
+                {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Add as Expansion</Text>}
+            </Pressable>
+
+            <ListGamesModal showModal={showModal} setShowModal={setShowModal}/>
         </View>
     );
 };

@@ -46,3 +46,17 @@ export type Game = {
     min_age: number | null;
     review_status: string;
 };
+
+export type Event = {
+    id: number;
+    description: string;
+    group_id: number;
+    location: string;
+    name: string;
+    event_date: string;
+    created_at: string;
+};
+
+export type EventWithGames = Event & {
+    games: Game[]
+}

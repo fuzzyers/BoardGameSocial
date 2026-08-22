@@ -16,12 +16,12 @@ export const createGame = async (req, res) => {
             min_play_time,
             max_play_time,
             min_age,
-            submitted_by
+            submitted_by,
         });
 
         res.status(201).json(game);
     } catch (error) {
-        console.log(error)
+        console.log(error);
         res.status(500).json({
             message: error.message,
         });

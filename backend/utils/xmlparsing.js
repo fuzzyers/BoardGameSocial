@@ -48,7 +48,7 @@ export const parseSearchByIdResults = async (data) => {
         expansions,
         min_play_time: items.minplaytime["@_value"],
         max_play_time: items.maxplaytime["@_value"],
-        min_age: items.minage["@_value"]
+        min_age: items.minage["@_value"],
     };
 };
 

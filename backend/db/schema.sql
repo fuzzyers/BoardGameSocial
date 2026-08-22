@@ -405,16 +405,11 @@ CREATE TABLE event_players (
 CREATE TABLE event_games (
     id SERIAL PRIMARY KEY,
 
-
     event_id INT REFERENCES events(id)
     ON DELETE CASCADE,
 
-
     game_id INT REFERENCES games(id)
     ON DELETE CASCADE,
-
-
-    play_order INT
 );
 
 

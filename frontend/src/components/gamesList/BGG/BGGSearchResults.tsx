@@ -19,7 +19,7 @@ const BGGSearchResults = ({ results, onGameSelected }: BGGSearchResultsProps) =>
             <FlatList
                 data={results}
                 keyExtractor={(item) => item.bgg_id}
-                renderItem={({ item }) => <BGGGameCard game={item}/>}
+                renderItem={({ item }) => <BGGGameCard game={item} />}
                 ItemSeparatorComponent={() => <View style={styles.separator} />}
                 showsVerticalScrollIndicator
             />
