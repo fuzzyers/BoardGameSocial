@@ -1,4 +1,4 @@
-import { getToken } from "@/services/auth";
+import { deleteToken, getToken, isTokenExpired } from "@/services/auth";
 import { Redirect, router, Slot, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
@@ -8,7 +8,17 @@ export default function Layout() {
     useEffect(() => {
         const checkAuth = async () => {
             const token = await getToken();
+
             if (!token) {
+                router.push("/(auth)/login");
+                return
+            }
+
+            const tokenExp = isTokenExpired(token)
+            console.log(tokenExp)
+
+            if (tokenExp){
+                deleteToken()
                 router.push("/(auth)/login");
             }
         };

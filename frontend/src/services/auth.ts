@@ -16,3 +16,9 @@ export const getToken = async (): Promise<string | null> => {
 export const deleteToken = async (): Promise<void> => {
     await AsyncStorage.removeItem("authToken");
 };
+
+export const isTokenExpired = (token: string) => {
+    const payload = JSON.parse(atob(token.split(".")[1]))
+
+    return payload.exp * 1000 < Date.now()
+}
