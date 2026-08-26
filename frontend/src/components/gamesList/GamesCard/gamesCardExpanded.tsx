@@ -1,5 +1,5 @@
 import { addGameToEvent } from "@/services/event";
-import { addToCollection } from "@/services/games";
+import { addToCollection, removeFromCollection } from "@/services/games";
 import { Game } from "@/types/apiDataTypes";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native"
@@ -24,6 +24,22 @@ const GamesCardExpanded = ({game, selectedTab, eventId}: GamesCardExpandedProps)
             setAddStatus("success");
         } catch (error) {
             console.error("Failed to add game to collection:", error);
+            setAddStatus("error");
+        } finally {
+            setAdding(false);
+        }
+    };
+
+    const handleRemoveFromCollection = async () => {
+        try {
+            setAdding(true);
+            setAddStatus(null);
+
+            await removeFromCollection(game.id);
+
+            setAddStatus("success");
+        } catch (error) {
+            console.error("Failed to remove game from collection:", error);
             setAddStatus("error");
         } finally {
             setAdding(false);
@@ -73,6 +89,32 @@ const GamesCardExpanded = ({game, selectedTab, eventId}: GamesCardExpandedProps)
                     </Pressable>
 
                     {addStatus === "success" && <Text style={styles.successMessage}>✓ Added to your collection</Text>}
+
+                    {addStatus === "error" && (
+                        <Text style={styles.errorMessage}>✕ Could not add this game. Please try again.</Text>
+                    )}
+                </>
+            )}
+
+            {selectedTab === "collection" && (
+                <>
+                    <Pressable
+                        style={[styles.collectionButton, adding && styles.collectionButtonDisabled]}
+                        onPress={handleRemoveFromCollection}
+                        disabled={adding}
+                    >
+                        <Text style={styles.collectionButtonText}>
+                            {adding
+                                ? "Removing..."
+                                : addStatus === "success"
+                                    ? "✓ Remove from Collection"
+                                    : addStatus === "error"
+                                    ? "✕ Failed — Try Again"
+                                    : "Remove from Collection"}
+                        </Text>
+                    </Pressable>
+
+                    {addStatus === "success" && <Text style={styles.successMessage}>✓ Removed from your collection</Text>}
 
                     {addStatus === "error" && (
                         <Text style={styles.errorMessage}>✕ Could not add this game. Please try again.</Text>

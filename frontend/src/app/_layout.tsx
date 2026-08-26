@@ -15,7 +15,6 @@ export default function Layout() {
             }
 
             const tokenExp = isTokenExpired(token)
-            console.log(tokenExp)
 
             if (tokenExp){
                 deleteToken()

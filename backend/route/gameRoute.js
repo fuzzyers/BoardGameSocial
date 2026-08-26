@@ -10,6 +10,7 @@ import {
     approveGame,
     getCollection,
     addGameToCollection,
+    removeGameFromCollection,
 } from "../controller/gameController.js";
 
 import { authentication } from "../middleware/authMiddleware.js";
@@ -20,7 +21,7 @@ const router = express.Router();
 router.get("/", getGames).post("/", authentication, createGame);
 router.get("/search", searchGames);
 router.get("/:id", getGame).put("/:id", authentication, updateGame).delete("/:id", authentication, deleteGame);
-router.get("/collection/me", authentication, getCollection).put("/collection/me", authentication, addGameToCollection);
+router.get("/collection/me", authentication, getCollection).put("/collection/me", authentication, addGameToCollection).put("/collection/me/remove", authentication, removeGameFromCollection);
 // router.get("/expansion/")
 
 // =======================

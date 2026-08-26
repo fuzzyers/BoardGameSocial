@@ -80,7 +80,6 @@ export const addGameToCollection = async (req, res) => {
     try {
         const { game_id } = req.body;
         const user_id = req.user.id;
-        // console.log(user_id)
 
         const game = await gamesService.addGameToCollection(user_id, game_id);
 
@@ -90,6 +89,19 @@ export const addGameToCollection = async (req, res) => {
         res.status(500).json({ message: error });
     }
 };
+
+export const removeGameFromCollection = async (req, res) => {
+    try {
+        const { game_id } = req.body;
+        const user_id = req.user.id;
+
+        const deletedGame = await gamesService.removeGameFromCollection(user_id, game_id)
+
+        res.status(201).json({ result: "success", game: deletedGame });
+    } catch (error) {
+        res.status(500).json({ message: error });
+    }
+}
 
 export const createExpansion = async (req, res) => {
     try {
