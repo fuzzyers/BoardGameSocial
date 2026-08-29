@@ -16,20 +16,38 @@ export const createEvent = async (data: CreateEventData) => {
 
 export const getEvents = async () => {
     const response = await api.get("/events/");
-
+    console.log(response)
     return response.data;
 };
 
 export const getEventById = async (event_id: string | string[]) => {
     const response = await api.get(`/events/${event_id}`)
 
-    return response.data.results[0]
+    return response.data.results
 }
 
 export const addGameToEvent = async (gameId: number, eventId: number) => {
     const response = await api.post("/events/addGameToEvent", {
         event_id: eventId,
         game_id: gameId
+    })
+
+    return response
+}
+
+export const addGameToEventPoll = async (gameId: number, poll_id: number) => {
+    const response = await api.post("/poll/option", {
+        poll_id: poll_id,
+        game_id: gameId
+    })
+
+    return response
+}
+
+export const voteForGame = async (poll_id: number, option_id: number | null) => {
+    const response = await api.post("poll/vote", {
+        poll_id: poll_id,
+        option_id: option_id
     })
 
     return response

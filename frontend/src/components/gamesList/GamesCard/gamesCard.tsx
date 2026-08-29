@@ -7,7 +7,7 @@ import GamesCardInfo from "./gamesCardInfo";
 
 type GamesCardProps = {
     game: Game;
-    selectedTab: "collection" | "database" | "add" | "addtoevent";
+    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls";
     eventId: number | null;
 };
 
@@ -27,14 +27,14 @@ const GamesCard = ({ game, selectedTab, eventId }: GamesCardProps) => {
 
 const styles = StyleSheet.create({
     card: {
-        marginHorizontal: 12,
+        flex: 1,
+        marginHorizontal: 4,
         marginVertical: 6,
         backgroundColor: "#fff",
         borderRadius: 10,
         borderWidth: 1,
         borderColor: "#e5e5e5",
         overflow: "hidden",
-
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

@@ -58,5 +58,27 @@ export type Event = {
 };
 
 export type EventWithGames = Event & {
-    games: Game[]
+    games: Game[];
+    polls: PollType[];
+}
+
+export type PollType = {
+    id: number;
+    anonymous: boolean;
+    closed_at: string | null;
+    created_at: string;
+    expires_at: string;
+    multiple_choices: boolean;
+    question: string;
+    options: PollOption[];
+    total_votes: number;
+};
+
+export type PollOption = {
+    id: number,
+    poll_id: number,
+    game_id: number,
+    created_at: string,
+    title: string,
+    votes: number,
 }

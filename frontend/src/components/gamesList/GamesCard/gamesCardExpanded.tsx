@@ -1,155 +1,149 @@
-import { addGameToEvent } from "@/services/event";
-import { addToCollection, removeFromCollection } from "@/services/games";
+import { addGameToEvent, addGameToEventPoll } from "@/services/event";
+import {addToCollection , removeFromCollection,} from "@/services/games";
 import { Game } from "@/types/apiDataTypes";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native"
+import { StyleSheet, Text, View } from "react-native";
+
+import GameActionButton from "./gameActionButton";
 
 type GamesCardExpandedProps = {
     game: Game;
-    selectedTab: "collection" | "database" | "add" | "addtoevent";
+    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls";
     eventId: number | null;
 };
 
-const GamesCardExpanded = ({game, selectedTab, eventId}: GamesCardExpandedProps) => {
+const GamesCardExpanded = ({
+    game,
+    selectedTab,
+    eventId,
+}: GamesCardExpandedProps) => {
     const [adding, setAdding] = useState(false);
-    const [addStatus, setAddStatus] = useState<"success" | "error" | null>(null);
-    
-    const handleAddToCollection = async () => {
+    const [addStatus, setAddStatus] = useState<
+        "success" | "error" | null
+    >(null);
+
+    const handleAction = async (action: () => Promise<void>) => {
         try {
             setAdding(true);
             setAddStatus(null);
 
+            await action();
+
+            setAddStatus("success");
+        } catch (error) {
+            console.error(error);
+            setAddStatus("error");
+        } finally {
+            setAdding(false);
+        }
+    };
+
+    const handleAddToCollection = () => {
+        return handleAction(async () => {
             await addToCollection(game.id);
-
-            setAddStatus("success");
-        } catch (error) {
-            console.error("Failed to add game to collection:", error);
-            setAddStatus("error");
-        } finally {
-            setAdding(false);
-        }
+        });
     };
 
-    const handleRemoveFromCollection = async () => {
-        try {
-            setAdding(true);
-            setAddStatus(null);
-
+    const handleRemoveFromCollection = () => {
+        return handleAction(async () => {
             await removeFromCollection(game.id);
-
-            setAddStatus("success");
-        } catch (error) {
-            console.error("Failed to remove game from collection:", error);
-            setAddStatus("error");
-        } finally {
-            setAdding(false);
-        }
+        });
     };
 
-        const handleAddToEvent = async () => {
-        try {
-            setAdding(true);
-            setAddStatus(null);
+    const handleAddToEvent = () => {
+        if (eventId === null) return;
 
-            if (eventId === null) return
-            
+        return handleAction(async () => {
             await addGameToEvent(game.id, eventId);
+        });
+    };
 
-            setAddStatus("success");
-        } catch (error) {
-            console.error("Failed to add game to collection:", error);
-            setAddStatus("error");
-        } finally {
-            setAdding(false);
-        }
+    // eventId is actually the pollId
+    const handleAddToEventPoll = () => {
+        if (eventId === null) return;
+
+        return handleAction(async () => {
+            await addGameToEventPoll(game.id, eventId);
+        });
     };
 
     return (
         <View style={styles.expandedContent}>
-            {game.description && <Text style={styles.description}>{game.description}</Text>}
+            {game.description && (
+                <Text style={styles.description}>
+                    {game.description}
+                </Text>
+            )}
 
-            {game.bgg_id && <Text style={styles.bgg}>BGG ID: {game.bgg_id}</Text>}
+            {game.bgg_id && (
+                <Text style={styles.bgg}>
+                    BGG ID: {game.bgg_id}
+                </Text>
+            )}
 
             {selectedTab === "database" && (
-                <>
-                    <Pressable
-                        style={[styles.collectionButton, adding && styles.collectionButtonDisabled]}
-                        onPress={handleAddToCollection}
-                        disabled={adding}
-                    >
-                        <Text style={styles.collectionButtonText}>
-                            {adding
-                                ? "Adding..."
-                                : addStatus === "success"
-                                    ? "✓ Added to Collection"
-                                    : addStatus === "error"
-                                    ? "✕ Failed — Try Again"
-                                    : "Add to Collection"}
-                        </Text>
-                    </Pressable>
-
-                    {addStatus === "success" && <Text style={styles.successMessage}>✓ Added to your collection</Text>}
-
-                    {addStatus === "error" && (
-                        <Text style={styles.errorMessage}>✕ Could not add this game. Please try again.</Text>
-                    )}
-                </>
+                <GameActionButton
+                    title="Add to Collection"
+                    loadingTitle="Adding..."
+                    successTitle="✓ Added to Collection"
+                    errorTitle="✕ Failed — Try Again"
+                    adding={adding}
+                    status={addStatus}
+                    onPress={handleAddToCollection}
+                />
             )}
 
             {selectedTab === "collection" && (
-                <>
-                    <Pressable
-                        style={[styles.collectionButton, adding && styles.collectionButtonDisabled]}
-                        onPress={handleRemoveFromCollection}
-                        disabled={adding}
-                    >
-                        <Text style={styles.collectionButtonText}>
-                            {adding
-                                ? "Removing..."
-                                : addStatus === "success"
-                                    ? "✓ Remove from Collection"
-                                    : addStatus === "error"
-                                    ? "✕ Failed — Try Again"
-                                    : "Remove from Collection"}
-                        </Text>
-                    </Pressable>
-
-                    {addStatus === "success" && <Text style={styles.successMessage}>✓ Removed from your collection</Text>}
-
-                    {addStatus === "error" && (
-                        <Text style={styles.errorMessage}>✕ Could not add this game. Please try again.</Text>
-                    )}
-                </>
+                <GameActionButton
+                    title="Remove from Collection"
+                    loadingTitle="Removing..."
+                    successTitle="✓ Removed from Collection"
+                    errorTitle="✕ Failed — Try Again"
+                    adding={adding}
+                    status={addStatus}
+                    onPress={handleRemoveFromCollection}
+                    variant="danger"
+                />
             )}
 
             {selectedTab === "addtoevent" && (
-                <>
-                    <Pressable
-                        style={[styles.collectionButton, adding && styles.collectionButtonDisabled]}
-                        onPress={handleAddToEvent}
-                        disabled={adding}
-                    >
-                        <Text style={styles.collectionButtonText}>
-                            {adding
-                                ? "Adding..."
-                                : addStatus === "success"
-                                    ? "✓ Added to Event"
-                                    : addStatus === "error"
-                                    ? "✕ Failed — Try Again"
-                                    : "Add to Event"}
-                        </Text>
-                    </Pressable>
+                <GameActionButton
+                    title="Add to Event"
+                    loadingTitle="Adding..."
+                    successTitle="✓ Added to Event"
+                    errorTitle="✕ Failed — Try Again"
+                    adding={adding}
+                    status={addStatus}
+                    onPress={handleAddToEvent}
+                />
+            )}
+            
+            {selectedTab === "polls" && (
+                <GameActionButton
+                    title="Add to Event Poll"
+                    loadingTitle="Adding..."
+                    successTitle="✓ Added to Event Poll"
+                    errorTitle="✕ Failed — Try Again"
+                    adding={adding}
+                    status={addStatus}
+                    onPress={handleAddToEventPoll}
+                />
+            )}
 
-                    {addStatus === "success" && <Text style={styles.successMessage}>✓ Added to your event</Text>}
+            {addStatus === "success" && (
+                <Text style={styles.successMessage}>
+                    ✓ Action completed successfully
+                </Text>
+            )}
 
-                    {addStatus === "error" && (
-                        <Text style={styles.errorMessage}>✕ Could not add this game. Please try again.</Text>
-                    )}
-                </>
+            {addStatus === "error" && (
+                <Text style={styles.errorMessage}>
+                    ✕ Could not complete this action. Please try again.
+                </Text>
             )}
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     expandedContent: {
@@ -171,22 +165,6 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
 
-    collectionButton: {
-        backgroundColor: "#4A90E2",
-        paddingVertical: 11,
-        borderRadius: 8,
-        alignItems: "center",
-    },
-
-    collectionButtonDisabled: {
-        opacity: 0.6,
-    },
-
-    collectionButtonText: {
-        color: "#fff",
-        fontWeight: "700",
-    },
-
     successMessage: {
         marginTop: 8,
         color: "#2e7d32",
@@ -204,4 +182,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default GamesCardExpanded
+export default GamesCardExpanded;

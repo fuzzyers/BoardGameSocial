@@ -7,6 +7,7 @@ import messageRouting from "./route/messageRoute.js";
 import userRoutes from "./route/userRoute.js";
 import eventRoutes from "./route/eventRoute.js";
 import bggRoutes from "./route/bggRoute.js";
+import pollRoutes from "./route/pollRoute.js"
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use("/messaging", messageRouting);
 app.use("/users", userRoutes);
 app.use("/events", eventRoutes);
 app.use("/bgg", bggRoutes);
+app.use("/poll", pollRoutes)
 
 app.get("/", (req, res) => {
     res.json({ message: "Hello from the backend!" });

@@ -1,11 +1,16 @@
 import { addGameToEventQuery, createEventQuery, getEventsQuery, getEventWithGamesQuery } from "../services/events.js";
+import { createPollQuery } from "../services/poll.js";
 
 export const createEvent = async (req, res) => {
     const { group_id, name, description, location, event_date } = req.body;
+    const user_id = req.user.id;
 
     try {
         const response = await createEventQuery(group_id, name, description, location, event_date);
+        
+        const poll = await createPollQuery(response.id, user_id, "What games do we want to play", true, false, response.event_date)
 
+        console.log(poll)
         res.status(201).json({ message: "success", results: response });
     } catch (error) {
         res.status(500).json({
@@ -48,7 +53,7 @@ export const getEventWithGames = async (req, res) => {
     try {
         const response = await getEventWithGamesQuery(id)
 
-        res.status(201).json({ message: "success", results: response.rows})
+        res.status(201).json({ message: "success", results: response})
     } catch (error) {
         console.log(error)
         res.status(500).json({

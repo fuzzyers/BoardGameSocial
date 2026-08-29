@@ -22,7 +22,10 @@ DROP TABLE IF EXISTS
     games,
     users,
     group_roles,
-    roles
+    roles,
+    polls,
+    poll_options,
+    poll_votes
 CASCADE;
 
 
@@ -427,4 +430,35 @@ CREATE TABLE game_scores (
 
 
     PRIMARY KEY(event_game_id,user_id)
+);
+
+CREATE TABLE polls (
+    id SERIAL PRIMARY KEY,
+    event_id INTEGER NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+    created_by INTEGER NOT NULL REFERENCES users(id),
+    question TEXT NOT NULL,
+    multiple_choice BOOLEAN NOT NULL DEFAULT FALSE,
+    anonymous BOOLEAN NOT NULL DEFAULT FALSE,
+    expires_at TIMESTAMPTZ,
+    closed_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE poll_options (
+    id SERIAL PRIMARY KEY,
+    poll_id INTEGER NOT NULL REFERENCES polls(id) ON DELETE CASCADE,
+    game_id INTEGER NOT NULL REFERENCES games(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    UNIQUE (poll_id, game_id)
+);
+
+CREATE TABLE poll_votes (
+    id SERIAL PRIMARY KEY,
+    poll_id INTEGER NOT NULL REFERENCES polls(id) ON DELETE CASCADE,
+    option_id INTEGER NOT NULL REFERENCES poll_options(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    UNIQUE (poll_id, option_id, user_id)
 );

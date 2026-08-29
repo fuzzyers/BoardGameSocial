@@ -1,5 +1,6 @@
+import EventHome from "@/components/events/eventHome";
 import EventIdHeader from "@/components/events/eventIdHeader";
-import GamesList from "@/components/gamesList/gamesList";
+import Poll from "@/components/events/eventPoll";
 import { getEventById } from "@/services/event";
 import { getAllGames } from "@/services/games";
 import { EventWithGames, Game } from "@/types/apiDataTypes";
@@ -10,9 +11,8 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-nati
 const EventPage = () => {
     const { eventId } = useLocalSearchParams();
     const [event, setEvent] = useState<EventWithGames>()
-    const [games, setGames] = useState<Game[]>()
-    const [addGames, setAddGames] = useState<boolean>(false)
     const [loading, setLoading] = useState(true);
+    const [selectedTab, setSelectedTab] = useState<"collection" | "database" | "add" | "addtoevent" | "polls">("addtoevent");
 
     useFocusEffect(
         useCallback(() => {
@@ -21,10 +21,11 @@ const EventPage = () => {
                     setLoading(true)
 
                     const response = await getEventById(eventId)
-                    setEvent(response)
-                    console.log("Singular event: ", response)
-                } catch (error) {
 
+                    console.log(response)
+                    setEvent(response)
+                } catch (error) {
+                    console.log(error)
                 } finally {
                     setLoading(false)
                 }
@@ -36,13 +37,6 @@ const EventPage = () => {
 
         }, [eventId])
     )
-
-    const getGames = async () => {
-        const response = await getAllGames()
-
-        setGames(response)
-        setAddGames(true)
-    }
 
     if (loading) {
         return (
@@ -63,24 +57,39 @@ const EventPage = () => {
 
     return (
         <View style={styles.container}>
+            <View style={styles.tabs}>
+                <Pressable
+                    style={[
+                        styles.tab,
+                        selectedTab === "addtoevent" && styles.selectedTab,
+                    ]}
+                    onPress={() => setSelectedTab("addtoevent")}
+                >
+                    <Text>Home</Text>
+                </Pressable>
+
+                <Pressable
+                    style={[
+                        styles.tab,
+                        selectedTab === "polls" && styles.selectedTab,
+                    ]}
+                    onPress={() => setSelectedTab("polls")}
+                >
+                    <Text>Polls</Text>
+                </Pressable>
+            </View>
             <EventIdHeader event={event}/>
-            <Text style={styles.sectionTitle}>Games</Text>
-
-            {event.games[0].id ? (
-                event.games.map((game) => (
-                    <View key={game.id} style={styles.gameCard}>
-                        <Text style={styles.gameTitle}>{game.title}</Text>
-                    </View>
-                ))
-            ):(
-                <Text>No Games Currently Added</Text>
-            )}
-
-            <Pressable onPress={() => getGames()}>
-                <Text>Add Games</Text>
-            </Pressable>
-            {addGames && games && <GamesList games={games} selectedTab={"addtoevent"} eventId={event.id}/>}
-
+            
+            {selectedTab === "polls" &&
+                <Poll
+                    poll={event.polls[0]}
+                    selectedTab={selectedTab}
+                />
+            }
+            
+            { selectedTab === "addtoevent" &&
+                <EventHome event={event}/>
+            }
         </View>
     );
 };
@@ -98,23 +107,23 @@ const styles = StyleSheet.create({
         gap: 10,
     },
 
-    sectionTitle: {
-        fontSize: 22,
-        fontWeight: "bold",
-        marginBottom: 12,
+    tabs: {
+        flexDirection: "row",
+        marginBottom: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: "#ddd",
     },
 
-    gameCard: {
-        backgroundColor: "#fff",
-        padding: 16,
-        borderRadius: 10,
-        marginBottom: 10,
-        elevation: 2,
+    tab: {
+        flex: 1,
+        paddingVertical: 12,
+        alignItems: "center",
+        justifyContent: "center",
     },
 
-    gameTitle: {
-        fontSize: 17,
-        fontWeight: "600",
+    selectedTab: {
+        borderBottomWidth: 2,
+        borderBottomColor: "#333",
     },
 });
 

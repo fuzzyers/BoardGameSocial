@@ -4,7 +4,7 @@ import { Text, View, StyleSheet } from "react-native"
 type EventProps = {
     event: EventWithGames
 }
-const EventIdHeader = async ({event}: EventProps) => {
+const EventIdHeader = ({event}: EventProps) => {
 
     return (
         <View>
