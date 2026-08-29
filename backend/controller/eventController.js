@@ -1,4 +1,4 @@
-import { addGameToEventQuery, createEventQuery, getEventsQuery, getEventWithGamesQuery } from "../services/events.js";
+import { addGameToEventQuery, createEventQuery, deleteEventByIdQuery, getEventsQuery, getEventWithGamesQuery } from "../services/events.js";
 import { createPollQuery } from "../services/poll.js";
 
 export const createEvent = async (req, res) => {
@@ -55,7 +55,20 @@ export const getEventWithGames = async (req, res) => {
 
         res.status(201).json({ message: "success", results: response})
     } catch (error) {
-        console.log(error)
+        res.status(500).json({
+            error: "Internal Server Error",
+            errorDetails: error.message,
+        });
+    }
+}
+
+export const deleteEventById = async (req, res) => {
+    const { id } = req.params
+    try {
+        const response = await deleteEventByIdQuery(id)
+
+        res.status(201).json({ message: "success", results: response})
+    } catch (error) {
         res.status(500).json({
             error: "Internal Server Error",
             errorDetails: error.message,

@@ -153,3 +153,16 @@ export const getEventWithGamesQuery = async (event_id) => {
 
     return result.rows[0];
 };
+
+export const deleteEventByIdQuery = async (id) => {
+    const result = await pool.query(
+        `
+        DELETE FROM events
+        WHERE id = $1
+        RETURNING *;
+        `,
+        [id]
+    );
+
+    return result.rows[0];
+}

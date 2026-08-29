@@ -45,10 +45,22 @@ export const addGameToEventPoll = async (gameId: number, poll_id: number) => {
 }
 
 export const voteForGame = async (poll_id: number, option_id: number | null) => {
-    const response = await api.post("poll/vote", {
+    const response = await api.post("/poll/vote", {
         poll_id: poll_id,
         option_id: option_id
     })
+
+    return response
+}
+
+export const deleteEvent = async (group_id: number, event_id: number) => {
+    const response = await api.delete(`/events/${event_id}`, {
+        data: {
+            group_id: group_id
+        }
+    })
+
+    console.log("RTR")
 
     return response
 }

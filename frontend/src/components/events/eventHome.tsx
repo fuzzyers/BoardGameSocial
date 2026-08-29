@@ -3,6 +3,7 @@ import { EventWithGames, Game } from "@/types/apiDataTypes";
 import { getAllGames } from "@/services/games";
 import { useState } from "react";
 import GamesListModal from "../gamesList/gamesListModal";
+import DeleteEventButton from "./deleteEventButton";
 
 type EventHomeProps = {
     event: EventWithGames;
@@ -14,7 +15,7 @@ const EventHome = ({event}: EventHomeProps) => {
     
     const getGames = async () => {
         const response = await getAllGames()
-
+        console.log("evemts ", event)
         setGames(response)
         setAddGames(true)
     }
@@ -42,7 +43,9 @@ const EventHome = ({event}: EventHomeProps) => {
                     eventId={event.id}
                     onClose={() => setAddGames(false)}
                 />
-            )}    
+            )}   
+
+            <DeleteEventButton group_id={event.group_id} eventId={event.id}/> 
         </View>
     )
 }
