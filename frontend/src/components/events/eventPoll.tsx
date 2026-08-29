@@ -1,40 +1,100 @@
 import { Game, PollType } from "@/types/apiDataTypes";
-import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import {
+    ActivityIndicator,
+    Pressable,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native";
 import GamesListModal from "../gamesList/gamesListModal";
 import { getAllGames } from "@/services/games";
 import { voteForGame } from "@/services/event";
 
 type PollProps = {
     poll: PollType;
-    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls"
+    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls";
 };
 
 const Poll = ({ poll, selectedTab }: PollProps) => {
-    const [selectedOption, setSelectedOption] = useState<number | null>(null);
-    const [visible, setVisible] = useState<boolean>(false)
-    const [games, setGames] = useState<Game[]>()
-    
-    const getGames = async () => {
-        const response = await getAllGames()
+    const [localPoll, setLocalPoll] = useState<PollType>(poll);
 
-        setGames(response)
-        setVisible(true)
-    }
+    const [selectedOption, setSelectedOption] = useState<number | null>(null);
+    const [visible, setVisible] = useState<boolean>(false);
+    const [games, setGames] = useState<Game[]>();
+
+    const [voting, setVoting] = useState<boolean>(false);
+    const [loadingGames, setLoadingGames] = useState<boolean>(false);
+    const [message, setMessage] = useState<string | null>(null);
+
+    const getGames = async () => {
+        try {
+            setLoadingGames(true);
+
+            const response = await getAllGames();
+
+            setGames(response);
+            setVisible(true);
+        } catch (error) {
+            console.error("Failed to get games:", error);
+            setMessage("Failed to load games.");
+        } finally {
+            setLoadingGames(false);
+        }
+    };
+
+    const handleVote = async () => {
+        if (selectedOption === null) return;
+
+        try {
+            setVoting(true);
+            setMessage(null);
+
+            await voteForGame(localPoll.id, selectedOption);
+
+            setLocalPoll((currentPoll) => ({
+                ...currentPoll,
+                total_votes: currentPoll.total_votes + 1,
+                options: currentPoll.options.map((option) =>
+                    option.id === selectedOption
+                        ? {
+                              ...option,
+                              votes: option.votes + 1,
+                          }
+                        : option
+                ),
+            }));
+
+            setMessage("Vote added!");
+            setSelectedOption(null);
+        } catch (error) {
+            console.error("Failed to vote:", error);
+            setMessage("Failed to submit vote. Please try again.");
+        } finally {
+            setVoting(false);
+        }
+    };
 
     return (
         <View style={styles.container}>
-            
-            <Text style={styles.question}>{poll.question}</Text>
+            <Text style={styles.question}>
+                {localPoll.question}
+            </Text>
 
-            {poll.options.map((option) => {
+            {message && (
+                <Text style={styles.message}>
+                    {message}
+                </Text>
+            )}
+
+            {localPoll.options.map((option) => {
                 const percentage =
-                    poll.total_votes > 0
-                        ? (option.votes / poll.total_votes) * 100
+                    localPoll.total_votes > 0
+                        ? (option.votes / localPoll.total_votes) * 100
                         : 0;
 
                 const selected = selectedOption === option.id;
-                console.log(option)
+
                 return (
                     <Pressable
                         key={option.id}
@@ -43,6 +103,7 @@ const Poll = ({ poll, selectedTab }: PollProps) => {
                             selected && styles.selectedOption,
                         ]}
                         onPress={() => setSelectedOption(option.id)}
+                        disabled={voting}
                     >
                         <View style={styles.optionHeader}>
                             <Text style={styles.optionTitle}>
@@ -71,30 +132,59 @@ const Poll = ({ poll, selectedTab }: PollProps) => {
             })}
 
             <Pressable
-                style={styles.voteButton}
-                onPress={() => {
-                    voteForGame(poll.id, selectedOption)
-                }}
-                disabled={selectedOption === null}
+                style={[
+                    styles.voteButton,
+                    (selectedOption === null || voting) &&
+                        styles.buttonDisabled,
+                ]}
+                onPress={handleVote}
+                disabled={selectedOption === null || voting}
             >
-                <Text style={styles.voteButtonText}>Vote</Text>
+                {voting ? (
+                    <View style={styles.loadingContent}>
+                        <ActivityIndicator color="#fff" size="small" />
+
+                        <Text style={styles.voteButtonText}>
+                            Voting...
+                        </Text>
+                    </View>
+                ) : (
+                    <Text style={styles.voteButtonText}>
+                        Vote
+                    </Text>
+                )}
             </Pressable>
 
             <Pressable
-                style={styles.voteButton}
-                onPress={() => {getGames()}}
+                style={[
+                    styles.voteButton,
+                    loadingGames && styles.buttonDisabled,
+                ]}
+                onPress={getGames}
+                disabled={loadingGames}
             >
-                <Text style={styles.voteButtonText}>Add Games To poll</Text>
+                {loadingGames ? (
+                    <View style={styles.loadingContent}>
+                        <ActivityIndicator color="#fff" size="small" />
+
+                        <Text style={styles.voteButtonText}>
+                            Loading Games...
+                        </Text>
+                    </View>
+                ) : (
+                    <Text style={styles.voteButtonText}>
+                        Add Games To Poll
+                    </Text>
+                )}
             </Pressable>
 
-            <GamesListModal 
+            <GamesListModal
                 visible={visible}
                 games={games ?? []}
-                eventId={poll.id} 
+                eventId={localPoll.id}
                 onClose={() => setVisible(false)}
                 selectedTab={selectedTab}
             />
-            
         </View>
     );
 };
@@ -112,6 +202,12 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         marginBottom: 16,
+    },
+
+    message: {
+        marginBottom: 12,
+        fontSize: 14,
+        fontWeight: "600",
     },
 
     option: {
@@ -164,7 +260,18 @@ const styles = StyleSheet.create({
         padding: 12,
         borderRadius: 8,
         alignItems: "center",
+        justifyContent: "center",
         marginTop: 6,
+    },
+
+    buttonDisabled: {
+        opacity: 0.6,
+    },
+
+    loadingContent: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 8,
     },
 
     voteButtonText: {

@@ -7,15 +7,16 @@ import DeleteEventButton from "./deleteEventButton";
 
 type EventHomeProps = {
     event: EventWithGames;
+    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls";
 }
 
-const EventHome = ({event}: EventHomeProps) => {
+const EventHome = ({event, selectedTab}: EventHomeProps) => {
     const [games, setGames] = useState<Game[]>()
     const [addGames, setAddGames] = useState<boolean>(false)
     
     const getGames = async () => {
         const response = await getAllGames()
-        console.log("evemts ", event)
+
         setGames(response)
         setAddGames(true)
     }
@@ -42,6 +43,7 @@ const EventHome = ({event}: EventHomeProps) => {
                     games={games ?? []}
                     eventId={event.id}
                     onClose={() => setAddGames(false)}
+                    selectedTab={selectedTab}
                 />
             )}   
 

@@ -1,5 +1,7 @@
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
+    ActivityIndicator,
     Modal,
     Pressable,
     StyleSheet,
@@ -18,15 +20,25 @@ const DeleteEventButton = ({
     group_id,
 }: DeleteEventButtonProps) => {
 
+    const router = useRouter();
+
     const [showModal, setShowModal] = useState(false);
+    const [deleting, setDeleting] = useState(false);
 
     const handleDelete = async () => {
-        setShowModal(false);
-
         try {
+            setDeleting(true);
+
             await deleteEvent(group_id, eventId);
+
+            setShowModal(false);
+
+            // Navigate back to events and refresh the page
+            router.replace("/events");
         } catch (error) {
             console.error("Failed to delete event:", error);
+        } finally {
+            setDeleting(false);
         }
     };
 
@@ -35,6 +47,7 @@ const DeleteEventButton = ({
             <Pressable
                 style={styles.button}
                 onPress={() => setShowModal(true)}
+                disabled={deleting}
             >
                 <Text style={styles.text}>
                     Delete Event
@@ -45,7 +58,11 @@ const DeleteEventButton = ({
                 visible={showModal}
                 transparent
                 animationType="fade"
-                onRequestClose={() => setShowModal(false)}
+                onRequestClose={() => {
+                    if (!deleting) {
+                        setShowModal(false);
+                    }
+                }}
             >
                 <View style={styles.overlay}>
                     <View style={styles.modal}>
@@ -60,8 +77,12 @@ const DeleteEventButton = ({
 
                         <View style={styles.actions}>
                             <Pressable
-                                style={styles.cancelButton}
+                                style={[
+                                    styles.cancelButton,
+                                    deleting && styles.disabled,
+                                ]}
                                 onPress={() => setShowModal(false)}
+                                disabled={deleting}
                             >
                                 <Text style={styles.cancelText}>
                                     Cancel
@@ -69,12 +90,28 @@ const DeleteEventButton = ({
                             </Pressable>
 
                             <Pressable
-                                style={styles.deleteButton}
+                                style={[
+                                    styles.deleteButton,
+                                    deleting && styles.disabled,
+                                ]}
                                 onPress={handleDelete}
+                                disabled={deleting}
                             >
-                                <Text style={styles.deleteText}>
-                                    Delete
-                                </Text>
+                                {deleting ? (
+                                    <View style={styles.loading}>
+                                        <ActivityIndicator
+                                            size="small"
+                                            color="#fff"
+                                        />
+                                        <Text style={styles.deleteText}>
+                                            Deleting...
+                                        </Text>
+                                    </View>
+                                ) : (
+                                    <Text style={styles.deleteText}>
+                                        Delete
+                                    </Text>
+                                )}
                             </Pressable>
                         </View>
                     </View>
@@ -158,6 +195,16 @@ const styles = StyleSheet.create({
         color: "#fff",
         fontSize: 15,
         fontWeight: "700",
+    },
+
+    loading: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 8,
+    },
+
+    disabled: {
+        opacity: 0.6,
     },
 });
 

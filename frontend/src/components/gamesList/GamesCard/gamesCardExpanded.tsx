@@ -1,7 +1,7 @@
 import { addGameToEvent, addGameToEventPoll } from "@/services/event";
 import {addToCollection , removeFromCollection,} from "@/services/games";
 import { Game } from "@/types/apiDataTypes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import GameActionButton from "./gameActionButton";
@@ -22,6 +22,9 @@ const GamesCardExpanded = ({
         "success" | "error" | null
     >(null);
 
+    useEffect(() => {
+        console.log(selectedTab)
+    },[])
     const handleAction = async (action: () => Promise<void>) => {
         try {
             setAdding(true);

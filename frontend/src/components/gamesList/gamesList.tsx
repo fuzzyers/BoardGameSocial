@@ -18,9 +18,9 @@ const GamesList = ({ games, selectedTab, eventId }: GamesListProps) => {
             data={games}
             keyExtractor={(game) => game.id.toString()}
             renderItem={({ item }) => <GameCard game={item} selectedTab={selectedTab} eventId={eventId}/>}
-            numColumns={numColumns}
+            // numColumns={numColumns}
             key={numColumns}
-            columnWrapperStyle={numColumns === 2 ? styles.row : undefined}
+            // columnWrapperStyle={numColumns === 2 ? styles.row : undefined}
             contentContainerStyle={styles.list}
         />
     );

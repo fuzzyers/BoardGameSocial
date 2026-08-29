@@ -2,7 +2,6 @@ import EventHome from "@/components/events/eventHome";
 import EventIdHeader from "@/components/events/eventIdHeader";
 import Poll from "@/components/events/eventPoll";
 import { getEventById } from "@/services/event";
-import { getAllGames } from "@/services/games";
 import { EventWithGames, Game } from "@/types/apiDataTypes";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useState } from "react";
@@ -22,7 +21,6 @@ const EventPage = () => {
 
                     const response = await getEventById(eventId)
 
-                    console.log(response)
                     setEvent(response)
                 } catch (error) {
                     console.log(error)
@@ -88,7 +86,7 @@ const EventPage = () => {
             }
             
             { selectedTab === "addtoevent" &&
-                <EventHome event={event}/>
+                <EventHome event={event} selectedTab={selectedTab}/>
             }
         </View>
     );
