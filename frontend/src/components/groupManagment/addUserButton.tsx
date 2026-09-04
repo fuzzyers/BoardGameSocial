@@ -4,12 +4,9 @@ import { addUserToGroup } from "@/services/groups";
 const AddUserButton = ({ userId, groupId }: { userId: number; groupId: number | undefined }) => {
     const handleAddUser = async () => {
         if (!groupId) {
-            console.error("Group ID is undefined");
             return;
         }
-        const response = await addUserToGroup(groupId, userId);
-
-        console.log("Add user response:", response);
+        await addUserToGroup(groupId, userId);
     };
 
     return (

@@ -1,5 +1,5 @@
 import { addGameToEvent, addGameToEventPoll } from "@/services/event";
-import {addToCollection , removeFromCollection,} from "@/services/games";
+import { addToCollection, removeFromCollection } from "@/services/games";
 import { Game } from "@/types/apiDataTypes";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -10,21 +10,13 @@ type GamesCardExpandedProps = {
     game: Game;
     selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls";
     eventId: number | null;
+    group_id: number;
 };
 
-const GamesCardExpanded = ({
-    game,
-    selectedTab,
-    eventId,
-}: GamesCardExpandedProps) => {
+const GamesCardExpanded = ({ game, selectedTab, eventId, group_id }: GamesCardExpandedProps) => {
     const [adding, setAdding] = useState(false);
-    const [addStatus, setAddStatus] = useState<
-        "success" | "error" | null
-    >(null);
+    const [addStatus, setAddStatus] = useState<"success" | "error" | null>(null);
 
-    useEffect(() => {
-        console.log(selectedTab)
-    },[])
     const handleAction = async (action: () => Promise<void>) => {
         try {
             setAdding(true);
@@ -57,7 +49,7 @@ const GamesCardExpanded = ({
         if (eventId === null) return;
 
         return handleAction(async () => {
-            await addGameToEvent(game.id, eventId);
+            await addGameToEvent(game.id, eventId, group_id);
         });
     };
 
@@ -72,17 +64,9 @@ const GamesCardExpanded = ({
 
     return (
         <View style={styles.expandedContent}>
-            {game.description && (
-                <Text style={styles.description}>
-                    {game.description}
-                </Text>
-            )}
+            {game.description && <Text style={styles.description}>{game.description}</Text>}
 
-            {game.bgg_id && (
-                <Text style={styles.bgg}>
-                    BGG ID: {game.bgg_id}
-                </Text>
-            )}
+            {game.bgg_id && <Text style={styles.bgg}>BGG ID: {game.bgg_id}</Text>}
 
             {selectedTab === "database" && (
                 <GameActionButton
@@ -120,7 +104,7 @@ const GamesCardExpanded = ({
                     onPress={handleAddToEvent}
                 />
             )}
-            
+
             {selectedTab === "polls" && (
                 <GameActionButton
                     title="Add to Event Poll"
@@ -133,16 +117,10 @@ const GamesCardExpanded = ({
                 />
             )}
 
-            {addStatus === "success" && (
-                <Text style={styles.successMessage}>
-                    ✓ Action completed successfully
-                </Text>
-            )}
+            {addStatus === "success" && <Text style={styles.successMessage}>✓ Action completed successfully</Text>}
 
             {addStatus === "error" && (
-                <Text style={styles.errorMessage}>
-                    ✕ Could not complete this action. Please try again.
-                </Text>
+                <Text style={styles.errorMessage}>✕ Could not complete this action. Please try again.</Text>
             )}
         </View>
     );

@@ -8,14 +8,6 @@ type GroupDetailsSectionProps = {
 };
 
 const GroupDetailsSection = ({ groupData }: GroupDetailsSectionProps) => {
-    useEffect(() => {
-        if (groupData) {
-            console.log("Group data received:", groupData);
-        } else {
-            console.log("No group data available.");
-        }
-    }, [groupData]);
-
     const handleDeleteGroup = () => {
         console.log(groupData?.id);
 

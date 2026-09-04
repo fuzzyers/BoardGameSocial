@@ -7,43 +7,24 @@ type GamesListModalProps = {
     games: Game[];
     eventId: number;
     onClose: () => void;
-    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls"
+    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls";
+    group_id: number;
 };
 
-const GamesListModal = ({
-    visible,
-    games,
-    onClose,
-    eventId,
-    selectedTab,
-}: GamesListModalProps) => {
+const GamesListModal = ({ visible, games, onClose, eventId, selectedTab, group_id }: GamesListModalProps) => {
     return (
-        <Modal
-            visible={visible}
-            transparent
-            animationType="slide"
-            onRequestClose={onClose}
-        >
+        <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContent}>
-
                     <View style={styles.modalHeader}>
                         <Text style={styles.modalTitle}>Add Games</Text>
 
-                        <Pressable
-                            onPress={onClose}
-                            style={styles.closeButton}
-                        >
+                        <Pressable onPress={onClose} style={styles.closeButton}>
                             <Text style={styles.closeButtonText}>✕</Text>
                         </Pressable>
                     </View>
 
-                    <GamesList
-                        games={games}
-                        selectedTab={selectedTab}
-                        eventId={eventId}
-                    />
-
+                    <GamesList games={games} selectedTab={selectedTab} eventId={eventId} group_id={group_id} />
                 </View>
             </View>
         </Modal>

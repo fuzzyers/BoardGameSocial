@@ -1,7 +1,4 @@
 import { View, Text, StyleSheet, useWindowDimensions, Pressable } from "react-native";
-import { useRouter } from "expo-router";
-import { deleteToken } from "@/services/auth";
-import { getSocket } from "@/services/socket";
 import { NavigationOption } from "@/types/navigationProps";
 
 type NavBarProps = {
@@ -10,10 +7,8 @@ type NavBarProps = {
 export default function Navbar({ onSetSelected }: NavBarProps) {
     const { width, height } = useWindowDimensions();
     const styles = createStyles(width, height);
-    const router = useRouter();
 
     const handleNavSelect = (navigate: NavigationOption) => {
-        console.log("navigate", navigate);
         onSetSelected(navigate);
     };
 

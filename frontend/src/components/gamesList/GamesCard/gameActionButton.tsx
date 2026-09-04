@@ -23,22 +23,12 @@ const GameActionButton = ({
 }: GameActionButtonProps) => {
     return (
         <Pressable
-            style={[
-                    styles.button,
-                    variant === "danger" && styles.dangerButton,
-                    adding && styles.disabled,
-            ]}            
+            style={[styles.button, variant === "danger" && styles.dangerButton, adding && styles.disabled]}
             onPress={onPress}
             disabled={adding}
         >
             <Text style={styles.buttonText}>
-                {adding
-                    ? loadingTitle
-                    : status === "success"
-                        ? successTitle
-                        : status === "error"
-                            ? errorTitle
-                            : title}
+                {adding ? loadingTitle : status === "success" ? successTitle : status === "error" ? errorTitle : title}
             </Text>
         </Pressable>
     );

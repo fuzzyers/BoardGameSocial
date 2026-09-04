@@ -1,13 +1,13 @@
-import { Game } from "@/types/apiDataTypes"
-import { Pressable, StyleSheet, Text, View } from "react-native"
+import { Game } from "@/types/apiDataTypes";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 type GamesCardHeaderProps = {
     game: Game;
     expanded: boolean;
     setExpanded: (value: boolean) => void;
-}
+};
 
-const GamesCardHeader = ({game, expanded, setExpanded}: GamesCardHeaderProps) => {
+const GamesCardHeader = ({ game, expanded, setExpanded }: GamesCardHeaderProps) => {
     return (
         <Pressable style={styles.header} onPress={() => setExpanded(!expanded)}>
             <View style={styles.titleContainer}>
@@ -40,8 +40,8 @@ const GamesCardHeader = ({game, expanded, setExpanded}: GamesCardHeaderProps) =>
 
             <Text style={styles.arrow}>{expanded ? "▲" : "▼"}</Text>
         </Pressable>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     header: {
@@ -118,4 +118,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default GamesCardHeader
+export default GamesCardHeader;

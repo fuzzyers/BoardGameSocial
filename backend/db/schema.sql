@@ -462,3 +462,6 @@ CREATE TABLE poll_votes (
 
     UNIQUE (poll_id, option_id, user_id)
 );
+
+ALTER TABLE users
+ADD COLUMN description TEXT;

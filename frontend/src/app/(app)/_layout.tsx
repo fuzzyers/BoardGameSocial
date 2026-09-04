@@ -34,6 +34,7 @@ export default function AppLayout() {
                 options={{
                     title: "Games",
                     tabBarIcon: ({ color, size }) => <Ionicons name="dice" size={size} color={color} />,
+                    headerShown: false,
                 }}
             />
 
@@ -41,7 +42,8 @@ export default function AppLayout() {
                 name="groups"
                 options={{
                     title: "Groups",
-                    tabBarIcon: ({ color, size }) => <Ionicons name="people" size={size} color={color} />,
+                    tabBarIcon: ({ color, size }) => <Ionicons name="chatbubbles" size={size} color={color} />,
+                    headerShown: false,
                 }}
             />
 
@@ -50,11 +52,29 @@ export default function AppLayout() {
                 options={{
                     title: "Events",
                     tabBarIcon: ({ color, size }) => <Ionicons name="calendar" size={size} color={color} />,
+                    headerShown: false,
                 }}
             />
 
             <Tabs.Screen
                 name="events/[eventId]"
+                options={{
+                    href: null,
+                    headerShown: false,
+                }}
+            />
+
+            <Tabs.Screen
+                name="profile/index"
+                options={{
+                    title: "Profile",
+                    tabBarIcon: ({ color, size }) => <Ionicons name="person-circle" size={size} color={color} />,
+                    headerShown: false,
+                }}
+            />
+
+            <Tabs.Screen
+                name="profile/[id]"
                 options={{
                     href: null,
                     headerShown: false,

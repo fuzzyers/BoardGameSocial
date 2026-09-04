@@ -44,11 +44,11 @@ export const addToCollection = async (game_id: number) => {
 
 export const removeFromCollection = async (game_id: number) => {
     try {
-        const response = await api.put("/games/collection/me/remove", {game_id: game_id})
+        const response = await api.put("/games/collection/me/remove", { game_id: game_id });
 
-        return response
+        return response;
     } catch (error) {
-        console.log("Failed to remove game from collection: ", error)
-        throw error
+        console.log("Failed to remove game from collection: ", error);
+        throw error;
     }
-}
+};

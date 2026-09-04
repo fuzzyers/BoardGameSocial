@@ -1,34 +1,30 @@
-import { EventWithGames } from "@/types/apiDataTypes"
-import { Text, View, StyleSheet } from "react-native"
+import { EventWithGames } from "@/types/apiDataTypes";
+import { Text, View, StyleSheet } from "react-native";
 
 type EventProps = {
-    event: EventWithGames
-}
-const EventIdHeader = ({event}: EventProps) => {
-
+    event: EventWithGames;
+};
+const EventIdHeader = ({ event }: EventProps) => {
     return (
         <View>
             <Text style={styles.title}>{event.name}</Text>
-            
-            <Text style={styles.description}>
-                {event.description}
-            </Text>
+
+            <Text style={styles.description}>{event.description}</Text>
 
             <View style={styles.details}>
                 <Text>📍 {event.location}</Text>
+                <Text>📅 {new Date(event.event_date).toLocaleDateString()}</Text>
                 <Text>
-                    📅 {new Date(event.event_date).toLocaleDateString()}
-                </Text>
-                <Text>
-                    🕐 {new Date(event.event_date).toLocaleTimeString([], {
+                    🕐{" "}
+                    {new Date(event.event_date).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                     })}
                 </Text>
             </View>
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     title: {
@@ -49,4 +45,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default EventIdHeader
+export default EventIdHeader;

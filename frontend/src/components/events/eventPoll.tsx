@@ -1,12 +1,6 @@
 import { Game, PollType } from "@/types/apiDataTypes";
 import { useState } from "react";
-import {
-    ActivityIndicator,
-    Pressable,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import GamesListModal from "../gamesList/gamesListModal";
 import { getAllGames } from "@/services/games";
 import { voteForGame } from "@/services/event";
@@ -77,66 +71,39 @@ const Poll = ({ poll, selectedTab }: PollProps) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.question}>
-                {localPoll.question}
-            </Text>
+            <Text style={styles.question}>{localPoll.question}</Text>
 
-            {message && (
-                <Text style={styles.message}>
-                    {message}
-                </Text>
-            )}
+            {message && <Text style={styles.message}>{message}</Text>}
 
             {localPoll.options.map((option) => {
-                const percentage =
-                    localPoll.total_votes > 0
-                        ? (option.votes / localPoll.total_votes) * 100
-                        : 0;
+                const percentage = localPoll.total_votes > 0 ? (option.votes / localPoll.total_votes) * 100 : 0;
 
                 const selected = selectedOption === option.id;
 
                 return (
                     <Pressable
                         key={option.id}
-                        style={[
-                            styles.option,
-                            selected && styles.selectedOption,
-                        ]}
+                        style={[styles.option, selected && styles.selectedOption]}
                         onPress={() => setSelectedOption(option.id)}
                         disabled={voting}
                     >
                         <View style={styles.optionHeader}>
-                            <Text style={styles.optionTitle}>
-                                {option.title}
-                            </Text>
+                            <Text style={styles.optionTitle}>{option.title}</Text>
 
-                            <Text style={styles.voteCount}>
-                                {option.votes} votes
-                            </Text>
+                            <Text style={styles.voteCount}>{option.votes} votes</Text>
                         </View>
 
                         <View style={styles.progressBackground}>
-                            <View
-                                style={[
-                                    styles.progress,
-                                    { width: `${percentage}%` },
-                                ]}
-                            />
+                            <View style={[styles.progress, { width: `${percentage}%` }]} />
                         </View>
 
-                        <Text style={styles.percentage}>
-                            {Math.round(percentage)}%
-                        </Text>
+                        <Text style={styles.percentage}>{Math.round(percentage)}%</Text>
                     </Pressable>
                 );
             })}
 
             <Pressable
-                style={[
-                    styles.voteButton,
-                    (selectedOption === null || voting) &&
-                        styles.buttonDisabled,
-                ]}
+                style={[styles.voteButton, (selectedOption === null || voting) && styles.buttonDisabled]}
                 onPress={handleVote}
                 disabled={selectedOption === null || voting}
             >
@@ -144,22 +111,15 @@ const Poll = ({ poll, selectedTab }: PollProps) => {
                     <View style={styles.loadingContent}>
                         <ActivityIndicator color="#fff" size="small" />
 
-                        <Text style={styles.voteButtonText}>
-                            Voting...
-                        </Text>
+                        <Text style={styles.voteButtonText}>Voting...</Text>
                     </View>
                 ) : (
-                    <Text style={styles.voteButtonText}>
-                        Vote
-                    </Text>
+                    <Text style={styles.voteButtonText}>Vote</Text>
                 )}
             </Pressable>
 
             <Pressable
-                style={[
-                    styles.voteButton,
-                    loadingGames && styles.buttonDisabled,
-                ]}
+                style={[styles.voteButton, loadingGames && styles.buttonDisabled]}
                 onPress={getGames}
                 disabled={loadingGames}
             >
@@ -167,14 +127,10 @@ const Poll = ({ poll, selectedTab }: PollProps) => {
                     <View style={styles.loadingContent}>
                         <ActivityIndicator color="#fff" size="small" />
 
-                        <Text style={styles.voteButtonText}>
-                            Loading Games...
-                        </Text>
+                        <Text style={styles.voteButtonText}>Loading Games...</Text>
                     </View>
                 ) : (
-                    <Text style={styles.voteButtonText}>
-                        Add Games To Poll
-                    </Text>
+                    <Text style={styles.voteButtonText}>Add Games To Poll</Text>
                 )}
             </Pressable>
 

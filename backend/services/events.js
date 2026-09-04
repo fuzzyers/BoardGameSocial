@@ -55,9 +55,9 @@ export const addGameToEventQuery = async (event_id, game_id) => {
         RETURNING *
         `,
         [event_id, game_id]
-    )
-    return result
-}
+    );
+    return result;
+};
 
 export const getEventWithGamesQuery = async (event_id) => {
     const result = await pool.query(
@@ -165,4 +165,4 @@ export const deleteEventByIdQuery = async (id) => {
     );
 
     return result.rows[0];
-}
+};

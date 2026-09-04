@@ -3,7 +3,9 @@ import { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 import EventFilters, { EventTimeFilter } from "@/components/events/eventFilters";
+
 import EventList from "@/components/events/eventList";
+
 import { Event } from "@/types/apiDataTypes";
 
 type Group = {
@@ -14,27 +16,37 @@ type Group = {
 const EventsPage = () => {
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
 
     const [timeFilter, setTimeFilter] = useState<EventTimeFilter>("upcoming");
 
     const [groupFilter, setGroupFilter] = useState<number | null>(null);
 
-    // This would eventually come from your groups service
     const [groups, setGroups] = useState<Group[]>([]);
 
-    useEffect(() => {
-        const getEventsData = async () => {
-            try {
-                const data = await getEvents();
+    const getEventsData = async (isRefresh = false) => {
+        try {
+            if (isRefresh) {
+                setRefreshing(true);
+            } else {
+                setLoading(true);
+            }
 
-                setEvents(data.results);
-            } catch (error) {
-                console.error("Failed to get events:", error);
-            } finally {
+            const data = await getEvents();
+
+            setEvents(data.results);
+        } catch (error) {
+            console.error("Failed to get events:", error);
+        } finally {
+            if (isRefresh) {
+                setRefreshing(false);
+            } else {
                 setLoading(false);
             }
-        };
+        }
+    };
 
+    useEffect(() => {
         getEventsData();
     }, []);
 
@@ -76,8 +88,10 @@ const EventsPage = () => {
                 timeFilter={timeFilter}
                 groupFilter={groupFilter}
                 groups={groups}
+                refreshing={refreshing}
                 onTimeFilterChange={setTimeFilter}
                 onGroupFilterChange={setGroupFilter}
+                onRefresh={() => getEventsData(true)}
             />
 
             <EventList events={filteredEvents} />

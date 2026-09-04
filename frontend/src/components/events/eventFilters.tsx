@@ -1,5 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
+import RefreshButton from "../refreshButton";
+
 export type EventTimeFilter = "all" | "upcoming" | "past";
 
 type Group = {
@@ -11,11 +13,21 @@ type EventFiltersProps = {
     timeFilter: EventTimeFilter;
     groupFilter: number | null;
     groups: Group[];
+    refreshing: boolean;
     onTimeFilterChange: (filter: EventTimeFilter) => void;
     onGroupFilterChange: (groupId: number | null) => void;
+    onRefresh: () => void;
 };
 
-const EventFilters = ({ timeFilter, groupFilter, groups, onTimeFilterChange, onGroupFilterChange }: EventFiltersProps) => {
+const EventFilters = ({
+    timeFilter,
+    groupFilter,
+    groups,
+    refreshing,
+    onTimeFilterChange,
+    onGroupFilterChange,
+    onRefresh,
+}: EventFiltersProps) => {
     return (
         <View style={styles.container}>
             <Text style={styles.heading}>Events</Text>
@@ -31,6 +43,8 @@ const EventFilters = ({ timeFilter, groupFilter, groups, onTimeFilterChange, onG
                 />
 
                 <FilterButton label="Past" active={timeFilter === "past"} onPress={() => onTimeFilterChange("past")} />
+
+                <RefreshButton onPress={onRefresh} refreshing={refreshing} />
             </View>
 
             {/* Group filter */}

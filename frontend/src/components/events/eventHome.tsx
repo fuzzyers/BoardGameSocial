@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native"
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { EventWithGames, Game } from "@/types/apiDataTypes";
 import { getAllGames } from "@/services/games";
 import { useState } from "react";
@@ -8,18 +8,18 @@ import DeleteEventButton from "./deleteEventButton";
 type EventHomeProps = {
     event: EventWithGames;
     selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls";
-}
+};
 
-const EventHome = ({event, selectedTab}: EventHomeProps) => {
-    const [games, setGames] = useState<Game[]>()
-    const [addGames, setAddGames] = useState<boolean>(false)
-    
+const EventHome = ({ event, selectedTab }: EventHomeProps) => {
+    const [games, setGames] = useState<Game[]>();
+    const [addGames, setAddGames] = useState<boolean>(false);
+
     const getGames = async () => {
-        const response = await getAllGames()
+        const response = await getAllGames();
 
-        setGames(response)
-        setAddGames(true)
-    }
+        setGames(response);
+        setAddGames(true);
+    };
 
     return (
         <View>
@@ -30,7 +30,7 @@ const EventHome = ({event, selectedTab}: EventHomeProps) => {
                         <Text style={styles.gameTitle}>{game.title}</Text>
                     </View>
                 ))
-            ):(
+            ) : (
                 <Text>No Games Currently Added</Text>
             )}
 
@@ -44,13 +44,14 @@ const EventHome = ({event, selectedTab}: EventHomeProps) => {
                     eventId={event.id}
                     onClose={() => setAddGames(false)}
                     selectedTab={selectedTab}
+                    group_id={event.group_id}
                 />
-            )}   
+            )}
 
-            <DeleteEventButton group_id={event.group_id} eventId={event.id}/> 
+            <DeleteEventButton group_id={event.group_id} eventId={event.id} />
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     sectionTitle: {
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: "600",
     },
-        modalOverlay: {
+    modalOverlay: {
         flex: 1,
         backgroundColor: "rgba(0, 0, 0, 0.5)",
         justifyContent: "center",
@@ -107,6 +108,5 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
 });
-
 
 export default EventHome;

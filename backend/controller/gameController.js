@@ -95,13 +95,13 @@ export const removeGameFromCollection = async (req, res) => {
         const { game_id } = req.body;
         const user_id = req.user.id;
 
-        const deletedGame = await gamesService.removeGameFromCollection(user_id, game_id)
+        const deletedGame = await gamesService.removeGameFromCollection(user_id, game_id);
 
         res.status(201).json({ result: "success", game: deletedGame });
     } catch (error) {
         res.status(500).json({ message: error });
     }
-}
+};
 
 export const createExpansion = async (req, res) => {
     try {

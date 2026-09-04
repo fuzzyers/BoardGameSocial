@@ -6,9 +6,10 @@ type GamesListProps = {
     games: Game[];
     selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls";
     eventId: number | null;
+    group_id: number;
 };
 
-const GamesList = ({ games, selectedTab, eventId }: GamesListProps) => {
+const GamesList = ({ games, selectedTab, eventId, group_id }: GamesListProps) => {
     const { width } = useWindowDimensions();
 
     const numColumns = width >= 600 ? 2 : 1;
@@ -17,7 +18,7 @@ const GamesList = ({ games, selectedTab, eventId }: GamesListProps) => {
         <FlatList
             data={games}
             keyExtractor={(game) => game.id.toString()}
-            renderItem={({ item }) => <GameCard game={item} selectedTab={selectedTab} eventId={eventId}/>}
+            renderItem={({ item }) => <GameCard game={item} selectedTab={selectedTab} eventId={eventId} group_id={group_id} />}
             // numColumns={numColumns}
             key={numColumns}
             // columnWrapperStyle={numColumns === 2 ? styles.row : undefined}

@@ -16,11 +16,7 @@ const GamesCardInfo = ({ game }: GamesCardInfoProps) => {
                 ⏱ {game.min_play_time}-{game.max_play_time} min
             </Text>
 
-            {game.min_age && (
-                <Text style={styles.info}>
-                    {game.min_age}+
-                </Text>
-            )}
+            {game.min_age && <Text style={styles.info}>{game.min_age}+</Text>}
         </View>
     );
 };
@@ -41,4 +37,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default GamesCardInfo
+export default GamesCardInfo;

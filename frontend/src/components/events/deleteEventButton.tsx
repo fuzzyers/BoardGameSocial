@@ -1,13 +1,6 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import {
-    ActivityIndicator,
-    Modal,
-    Pressable,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
+import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { deleteEvent } from "@/services/event";
 
 type DeleteEventButtonProps = {
@@ -15,11 +8,7 @@ type DeleteEventButtonProps = {
     group_id: number;
 };
 
-const DeleteEventButton = ({
-    eventId,
-    group_id,
-}: DeleteEventButtonProps) => {
-
+const DeleteEventButton = ({ eventId, group_id }: DeleteEventButtonProps) => {
     const router = useRouter();
 
     const [showModal, setShowModal] = useState(false);
@@ -44,14 +33,8 @@ const DeleteEventButton = ({
 
     return (
         <>
-            <Pressable
-                style={styles.button}
-                onPress={() => setShowModal(true)}
-                disabled={deleting}
-            >
-                <Text style={styles.text}>
-                    Delete Event
-                </Text>
+            <Pressable style={styles.button} onPress={() => setShowModal(true)} disabled={deleting}>
+                <Text style={styles.text}>Delete Event</Text>
             </Pressable>
 
             <Modal
@@ -66,51 +49,31 @@ const DeleteEventButton = ({
             >
                 <View style={styles.overlay}>
                     <View style={styles.modal}>
-                        <Text style={styles.title}>
-                            Delete Event
-                        </Text>
+                        <Text style={styles.title}>Delete Event</Text>
 
-                        <Text style={styles.message}>
-                            Are you sure you want to delete this event?
-                            This cannot be undone.
-                        </Text>
+                        <Text style={styles.message}>Are you sure you want to delete this event? This cannot be undone.</Text>
 
                         <View style={styles.actions}>
                             <Pressable
-                                style={[
-                                    styles.cancelButton,
-                                    deleting && styles.disabled,
-                                ]}
+                                style={[styles.cancelButton, deleting && styles.disabled]}
                                 onPress={() => setShowModal(false)}
                                 disabled={deleting}
                             >
-                                <Text style={styles.cancelText}>
-                                    Cancel
-                                </Text>
+                                <Text style={styles.cancelText}>Cancel</Text>
                             </Pressable>
 
                             <Pressable
-                                style={[
-                                    styles.deleteButton,
-                                    deleting && styles.disabled,
-                                ]}
+                                style={[styles.deleteButton, deleting && styles.disabled]}
                                 onPress={handleDelete}
                                 disabled={deleting}
                             >
                                 {deleting ? (
                                     <View style={styles.loading}>
-                                        <ActivityIndicator
-                                            size="small"
-                                            color="#fff"
-                                        />
-                                        <Text style={styles.deleteText}>
-                                            Deleting...
-                                        </Text>
+                                        <ActivityIndicator size="small" color="#fff" />
+                                        <Text style={styles.deleteText}>Deleting...</Text>
                                     </View>
                                 ) : (
-                                    <Text style={styles.deleteText}>
-                                        Delete
-                                    </Text>
+                                    <Text style={styles.deleteText}>Delete</Text>
                                 )}
                             </Pressable>
                         </View>

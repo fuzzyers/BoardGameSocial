@@ -1,11 +1,4 @@
-import {
-    ActivityIndicator,
-    Modal,
-    Pressable,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
+import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import GamesList from "../gamesList";
 import { useEffect, useState } from "react";
 import { getAllGames } from "@/services/games";
@@ -16,10 +9,7 @@ type ListGamesModalProps = {
     setShowModal: (show: boolean) => void;
 };
 
-const ListGamesModal = ({
-    showModal,
-    setShowModal,
-}: ListGamesModalProps) => {
+const ListGamesModal = ({ showModal, setShowModal }: ListGamesModalProps) => {
     const [games, setGames] = useState<Game[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -43,35 +33,19 @@ const ListGamesModal = ({
     }, [showModal]);
 
     return (
-        <Modal
-            visible={showModal}
-            animationType="fade"
-            transparent
-            onRequestClose={() => setShowModal(false)}
-        >
+        <Modal visible={showModal} animationType="fade" transparent onRequestClose={() => setShowModal(false)}>
             <View style={styles.overlay}>
                 <View style={styles.modal}>
                     <View style={styles.header}>
-                        <Text style={styles.title}>
-                            Select Base Game
-                        </Text>
+                        <Text style={styles.title}>Select Base Game</Text>
 
-                        <Pressable
-                            onPress={() => setShowModal(false)}
-                        >
+                        <Pressable onPress={() => setShowModal(false)}>
                             <Text style={styles.close}>✕</Text>
                         </Pressable>
                     </View>
 
                     <View style={styles.content}>
-                        {loading ? (
-                            <ActivityIndicator size="large" />
-                        ) : (
-                            <GamesList
-                                selectedTab="database"
-                                games={games}
-                            />
-                        )}
+                        {loading ? <ActivityIndicator size="large" /> : <GamesList selectedTab="database" games={games} />}
                     </View>
                 </View>
             </View>

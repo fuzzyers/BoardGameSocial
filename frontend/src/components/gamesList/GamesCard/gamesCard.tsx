@@ -9,18 +9,17 @@ type GamesCardProps = {
     game: Game;
     selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls";
     eventId: number | null;
+    group_id: number;
 };
 
-const GamesCard = ({ game, selectedTab, eventId }: GamesCardProps) => {
+const GamesCard = ({ game, selectedTab, eventId, group_id }: GamesCardProps) => {
     const [expanded, setExpanded] = useState(false);
 
     return (
         <View style={styles.card}>
-            <GamesCardHeader game={game} expanded={expanded} setExpanded={setExpanded}/>
-            <GamesCardInfo game={game}/>
-            {expanded && (
-                <GamesCardExpanded game={game} selectedTab={selectedTab} eventId={eventId}/>
-            )}
+            <GamesCardHeader game={game} expanded={expanded} setExpanded={setExpanded} />
+            <GamesCardInfo game={game} />
+            {expanded && <GamesCardExpanded game={game} selectedTab={selectedTab} eventId={eventId} group_id={group_id} />}
         </View>
     );
 };

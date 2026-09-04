@@ -27,7 +27,7 @@ const UserSearch = ({ groupData }: UserSearchProps) => {
             setLoading(true);
 
             const users = await searchUsers(searchQuery, groupData?.id);
-            console.log("Fetched users:", users);
+
             setSearchResults(users);
             setLoading(false);
         }, 300);

@@ -1,4 +1,4 @@
-import pool from "../db/db.js"
+import pool from "../db/db.js";
 
 export const createPollQuery = async (event_id, created_by, question, multiple_choice, anonymous, expires_at, closed_at) => {
     const result = await pool.query(
@@ -14,11 +14,12 @@ export const createPollQuery = async (event_id, created_by, question, multiple_c
         )
         VALUES
         ($1, $2, $3, $4, $5, $6, $7)
-        `, [event_id, created_by, question, multiple_choice, anonymous, expires_at, closed_at]
-    )
+        `,
+        [event_id, created_by, question, multiple_choice, anonymous, expires_at, closed_at]
+    );
 
-    return result
-}
+    return result;
+};
 
 export const insertVoteQuery = async (userId, pollOptionId) => {
     const result = await pool.query(
@@ -79,7 +80,7 @@ export const addPollOptionQuery = async (pollId, gameId) => {
         [pollId, gameId]
     );
 
-    console.log(result.rows[0])
+    console.log(result.rows[0]);
     return result.rows[0];
 };
 
@@ -99,4 +100,3 @@ export const createPollVote = async (poll_id, option_id, user_id) => {
 
     return result.rows[0];
 };
-

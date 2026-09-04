@@ -10,7 +10,7 @@ type BGGGameCardProps = {
 
 const BGGGameCard = ({ game }: BGGGameCardProps) => {
     const [loading, setLoading] = useState(false);
-    const [showModal, setShowModal] = useState(false)
+    const [showModal, setShowModal] = useState(false);
 
     const handleAddGame = async () => {
         if (loading) return;
@@ -20,11 +20,7 @@ const BGGGameCard = ({ game }: BGGGameCardProps) => {
         try {
             const gameById = await searchBGGGameByID(game.bgg_id);
 
-            console.log(gameById);
-
-            const result = await createGame(gameById);
-
-            console.log("Game added:", result);
+            await createGame(gameById);
         } catch (error) {
             console.error("Failed to add game:", error);
         } finally {
@@ -33,8 +29,8 @@ const BGGGameCard = ({ game }: BGGGameCardProps) => {
     };
 
     const handleAddExpansion = () => {
-        setShowModal(true)
-    }
+        setShowModal(true);
+    };
 
     return (
         <View style={styles.card}>
@@ -52,7 +48,7 @@ const BGGGameCard = ({ game }: BGGGameCardProps) => {
                 {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Add as Expansion</Text>}
             </Pressable>
 
-            <ListGamesModal showModal={showModal} setShowModal={setShowModal}/>
+            <ListGamesModal showModal={showModal} setShowModal={setShowModal} />
         </View>
     );
 };

@@ -11,13 +11,13 @@ export default function Layout() {
 
             if (!token) {
                 router.push("/(auth)/login");
-                return
+                return;
             }
 
-            const tokenExp = isTokenExpired(token)
+            const tokenExp = isTokenExpired(token);
 
-            if (tokenExp){
-                deleteToken()
+            if (tokenExp) {
+                deleteToken();
                 router.push("/(auth)/login");
             }
         };

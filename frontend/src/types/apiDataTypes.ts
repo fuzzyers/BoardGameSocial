@@ -60,7 +60,7 @@ export type Event = {
 export type EventWithGames = Event & {
     games: Game[];
     polls: PollType[];
-}
+};
 
 export type PollType = {
     id: number;
@@ -75,10 +75,22 @@ export type PollType = {
 };
 
 export type PollOption = {
-    id: number,
-    poll_id: number,
-    game_id: number,
-    created_at: string,
-    title: string,
-    votes: number,
-}
+    id: number;
+    poll_id: number;
+    game_id: number;
+    created_at: string;
+    title: string;
+    votes: number;
+};
+
+export type ProfileData = {
+    description: string;
+    email: string;
+    events_count: string;
+    game_count: string;
+    group_count: string;
+    id: number;
+    name: string;
+    role: string;
+    username: string;
+};

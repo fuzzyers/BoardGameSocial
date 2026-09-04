@@ -13,6 +13,7 @@ export const createGroup = async (name: string, description: string) => {
 export const getGroups = async () => {
     try {
         const response = await api.get("/groups");
+
         return response.data.data;
     } catch (error) {
         console.log(error);
