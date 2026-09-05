@@ -23,7 +23,6 @@ const ProfilePage = () => {
         );
     }
 
-
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.content}>
             <ProfileHeader profile={profile!} updateDescription={updateProfileDescription} />

@@ -1,10 +1,20 @@
 import * as gamesService from "../services/games.js";
 
 export const createGame = async (req, res) => {
-    const { title, description, bgg_id, year_published, min_players, max_players, min_play_time, max_play_time, min_age } =
-        req.body.game;
+    const {
+        title,
+        description,
+        bgg_id,
+        year_published,
+        min_players,
+        max_players,
+        min_play_time,
+        max_play_time,
+        min_age,
+        avg_rating,
+        avg_weight,
+    } = req.body.game;
     const submitted_by = req.user.id;
-
     try {
         const game = await gamesService.createGame({
             title,
@@ -16,6 +26,8 @@ export const createGame = async (req, res) => {
             min_play_time,
             max_play_time,
             min_age,
+            avg_rating,
+            avg_weight,
             submitted_by,
         });
 
@@ -105,15 +117,27 @@ export const removeGameFromCollection = async (req, res) => {
 
 export const createExpansion = async (req, res) => {
     try {
-        const { base_game_id } = req.params;
-
-        const { title, description, bgg_id, year_published, min_players, max_players, min_play_time, max_play_time, min_age } =
-            req.body;
+        const {
+            game_id,
+            expansion: {
+                title,
+                description,
+                bgg_id,
+                year_published,
+                min_players,
+                max_players,
+                min_play_time,
+                max_play_time,
+                min_age,
+                avg_rating,
+                avg_weight,
+            },
+        } = req.body;
 
         const submitted_by = req.user.id;
 
         const expansion = await gamesService.createExpansion({
-            base_game_id,
+            base_game_id: game_id,
             title,
             description,
             bgg_id,
@@ -123,6 +147,8 @@ export const createExpansion = async (req, res) => {
             min_play_time,
             max_play_time,
             min_age,
+            avg_rating,
+            avg_weight,
             submitted_by,
         });
 
@@ -130,6 +156,7 @@ export const createExpansion = async (req, res) => {
             data: expansion,
         });
     } catch (error) {
+        console.error("Error creating expansion:", error);
         res.status(500).json({
             message: error.message,
         });

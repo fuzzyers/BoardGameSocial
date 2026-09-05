@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { EventWithGames, Game } from "@/types/apiDataTypes";
 import { getAllGames } from "@/services/games";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GamesListModal from "../gamesList/gamesListModal";
 import DeleteEventButton from "./deleteEventButton";
 

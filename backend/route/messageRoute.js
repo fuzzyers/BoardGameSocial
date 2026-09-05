@@ -1,8 +1,8 @@
 import express from "express";
-import { authentication } from "../middleware/authMiddleware.js";
+import { firebaseAuthMiddleware } from "../middleware/firebaseAuthMiddleware.js";
 import { sendMessage } from "../controller/messageController.js";
 const router = express.Router();
 
-router.post("/create", authentication, sendMessage);
+router.post("/create", firebaseAuthMiddleware, sendMessage);
 
 export default router;

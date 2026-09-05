@@ -101,6 +101,9 @@ CREATE TABLE games (
 
     primary_image_url TEXT,
 
+    average_rating FLOAT,
+    avg_weight FLOAT,
+
 
     -- Moderation
 
@@ -403,8 +406,6 @@ CREATE TABLE event_players (
     PRIMARY KEY(event_id,user_id)
 );
 
-
-
 CREATE TABLE event_games (
     id SERIAL PRIMARY KEY,
 
@@ -412,24 +413,25 @@ CREATE TABLE event_games (
     ON DELETE CASCADE,
 
     game_id INT REFERENCES games(id)
-    ON DELETE CASCADE,
+    ON DELETE CASCADE
 );
-
-
 
 CREATE TABLE game_scores (
     event_game_id INT REFERENCES event_games(id)
-    ON DELETE CASCADE,
-
+        ON DELETE CASCADE,
 
     user_id INT REFERENCES users(id)
-    ON DELETE CASCADE,
-
+        ON DELETE CASCADE,
 
     score INT NOT NULL,
 
+    placement INT NOT NULL
+        CHECK (placement >= 0),
 
-    PRIMARY KEY(event_game_id,user_id)
+    leaderboard_points NUMERIC(6,2) NOT NULL DEFAULT 0.00
+        CHECK (leaderboard_points >= 0),
+
+    PRIMARY KEY(event_game_id, user_id)
 );
 
 CREATE TABLE polls (
@@ -465,3 +467,7 @@ CREATE TABLE poll_votes (
 
 ALTER TABLE users
 ADD COLUMN description TEXT;
+ALTER TABLE users
+ADD COLUMN firebase_uid TEXT UNIQUE;
+ALTER TABLE users
+ALTER COLUMN password DROP NOT NULL;

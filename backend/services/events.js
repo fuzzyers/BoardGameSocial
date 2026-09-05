@@ -19,26 +19,55 @@ export const createEventQuery = async (group_id, name, description, location, ev
     return result.rows[0];
 };
 
-export const getEventsQuery = async () => {
+export const getEventsQuery = async (user_id) => {
     const result = await pool.query(
         `
         SELECT
             e.*,
+
             COALESCE(
                 json_agg(
-                    json_build_object(
+                    DISTINCT jsonb_build_object(
                         'id', p.id,
                         'question', p.question,
                         'created_at', p.created_at
                     )
                 ) FILTER (WHERE p.id IS NOT NULL),
                 '[]'
-            ) AS polls
+            ) AS polls,
+
+            COALESCE(
+                json_agg(
+                    DISTINCT jsonb_build_object(
+                        'id', u.id,
+                        'username', u.username,
+                        'name', u.name,
+                        'email', u.email
+                    )
+                ) FILTER (WHERE u.id IS NOT NULL),
+                '[]'
+            ) AS members
+
         FROM events e
-        LEFT JOIN polls p ON p.event_id = e.id
+
+        JOIN group_members gm_user
+            ON gm_user.group_id = e.group_id
+            AND gm_user.user_id = $1
+
+        LEFT JOIN polls p
+            ON p.event_id = e.id
+
+        LEFT JOIN group_members gm
+            ON gm.group_id = e.group_id
+
+        LEFT JOIN users u
+            ON u.id = gm.user_id
+
         GROUP BY e.id
+
         ORDER BY e.id;
-        `
+        `,
+        [user_id]
     );
 
     return result.rows;
@@ -83,7 +112,33 @@ export const getEventWithGamesQuery = async (event_id) => {
                             'min_play_time', G.min_play_time,
                             'max_play_time', G.max_play_time,
                             'age', G.min_age,
-                            'image', G.primary_image_url
+                            'avg_weight', G.avg_weight,
+                            'image', G.primary_image_url,
+
+                            'results', COALESCE(
+                                (
+                                    SELECT json_agg(
+                                        json_build_object(
+                                            'user_id', U.id,
+                                            'username', U.username,
+                                            'name', U.name,
+                                            'placement', GS.placement,
+                                            'score', GS.score,
+                                            'leaderboard_points', GS.leaderboard_points
+                                        )
+                                        ORDER BY
+                                            CASE
+                                                WHEN GS.placement = 0 THEN 999999
+                                                ELSE GS.placement
+                                            END
+                                    )
+                                    FROM game_scores GS
+                                    JOIN users U
+                                        ON U.id = GS.user_id
+                                    WHERE GS.event_game_id = EG.id
+                                ),
+                                '[]'
+                            )
                         )
                     )
                     FROM event_games EG
@@ -143,7 +198,30 @@ export const getEventWithGamesQuery = async (event_id) => {
                     WHERE P.event_id = E.id
                 ),
                 '[]'
-            ) AS polls
+            ) AS polls,
+
+            COALESCE(
+                (
+                    SELECT json_agg(
+                        json_build_object(
+                            'id', U.id,
+                            'username', U.username,
+                            'name', U.name,
+                            'attending', EXISTS (
+                                SELECT 1
+                                FROM event_players EP
+                                WHERE EP.event_id = E.id
+                                AND EP.user_id = U.id
+                            )
+                        )
+                    )
+                    FROM group_members GM
+                    JOIN users U
+                        ON U.id = GM.user_id
+                    WHERE GM.group_id = E.group_id
+                ),
+                '[]'
+            ) AS members
 
         FROM events E
         WHERE E.id = $1;
@@ -166,3 +244,4 @@ export const deleteEventByIdQuery = async (id) => {
 
     return result.rows[0];
 };
+

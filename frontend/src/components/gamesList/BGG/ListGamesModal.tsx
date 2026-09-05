@@ -7,15 +7,17 @@ import { Game } from "@/types/apiDataTypes";
 type ListGamesModalProps = {
     showModal: boolean;
     setShowModal: (show: boolean) => void;
+    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion";
+    expansion?: any;
 };
 
-const ListGamesModal = ({ showModal, setShowModal }: ListGamesModalProps) => {
+const ListGamesModal = ({ showModal, setShowModal, selectedTab, expansion }: ListGamesModalProps) => {
     const [games, setGames] = useState<Game[]>([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (!showModal) return;
-
+        console.log(showModal);
         const getData = async () => {
             setLoading(true);
 
@@ -45,7 +47,11 @@ const ListGamesModal = ({ showModal, setShowModal }: ListGamesModalProps) => {
                     </View>
 
                     <View style={styles.content}>
-                        {loading ? <ActivityIndicator size="large" /> : <GamesList selectedTab="database" games={games} />}
+                        {loading ? (
+                            <ActivityIndicator size="large" />
+                        ) : (
+                            <GamesList selectedTab={selectedTab} games={games} expansion={expansion} />
+                        )}
                     </View>
                 </View>
             </View>

@@ -1,11 +1,9 @@
-import { deleteToken } from "@/services/auth";
 import { getSocket } from "@/services/socket";
 import { router } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function HomeScreen() {
     const handleLogout = async () => {
-        await deleteToken();
         const socket = getSocket();
         if (!socket) return;
         socket.disconnect();

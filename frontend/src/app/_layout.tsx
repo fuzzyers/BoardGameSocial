@@ -1,29 +1,34 @@
-import { deleteToken, getToken, isTokenExpired } from "@/services/auth";
-import { Redirect, router, Slot, useSegments } from "expo-router";
+import { auth } from "@/config/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { router, Slot } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 
 export default function Layout() {
-    useEffect(() => {
-        const checkAuth = async () => {
-            const token = await getToken();
+    const [loading, setLoading] = useState(true);
 
-            if (!token) {
-                router.push("/(auth)/login");
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                setLoading(false);
+                router.replace("/(auth)/login");
                 return;
             }
 
-            const tokenExp = isTokenExpired(token);
+            setLoading(false);
+        });
 
-            if (tokenExp) {
-                deleteToken();
-                router.push("/(auth)/login");
-            }
-        };
-        checkAuth();
+        return unsubscribe;
     }, []);
-    const segments = useSegments();
+
+    if (loading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" />
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -36,5 +41,11 @@ export default function Layout() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+
+    loadingContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
     },
 });

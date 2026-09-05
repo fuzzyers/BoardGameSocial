@@ -8,7 +8,6 @@ export type BGGSearchResult = {
 
 export const searchBGGGame = async (search: string) => {
     const response = await api.get(`/bgg/search/${search}`);
-
     return response.data.results;
 };
 

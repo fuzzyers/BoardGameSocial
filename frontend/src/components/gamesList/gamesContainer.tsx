@@ -23,6 +23,7 @@ const GamesContainer = () => {
 
         if (selectedTab === "database") {
             data = await getAllGames();
+            console.log("Fetched games from database:", data);
         }
 
         if (selectedTab === "add") return;

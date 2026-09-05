@@ -4,12 +4,13 @@ import GameCard from "./GamesCard/gamesCard";
 
 type GamesListProps = {
     games: Game[];
-    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls";
-    eventId: number | null;
-    group_id: number;
+    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion";
+    eventId?: number;
+    group_id?: number;
+    expansion?: Game;
 };
 
-const GamesList = ({ games, selectedTab, eventId, group_id }: GamesListProps) => {
+const GamesList = ({ games, selectedTab, eventId, group_id, expansion }: GamesListProps) => {
     const { width } = useWindowDimensions();
 
     const numColumns = width >= 600 ? 2 : 1;
@@ -17,26 +18,25 @@ const GamesList = ({ games, selectedTab, eventId, group_id }: GamesListProps) =>
     return (
         <FlatList
             data={games}
+            style={styles.list}
+            contentContainerStyle={styles.content}
             keyExtractor={(game) => game.id.toString()}
-            renderItem={({ item }) => <GameCard game={item} selectedTab={selectedTab} eventId={eventId} group_id={group_id} />}
-            // numColumns={numColumns}
-            key={numColumns}
-            // columnWrapperStyle={numColumns === 2 ? styles.row : undefined}
-            contentContainerStyle={styles.list}
+            renderItem={({ item }) => (
+                <GameCard game={item} selectedTab={selectedTab} eventId={eventId} group_id={group_id} expansion={expansion} />
+            )}
         />
     );
 };
 
 const styles = StyleSheet.create({
     list: {
-        paddingVertical: 8,
-        paddingHorizontal: 8,
+        flex: 1,
+        minHeight: 0,
     },
 
-    row: {
-        justifyContent: "space-between",
-        gap: 8,
-        marginBottom: 8,
+    content: {
+        paddingVertical: 8,
+        paddingHorizontal: 8,
     },
 });
 

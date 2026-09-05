@@ -11,3 +11,4 @@ yarn-error.log*
 .DS_Store
 .env
 dist/
+boardgamesocias-firebase-adminsdk-fbsvc-421c1427b2.json

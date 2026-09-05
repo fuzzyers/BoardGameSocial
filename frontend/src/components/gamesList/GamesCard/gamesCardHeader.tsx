@@ -1,18 +1,30 @@
 import { Game } from "@/types/apiDataTypes";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import GameActionButton from "./gameActionButton";
+import useGameAction from "@/hooks/useGameAction";
 
 type GamesCardHeaderProps = {
     game: Game;
-    expanded: boolean;
-    setExpanded: (value: boolean) => void;
+    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion";
+    eventId?: number;
+    group_id?: number;
+    expansion?: Game;
 };
 
-const GamesCardHeader = ({ game, expanded, setExpanded }: GamesCardHeaderProps) => {
+const GamesCardHeader = ({ game, selectedTab, eventId, group_id, expansion }: GamesCardHeaderProps) => {
+    const { action, loading, status, button } = useGameAction({
+        game,
+        selectedTab,
+        eventId,
+        group_id,
+        expansion,
+    });
+
     return (
-        <Pressable style={styles.header} onPress={() => setExpanded(!expanded)}>
+        <View style={styles.header}>
             <View style={styles.titleContainer}>
                 <View style={styles.titleRow}>
-                    <Text style={styles.title} numberOfLines={expanded ? undefined : 1}>
+                    <Text style={styles.title} numberOfLines={1}>
                         {game.title}
                     </Text>
 
@@ -38,15 +50,28 @@ const GamesCardHeader = ({ game, expanded, setExpanded }: GamesCardHeaderProps) 
                 {game.year_published && <Text style={styles.year}>{game.year_published}</Text>}
             </View>
 
-            <Text style={styles.arrow}>{expanded ? "▲" : "▼"}</Text>
-        </Pressable>
+            <View style={styles.actionContainer}>
+                {button && (
+                    <GameActionButton
+                        title={button.title}
+                        loadingTitle={button.loadingTitle}
+                        successTitle={button.successTitle}
+                        errorTitle={button.errorTitle}
+                        adding={loading}
+                        status={status}
+                        onPress={action}
+                        variant={button.variant}
+                    />
+                )}
+            </View>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     header: {
         flexDirection: "row",
-        alignItems: "flex-start",
+        alignItems: "center",
         padding: 14,
     },
 
@@ -110,11 +135,9 @@ const styles = StyleSheet.create({
         color: "#777",
     },
 
-    arrow: {
-        marginLeft: 8,
-        marginTop: 2,
-        fontSize: 14,
-        color: "#777",
+    actionContainer: {
+        marginLeft: 10,
+        flexShrink: 0,
     },
 });
 

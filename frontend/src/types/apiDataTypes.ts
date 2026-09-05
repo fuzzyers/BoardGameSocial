@@ -45,6 +45,11 @@ export type Game = {
     max_play_time: number;
     min_age: number | null;
     review_status: string;
+    average_rating: number | null;
+    avg_weight: number | null;
+    submitted_by: number;
+    created_at: string;
+    expansions: Game[];
 };
 
 export type Event = {
@@ -55,6 +60,7 @@ export type Event = {
     name: string;
     event_date: string;
     created_at: string;
+    members: Members[];
 };
 
 export type EventWithGames = Event & {
@@ -93,4 +99,11 @@ export type ProfileData = {
     name: string;
     role: string;
     username: string;
+};
+
+export type Members = {
+    id: number;
+    username: string;
+    name: string;
+    attending: boolean;
 };

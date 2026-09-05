@@ -39,6 +39,14 @@ export default function AppLayout() {
             />
 
             <Tabs.Screen
+                name="games/[gameid]"
+                options={{
+                    href: null,
+                    headerShown: false,
+                }}
+            />
+
+            <Tabs.Screen
                 name="groups"
                 options={{
                     title: "Groups",

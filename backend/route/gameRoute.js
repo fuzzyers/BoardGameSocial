@@ -11,21 +11,22 @@ import {
     getCollection,
     addGameToCollection,
     removeGameFromCollection,
+    createExpansion,
 } from "../controller/gameController.js";
 
-import { authentication } from "../middleware/authMiddleware.js";
 import { adminAuthentication } from "../middleware/adminAuthMiddleware.js";
+import { firebaseAuthMiddleware } from "../middleware/firebaseAuthMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", getGames).post("/", authentication, createGame);
+router.get("/", getGames).post("/", firebaseAuthMiddleware, createGame);
 router.get("/search", searchGames);
-router.get("/:id", getGame).put("/:id", authentication, updateGame).delete("/:id", authentication, deleteGame);
+router.get("/:id", getGame).put("/:id", firebaseAuthMiddleware, updateGame).delete("/:id", firebaseAuthMiddleware, deleteGame);
 router
-    .get("/collection/me", authentication, getCollection)
-    .put("/collection/me", authentication, addGameToCollection)
-    .put("/collection/me/remove", authentication, removeGameFromCollection);
-// router.get("/expansion/")
+    .get("/collection/me", firebaseAuthMiddleware, getCollection)
+    .put("/collection/me", firebaseAuthMiddleware, addGameToCollection)
+    .put("/collection/me/remove", firebaseAuthMiddleware, removeGameFromCollection);
+router.get("/expansion/:id", firebaseAuthMiddleware, getGame).post("/expansion/", firebaseAuthMiddleware, createExpansion);
 
 // =======================
 // Moderation
@@ -35,7 +36,7 @@ router
 router.patch("/:id/approve", adminAuthentication, approveGame);
 
 // Reject game
-router.patch("/:id/reject", authentication, async (req, res) => {
+router.patch("/:id/reject", firebaseAuthMiddleware, async (req, res) => {
     // Add rejectGame controller when needed
 });
 

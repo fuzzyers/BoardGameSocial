@@ -7,7 +7,7 @@ type GamesListModalProps = {
     games: Game[];
     eventId: number;
     onClose: () => void;
-    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls";
+    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion";
     group_id: number;
 };
 
@@ -24,7 +24,9 @@ const GamesListModal = ({ visible, games, onClose, eventId, selectedTab, group_i
                         </Pressable>
                     </View>
 
-                    <GamesList games={games} selectedTab={selectedTab} eventId={eventId} group_id={group_id} />
+                    <View style={{ flex: 1 }}>
+                        <GamesList games={games} selectedTab={selectedTab} eventId={eventId} group_id={group_id} />
+                    </View>
                 </View>
             </View>
         </Modal>
@@ -41,7 +43,7 @@ const styles = StyleSheet.create({
 
     modalContent: {
         width: "90%",
-        maxHeight: "80%",
+        height: "80%",
         backgroundColor: "white",
         borderRadius: 12,
         padding: 16,

@@ -17,6 +17,8 @@ export const createGame = async (game, submitted_by) => {
             min_play_time,
             max_play_time,
             min_age,
+            average_rating,
+            avg_weight,
             submitted_by,
             review_status
         )
@@ -31,6 +33,8 @@ export const createGame = async (game, submitted_by) => {
             $8,
             $9,
             $10,
+            $11,
+            $12,
             'imported'
         )
         ON CONFLICT (bgg_id)
@@ -47,6 +51,8 @@ export const createGame = async (game, submitted_by) => {
             game.min_play_time,
             game.max_play_time,
             game.min_age,
+            game.avg_rating,
+            game.avg_weight,
             submitted_by,
         ]
     );
@@ -73,17 +79,49 @@ export const createGame = async (game, submitted_by) => {
 // =======================
 
 export const getGames = async () => {
-    const result = await pool.query(
-        `
-        SELECT *
-        FROM games
-        ORDER BY title;
-        `
-    );
+    const result = await pool.query(`
+        SELECT
+            g.*,
+            COALESCE(
+                json_agg(
+                    json_build_object(
+                        'id', e.id,
+                        'title', e.title,
+                        'description', e.description,
+                        'bgg_id', e.bgg_id,
+                        'year_published', e.year_published,
+                        'min_players', e.min_players,
+                        'max_players', e.max_players,
+                        'min_play_time', e.min_play_time,
+                        'max_play_time', e.max_play_time,
+                        'min_age', e.min_age,
+                        'avgerage_rating', e.average_rating,
+                        'avg_weight', e.avg_weight,
+                        'primary_image_url', e.primary_image_url
+                    )
+                ) FILTER (WHERE e.id IS NOT NULL),
+                '[]'
+            ) AS expansions
+        FROM games g
+
+        LEFT JOIN game_expansions ge
+            ON ge.base_game_id = g.id
+
+        LEFT JOIN games e
+            ON e.id = ge.expansion_id
+
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM game_expansions expansion_check
+            WHERE expansion_check.expansion_id = g.id
+        )
+
+        GROUP BY g.id
+        ORDER BY g.title;
+    `);
 
     return result.rows;
 };
-
 // =======================
 // GET GAME BY ID
 // =======================
@@ -91,19 +129,46 @@ export const getGames = async () => {
 export const getGameById = async (id) => {
     const result = await pool.query(
         `
-        SELECT *
-        FROM games
-        WHERE id = $1
+        SELECT
+            g.*,
+            COALESCE(
+                json_agg(
+                    json_build_object(
+                        'id', e.id,
+                        'title', e.title,
+                        'description', e.description,
+                        'bgg_id', e.bgg_id,
+                        'year_published', e.year_published,
+                        'min_players', e.min_players,
+                        'max_players', e.max_players,
+                        'min_play_time', e.min_play_time,
+                        'max_play_time', e.max_play_time,
+                        'min_age', e.min_age,
+                        'average_rating', e.average_rating,
+                        'avg_weight', e.avg_weight,
+                        'primary_image_url', e.primary_image_url
+                    )
+                ) FILTER (WHERE e.id IS NOT NULL),
+                '[]'
+            ) AS expansions
+
+        FROM games g
+
+        LEFT JOIN game_expansions ge
+            ON ge.base_game_id = g.id
+
+        LEFT JOIN games e
+            ON e.id = ge.expansion_id
+
+        WHERE g.id = $1
+
+        GROUP BY g.id;
         `,
         [id]
     );
 
     return result.rows[0];
 };
-
-// =======================
-// SEARCH
-// =======================
 
 export const searchGames = async (query) => {
     const result = await pool.query(
@@ -120,10 +185,6 @@ export const searchGames = async (query) => {
 
     return result.rows;
 };
-
-// =======================
-// UPDATE GAME
-// =======================
 
 export const updateGame = async (id, data) => {
     const result = await pool.query(
@@ -236,6 +297,8 @@ export const createExpansion = async (game) => {
                 min_play_time,
                 max_play_time,
                 min_age,
+                average_rating,
+                avg_weight,
                 submitted_by
             )
             VALUES (
@@ -248,7 +311,9 @@ export const createExpansion = async (game) => {
                 $7,
                 $8,
                 $9,
-                $10
+                $10,
+                $11,
+                $12
             )
             RETURNING *
             `,
@@ -262,6 +327,8 @@ export const createExpansion = async (game) => {
                 game.min_play_time,
                 game.max_play_time,
                 game.min_age,
+                game.avg_rating,
+                game.avg_weight,
                 game.submitted_by,
             ]
         );
@@ -323,15 +390,52 @@ export const removeGameFromCollection = async (userId, gameId) => {
 export const getUserCollection = async (userId) => {
     const result = await pool.query(
         `
-        SELECT g.*
-        FROM user_games ug
+        SELECT
+            g.*,
+            COALESCE(
+                json_agg(
+                    json_build_object(
+                        'id', e.id,
+                        'title', e.title,
+                        'description', e.description,
+                        'bgg_id', e.bgg_id,
+                        'year_published', e.year_published,
+                        'min_players', e.min_players,
+                        'max_players', e.max_players,
+                        'min_play_time', e.min_play_time,
+                        'max_play_time', e.max_play_time,
+                        'min_age', e.min_age,
+                        'primary_image_url', e.primary_image_url
+                    )
+                ) FILTER (WHERE e.id IS NOT NULL),
+                '[]'
+            ) AS expansions
+        FROM games g
 
-        JOIN games g
-        ON g.id=ug.game_id
+        LEFT JOIN game_expansions ge
+            ON ge.base_game_id = g.id
 
-        WHERE ug.user_id=$1
+        LEFT JOIN games e
+            ON e.id = ge.expansion_id
 
-        ORDER BY g.title
+        WHERE
+            EXISTS (
+                SELECT 1
+                FROM user_games ug
+                WHERE ug.user_id = $1
+                AND ug.game_id = g.id
+            )
+            OR EXISTS (
+                SELECT 1
+                FROM user_games ug
+                JOIN game_expansions ge2
+                    ON ge2.expansion_id = ug.game_id
+                WHERE ug.user_id = $1
+                AND ge2.base_game_id = g.id
+            )
+
+        GROUP BY g.id
+        ORDER BY g.title;
         `,
         [userId]
     );

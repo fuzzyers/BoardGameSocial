@@ -1,17 +1,21 @@
 import EventHome from "@/components/events/eventHome";
 import EventIdHeader from "@/components/events/eventIdHeader";
 import Poll from "@/components/events/eventPoll";
+import Result from "@/components/events/results/results";
 import { getEventById } from "@/services/event";
 import { EventWithGames } from "@/types/apiDataTypes";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import EventAtendees from "@/components/events/eventAtendees";
 
 const EventPage = () => {
     const { eventId } = useLocalSearchParams();
     const [event, setEvent] = useState<EventWithGames>();
     const [loading, setLoading] = useState(true);
-    const [selectedTab, setSelectedTab] = useState<"collection" | "database" | "add" | "addtoevent" | "polls">("addtoevent");
+    const [selectedTab, setSelectedTab] = useState<"collection" | "database" | "add" | "addtoevent" | "polls" | "results">(
+        "addtoevent"
+    );
 
     useFocusEffect(
         useCallback(() => {
@@ -32,7 +36,7 @@ const EventPage = () => {
             if (eventId) {
                 getData();
             }
-        }, [eventId])
+        }, [])
     );
 
     if (loading) {
@@ -68,12 +72,26 @@ const EventPage = () => {
                 >
                     <Text>Polls</Text>
                 </Pressable>
+
+                <Pressable
+                    style={[styles.tab, selectedTab === "results" && styles.selectedTab]}
+                    onPress={() => setSelectedTab("results")}
+                >
+                    <Text>Results</Text>
+                </Pressable>
             </View>
             <EventIdHeader event={event} />
 
             {selectedTab === "polls" && <Poll poll={event.polls[0]} selectedTab={selectedTab} />}
 
-            {selectedTab === "addtoevent" && <EventHome event={event} selectedTab={selectedTab} />}
+            {selectedTab === "addtoevent" && (
+                <>
+                    <EventHome event={event} selectedTab={selectedTab} />
+                    <EventAtendees members={event.members} event_id={event.id}/>
+                </>
+            )}
+
+            {selectedTab === "results" && <Result event={event} selectedTab={selectedTab} />}
         </ScrollView>
     );
 };

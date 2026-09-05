@@ -1,4 +1,5 @@
 import { api } from "./api";
+import { Game } from "@/types/apiDataTypes";
 
 export const getAllGames = async () => {
     const response = await api.get("/games/");
@@ -49,6 +50,28 @@ export const removeFromCollection = async (game_id: number) => {
         return response;
     } catch (error) {
         console.log("Failed to remove game from collection: ", error);
+        throw error;
+    }
+};
+
+export const addExpansionToGame = async (game_id: number, expansion: Game) => {
+    try {
+        const response = await api.post("/games/expansion", { game_id, expansion });
+
+        return response;
+    } catch (error) {
+        console.error("Failed to add expansion to game:", error);
+        throw error;
+    }
+};
+
+export const getGameById = async (gameid: number) => {
+    try {
+        const response = await api.get(`/games/${gameid}`);
+
+        return response.data;
+    } catch (error) {
+        console.error("Failed to fetch game by ID:", error);
         throw error;
     }
 };

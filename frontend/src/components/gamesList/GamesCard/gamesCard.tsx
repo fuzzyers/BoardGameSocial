@@ -1,32 +1,39 @@
-import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Pressable, StyleSheet } from "react-native";
 import { Game } from "@/types/apiDataTypes";
-import GamesCardExpanded from "./gamesCardExpanded";
 import GamesCardHeader from "./gamesCardHeader";
 import GamesCardInfo from "./gamesCardInfo";
 
 type GamesCardProps = {
     game: Game;
-    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls";
-    eventId: number | null;
-    group_id: number;
+    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion";
+    eventId?: number;
+    group_id?: number;
+    expansion?: Game;
 };
 
-const GamesCard = ({ game, selectedTab, eventId, group_id }: GamesCardProps) => {
-    const [expanded, setExpanded] = useState(false);
+const GamesCard = ({ game, selectedTab, eventId, group_id, expansion }: GamesCardProps) => {
+    const router = useRouter();
+
+    const handlePress = () => {
+        router.push({
+            pathname: "/(app)/games/[gameid]",
+            params: {
+                gameid: game.id.toString(),
+            },
+        });
+    };
 
     return (
-        <View style={styles.card}>
-            <GamesCardHeader game={game} expanded={expanded} setExpanded={setExpanded} />
+        <Pressable style={styles.card} onPress={handlePress}>
+            <GamesCardHeader game={game} selectedTab={selectedTab} expansion={expansion} eventId={eventId} group_id={group_id} />
             <GamesCardInfo game={game} />
-            {expanded && <GamesCardExpanded game={game} selectedTab={selectedTab} eventId={eventId} group_id={group_id} />}
-        </View>
+        </Pressable>
     );
 };
 
 const styles = StyleSheet.create({
     card: {
-        flex: 1,
         marginHorizontal: 4,
         marginVertical: 6,
         backgroundColor: "#fff",

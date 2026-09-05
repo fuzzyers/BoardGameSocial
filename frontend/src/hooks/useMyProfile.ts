@@ -24,7 +24,7 @@ export const useMyProfile = () => {
         fetchProfile();
     }, []);
 
-    const updateProfileDescription = async(newDescription: string) => {
+    const updateProfileDescription = async (newDescription: string) => {
         const response = await updateProfileBio(newDescription);
 
         console.log("Updated profile description:", response);
@@ -37,6 +37,5 @@ export const useMyProfile = () => {
         });
     };
 
-    return { profile, loading, error, updateProfileDescription};
-}
-                
+    return { profile, loading, error, updateProfileDescription };
+};

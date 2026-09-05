@@ -8,7 +8,7 @@ type GameActionButtonProps = {
     adding: boolean;
     status: "success" | "error" | null;
     onPress: () => void;
-    variant?: "primary" | "danger";
+    variant?: "primary" | "danger" | "default";
 };
 
 const GameActionButton = ({
@@ -36,22 +36,27 @@ const GameActionButton = ({
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: "#4A90E2",
-        paddingVertical: 11,
+        minWidth: 38,
+        height: 38,
+        paddingHorizontal: 12,
         borderRadius: 8,
         alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#2563EB",
+    },
+
+    dangerButton: {
+        backgroundColor: "#DC2626",
     },
 
     disabled: {
-        opacity: 0.6,
+        opacity: 0.55,
     },
 
     buttonText: {
-        color: "#fff",
+        color: "#FFFFFF",
+        fontSize: 14,
         fontWeight: "700",
-    },
-    dangerButton: {
-        backgroundColor: "#b94444",
     },
 });
 

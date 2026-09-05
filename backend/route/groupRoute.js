@@ -7,11 +7,14 @@ import {
     getAllGroups,
     removeUserFromGroup,
 } from "../controller/groupController.js";
-import { authentication } from "../middleware/authMiddleware.js";
+import { firebaseAuthMiddleware } from "../middleware/firebaseAuthMiddleware.js";
 const router = express.Router();
 
-router.post("/create", authentication, createGroup);
-router.put("/addUser", authentication, addUserToGroup).put("/removeUser", authentication, removeUserFromGroup);
-router.get("/", authentication, getAllGroups).get("/:id", getAllGroupByIdData).delete("/:id", authentication, deleteGroup);
+router.post("/create", firebaseAuthMiddleware, createGroup);
+router.put("/addUser", firebaseAuthMiddleware, addUserToGroup).put("/removeUser", firebaseAuthMiddleware, removeUserFromGroup);
+router
+    .get("/", firebaseAuthMiddleware, getAllGroups)
+    .get("/:id", getAllGroupByIdData)
+    .delete("/:id", firebaseAuthMiddleware, deleteGroup);
 
 export default router;

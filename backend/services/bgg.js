@@ -8,13 +8,12 @@ export const searchBGGGame = async (search) => {
             type: "boardgame",
         },
     });
-
     const parsedData = await parseSearchResults(response.data);
     return parsedData;
 };
 
 export const searchBGGGameById = async (id) => {
-    const response = await bggApi.get(`thing?id=${id}`);
+    const response = await bggApi.get(`/thing?id=${id}&stats=1`);
 
     const parsedData = await parseSearchByIdResults(response.data);
 

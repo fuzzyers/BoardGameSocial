@@ -58,7 +58,7 @@ const SearchBGG = ({ onGameSelected }: SearchGameProps) => {
 
             {message !== "" && <Text style={styles.message}>{message}</Text>}
 
-            <BGGSearchResults results={results} onGameSelected={onGameSelected} />
+            <BGGSearchResults results={results} />
         </View>
     );
 };

@@ -9,6 +9,7 @@ import eventRoutes from "./route/eventRoute.js";
 import bggRoutes from "./route/bggRoute.js";
 import pollRoutes from "./route/pollRoute.js";
 import profileRoutes from "./route/profileRoute.js";
+import eventScoringRoutes from "./route/eventScoringRoute.js"
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use("/events", eventRoutes);
 app.use("/bgg", bggRoutes);
 app.use("/poll", pollRoutes);
 app.use("/profile", profileRoutes);
+app.use("/events/scoring", eventScoringRoutes)
 
 app.get("/", (req, res) => {
     res.json({ message: "Hello from the backend!" });

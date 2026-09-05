@@ -1,6 +1,5 @@
 import { getProfile, updateBio } from "../services/profile.js";
 
-
 export const getMyProfile = async (req, res) => {
     try {
         const user_id = req.user.id;
@@ -31,7 +30,7 @@ export const updateProfileBio = async (req, res) => {
         const { bio } = req.body;
 
         const response = await updateBio(user_id, bio);
-        
+
         res.status(200).json({ message: "success", data: response });
     } catch (error) {
         res.status(500).json({ message: error });
