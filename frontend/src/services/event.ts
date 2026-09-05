@@ -67,8 +67,8 @@ export const deleteEvent = async (group_id: number, event_id: number) => {
 export const toggleAttendance = async (event_id: number, user_id: number) => {
     const response = await api.put("/events/attendingEvent", {
         event_id: event_id,
-        user_id: user_id
-    })
+        user_id: user_id,
+    });
 
-    return response
-}
+    return response;
+};

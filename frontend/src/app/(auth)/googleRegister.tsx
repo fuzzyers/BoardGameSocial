@@ -2,6 +2,8 @@ import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
 import { createFirebaseUser } from "@/services/auth";
+import { styles } from "@/styles/googleRegister"
+import { errorStyle } from "@/styles/error";
 
 const GoogleRegisterPage = () => {
     const router = useRouter();
@@ -65,7 +67,7 @@ const GoogleRegisterPage = () => {
                     <Text style={styles.label}>Username</Text>
 
                     <TextInput
-                        style={[styles.input, error ? styles.inputError : undefined]}
+                        style={[styles.input, error ? errorStyle.inputError : undefined]}
                         value={username}
                         onChangeText={(text) => {
                             setUsername(text);
@@ -80,7 +82,7 @@ const GoogleRegisterPage = () => {
 
                     <Text style={styles.hint}>3–20 characters. Letters, numbers and underscores.</Text>
 
-                    {error ? <Text style={styles.error}>{error}</Text> : null}
+                    {error ? <Text style={errorStyle.error}>{error}</Text> : null}
 
                     <Pressable
                         style={[styles.button, loading || !username.trim() ? styles.buttonDisabled : undefined]}
@@ -94,81 +96,5 @@ const GoogleRegisterPage = () => {
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 20,
-    },
-
-    content: {
-        width: "100%",
-        maxWidth: 450,
-    },
-
-    title: {
-        fontSize: 28,
-        fontWeight: "bold",
-        textAlign: "center",
-        marginBottom: 12,
-    },
-
-    subtitle: {
-        fontSize: 16,
-        textAlign: "center",
-        marginBottom: 32,
-    },
-
-    form: {
-        width: "100%",
-    },
-
-    label: {
-        fontSize: 16,
-        fontWeight: "600",
-        marginBottom: 8,
-    },
-
-    input: {
-        height: 50,
-        borderWidth: 1,
-        borderRadius: 8,
-        paddingHorizontal: 14,
-        fontSize: 16,
-    },
-
-    inputError: {
-        borderWidth: 1,
-    },
-
-    hint: {
-        fontSize: 13,
-        marginTop: 6,
-    },
-
-    error: {
-        fontSize: 14,
-        marginTop: 8,
-    },
-
-    button: {
-        height: 50,
-        borderRadius: 8,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 24,
-    },
-
-    buttonDisabled: {
-        opacity: 0.5,
-    },
-
-    buttonText: {
-        fontSize: 16,
-        fontWeight: "600",
-    },
-});
 
 export default GoogleRegisterPage;

@@ -73,12 +73,12 @@ const fakeGames = [
 
 const Result = ({ event, selectedTab }: any) => {
     useEffect(() => {
-        console.log(event)
-    },[])
+        console.log(event);
+    }, []);
     return (
         <View>
-            {event.games.map((game:any) => (
-                <ResultTable game={game} members={event.members} event_id={event.id}/>
+            {event.games.map((game: any) => (
+                <ResultTable game={game} members={event.members} event_id={event.id} />
             ))}
         </View>
     );

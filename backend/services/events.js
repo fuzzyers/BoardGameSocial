@@ -244,4 +244,3 @@ export const deleteEventByIdQuery = async (id) => {
 
     return result.rows[0];
 };
-

@@ -1,6 +1,6 @@
 import { getEvents } from "@/services/event";
 import { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 import EventFilters, { EventTimeFilter } from "@/components/events/eventFilters";
 
@@ -17,12 +17,10 @@ const EventsPage = () => {
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
-
     const [timeFilter, setTimeFilter] = useState<EventTimeFilter>("upcoming");
-
     const [groupFilter, setGroupFilter] = useState<number | null>(null);
-
     const [groups, setGroups] = useState<Group[]>([]);
+    const [error, setError] = useState<boolean>(false);
 
     const getEventsData = async (isRefresh = false) => {
         try {
@@ -31,12 +29,11 @@ const EventsPage = () => {
             } else {
                 setLoading(true);
             }
-
             const data = await getEvents();
 
             setEvents(data.results);
         } catch (error) {
-            console.error("Failed to get events:", error);
+            setError(true);
         } finally {
             if (isRefresh) {
                 setRefreshing(false);
@@ -95,6 +92,7 @@ const EventsPage = () => {
             />
 
             <EventList events={filteredEvents} />
+            {error && <Text>Unable to retrieve events</Text>}
         </View>
     );
 };

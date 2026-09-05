@@ -59,11 +59,11 @@ export const addUserToGroup = async (req, res) => {
         }
 
         const getGroup = await getGroupWithMembers(groupId);
-        console.log(getGroup);
+
         // Check if the user is the owner of the group
-        if (getGroup.members[0].id !== ownerId) {
-            return res.status(401).json({ message: "You are not the owner of this group" });
-        }
+        // if (getGroup.members[0].id !== ownerId) {
+        //     return res.status(401).json({ message: "You are not the owner of this group" });
+        // }
 
         const memberExists = getGroup.members.some((member) => member.id === userId);
 

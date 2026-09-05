@@ -9,8 +9,8 @@ export const eventGameResult = async (event_id, game_id) => {
         AND game_id = $2
         `,
         [event_id, game_id]
-    )
-}
+    );
+};
 
 export const insertGameScores = async (eventGameId, user_id, score, placement, leaderboard_points) => {
     const result = await pool.query(
@@ -30,14 +30,8 @@ export const insertGameScores = async (eventGameId, user_id, score, placement, l
             leaderboard_points = EXCLUDED.leaderboard_points
         RETURNING *
         `,
-        [
-            eventGameId,
-            user_id,
-            score,
-            placement,
-            leaderboard_points,
-        ]
+        [eventGameId, user_id, score, placement, leaderboard_points]
     );
 
-    return result.rows[0]
-}
+    return result.rows[0];
+};

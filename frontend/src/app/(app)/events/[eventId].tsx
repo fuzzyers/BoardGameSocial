@@ -87,7 +87,7 @@ const EventPage = () => {
             {selectedTab === "addtoevent" && (
                 <>
                     <EventHome event={event} selectedTab={selectedTab} />
-                    <EventAtendees members={event.members} event_id={event.id}/>
+                    <EventAtendees members={event.members} event_id={event.id} />
                 </>
             )}
 

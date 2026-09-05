@@ -11,10 +11,8 @@ const EventAttendees = ({ members, event_id }: EventAttendeesProps) => {
     const handleToggleAttendance = async (userId: number) => {
         console.log("Toggle attendance for user:", userId);
         try {
-            const response = toggleAttendance(event_id, userId)
-        } catch (error) {
-            
-        }
+            const response = toggleAttendance(event_id, userId);
+        } catch (error) {}
     };
 
     return (
@@ -22,42 +20,19 @@ const EventAttendees = ({ members, event_id }: EventAttendeesProps) => {
             <Text style={styles.title}>Attendees</Text>
 
             {members.map((member) => (
-                <View
-                    key={member.id}
-                    style={styles.memberRow}
-                >
+                <View key={member.id} style={styles.memberRow}>
                     <View style={styles.memberInfo}>
-                        <Text style={styles.name}>
-                            {member.name}
-                        </Text>
+                        <Text style={styles.name}>{member.name}</Text>
 
-                        <Text style={styles.username}>
-                            @{member.username}
-                        </Text>
+                        <Text style={styles.username}>@{member.username}</Text>
                     </View>
 
                     <Pressable
-                        style={[
-                            styles.attendanceButton,
-                            member.attending
-                                ? styles.attending
-                                : styles.notAttending,
-                        ]}
-                        onPress={() =>
-                            handleToggleAttendance(member.id)
-                        }
+                        style={[styles.attendanceButton, member.attending ? styles.attending : styles.notAttending]}
+                        onPress={() => handleToggleAttendance(member.id)}
                     >
-                        <Text
-                            style={[
-                                styles.buttonText,
-                                member.attending
-                                    ? styles.attendingText
-                                    : styles.notAttendingText,
-                            ]}
-                        >
-                            {member.attending
-                                ? "Coming"
-                                : "Not Coming"}
+                        <Text style={[styles.buttonText, member.attending ? styles.attendingText : styles.notAttendingText]}>
+                            {member.attending ? "Coming" : "Not Coming"}
                         </Text>
                     </Pressable>
                 </View>
