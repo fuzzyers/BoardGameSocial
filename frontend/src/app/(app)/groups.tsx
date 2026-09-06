@@ -1,5 +1,12 @@
-import { useEffect, useState } from "react";
-import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import {
+    StyleSheet,
+    Text,
+    useWindowDimensions,
+    View,
+} from "react-native";
+import { useFocusEffect } from "expo-router";
+
 import { Group } from "@/types/apiDataTypes";
 import NavGroups from "@/components/groupManagment/navGroups";
 import ChatBox from "@/components/groupManagment/chatbox";
@@ -11,7 +18,6 @@ const Groups = () => {
     const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
 
     const { width } = useWindowDimensions();
-
     const isDesktop = width >= 768;
 
     const loadGroups = async () => {
@@ -20,20 +26,38 @@ const Groups = () => {
 
             if (Array.isArray(data)) {
                 setGroups(data);
+
+                // If the currently selected group was deleted/left,
+                // clear it from the UI.
+                setSelectedGroup((currentGroup) => {
+                    if (!currentGroup) {
+                        return null;
+                    }
+
+                    const stillExists = data.some(
+                        (group) => group.id === currentGroup.id
+                    );
+
+                    return stillExists ? currentGroup : null;
+                });
             }
         } catch (error) {
             console.error("Failed to load groups:", error);
         }
     };
 
-    useEffect(() => {
-        loadGroups();
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            loadGroups();
+        }, [])
+    );
 
     useEffect(() => {
         const socket = getSocket();
 
-        if (!socket) return;
+        if (!socket) {
+            return;
+        }
 
         const handleGroupCreated = () => {
             loadGroups();
@@ -46,27 +70,32 @@ const Groups = () => {
         };
     }, []);
 
-    /*
-     * DESKTOP
-     *
-     * Groups stay visible on the left and ChatBox
-     * stays visible on the right.
-     */
     if (isDesktop) {
         return (
             <View style={styles.desktopContainer}>
                 <View style={styles.sidebar}>
-                    <NavGroups groups={groups} onSelectGroup={setSelectedGroup} />
+                    <NavGroups
+                        groups={groups}
+                        onSelectGroup={setSelectedGroup}
+                    />
                 </View>
 
                 <View style={styles.chatArea}>
                     {selectedGroup ? (
-                        <ChatBox group={selectedGroup} onBack={() => setSelectedGroup(null)} />
+                        <ChatBox
+                            group={selectedGroup}
+                            onBack={() => setSelectedGroup(null)}
+                        />
                     ) : (
                         <View style={styles.emptyState}>
-                            <Text style={styles.emptyTitle}>Select a group</Text>
+                            <Text style={styles.emptyTitle}>
+                                Select a group
+                            </Text>
 
-                            <Text style={styles.emptyText}>Choose a group from the list to start chatting.</Text>
+                            <Text style={styles.emptyText}>
+                                Choose a group from the list to start
+                                chatting.
+                            </Text>
                         </View>
                     )}
                 </View>
@@ -74,18 +103,18 @@ const Groups = () => {
         );
     }
 
-    /*
-     * MOBILE
-     *
-     * Keep your existing behaviour where the group list
-     * and chat replace each other.
-     */
     return (
         <View style={styles.mobileContainer}>
             {selectedGroup === null ? (
-                <NavGroups groups={groups} onSelectGroup={setSelectedGroup} />
+                <NavGroups
+                    groups={groups}
+                    onSelectGroup={setSelectedGroup}
+                />
             ) : (
-                <ChatBox group={selectedGroup} onBack={() => setSelectedGroup(null)} />
+                <ChatBox
+                    group={selectedGroup}
+                    onBack={() => setSelectedGroup(null)}
+                />
             )}
         </View>
     );

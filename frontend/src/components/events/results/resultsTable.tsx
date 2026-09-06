@@ -1,3 +1,4 @@
+import Button from "@/components/generalComponents/Button";
 import { AddPlayersScore } from "@/services/eventScoring";
 import { Game } from "@/types/apiDataTypes";
 import { useState } from "react";
@@ -138,9 +139,12 @@ const ResultTable = ({ game, members, event_id }: ResultTableProps) => {
                                 </View>
 
                                 <View style={styles.actionColumn}>
-                                    <Pressable onPress={() => handleRemovePlayer(result.user_id)}>
-                                        <Text style={styles.remove}>×</Text>
-                                    </Pressable>
+                                    <Button
+                                        title={"x"}
+                                        onPress={() => handleRemovePlayer(result.user_id)}
+                                        variant={"dangerOutline"}
+                                        disabled={false}
+                                    />
                                 </View>
                             </View>
                         ))}

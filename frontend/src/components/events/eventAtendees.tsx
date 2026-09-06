@@ -5,7 +5,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 type EventAttendeesProps = {
     members: Members[];
     event_id: number;
-    setEvent: React.Dispatch<React.SetStateAction<EventWithGames | null>>;
+    setEvent: React.Dispatch<React.SetStateAction<EventWithGames | undefined>>;
 };
 
 const EventAttendees = ({ members, event_id, setEvent }: EventAttendeesProps) => {

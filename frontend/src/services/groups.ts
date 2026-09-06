@@ -9,7 +9,6 @@ export const createGroup = async (name: string, description: string) => {
     }
 };
 
-// This will get all groups the user is in
 export const getGroups = async () => {
     try {
         const response = await api.get("/groups");
@@ -46,3 +45,12 @@ export const deleteGroup = async (groupId: number) => {
         console.log(error);
     }
 };
+
+export const leaveGroup = async (groupId: number) => {
+    try {
+        const response = await api.put(`/groups/leaveGroup`, { groupId });
+        return response;
+    } catch (error) {
+        console.log(error);
+    }
+}

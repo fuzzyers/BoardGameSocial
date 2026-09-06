@@ -1,10 +1,10 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { EventWithGames, Game } from "@/types/apiDataTypes";
 import { getAllGames } from "@/services/games";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import GamesListModal from "../gamesList/gamesListModal";
 import DeleteEventButton from "./deleteEventButton";
-import { buttonStyle } from "@/styles/button";
+import Button from "../generalComponents/Button";
 
 type EventHomeProps = {
     event: EventWithGames;
@@ -46,9 +46,12 @@ const EventHome = ({ event, selectedTab }: EventHomeProps) => {
                 />
             )}
             <View style={styles.RowContainer}>
-                <Pressable style={buttonStyle.button} onPress={() => getGames()}>
-                    <Text style={buttonStyle.text}>Add Games</Text>
-                </Pressable>
+                <Button
+                    title={"Add Games"}
+                    onPress={() => getGames()}
+                    variant={"primary"}
+                    disabled={false}
+                />
                 <DeleteEventButton group_id={event.group_id} eventId={event.id} />
             </View>
         </View>

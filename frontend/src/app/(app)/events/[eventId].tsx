@@ -9,6 +9,7 @@ import { useCallback, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import EventAtendees from "@/components/events/eventAtendees";
 import { styles } from "@/styles/eventId"
+import Button from "@/components/generalComponents/Button";
 
 const EventPage = () => {
     const { eventId } = useLocalSearchParams();
@@ -36,6 +37,10 @@ const EventPage = () => {
 
             if (eventId) {
                 getData();
+            }
+
+            return () => {
+                
             }
         }, [eventId])
     );

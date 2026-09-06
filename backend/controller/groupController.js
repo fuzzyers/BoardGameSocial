@@ -147,3 +147,20 @@ export const deleteGroup = async (req, res) => {
         });
     }
 };
+
+export const leaveAgroup = async (req, res) => {
+    try {
+        const { groupId } = req.body;
+        const userId = req.user.id;
+
+        const removedUser = await removeMemberFromGroup(groupId, userId);
+
+        res.status(201).json({ message: "success", results: removedUser });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: "Internal Server Error",
+            errorDetails: error.message,
+        });
+    }
+};

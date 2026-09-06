@@ -31,7 +31,6 @@ export const styles = StyleSheet.create({
     },
 
     googleButton: {
-        width: "100%",
         minHeight: 50,
         backgroundColor: "#fff",
         borderWidth: 1,
