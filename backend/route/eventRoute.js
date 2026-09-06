@@ -17,6 +17,6 @@ router
     .get("/:id", firebaseAuthMiddleware, getEventWithGames)
     .delete("/:id", firebaseAuthMiddleware, requireGroupAdmin, deleteEventById);
 router
-    .post("/addGameToEvent", firebaseAuthMiddleware, requireGroupAdmin, addEventGame)
+    .post("/addGameToEvent", firebaseAuthMiddleware, addEventGame)
     .put("/attendingEvent", firebaseAuthMiddleware, toggleEventAttendance);
 export default router;
