@@ -1,4 +1,4 @@
-import { eventGameResult, insertGameScores } from "../services/eventScoring.js";
+import { eventGameResult, insertGameScores, removeGameScore } from "../services/eventScoring.js";
 
 export const insertScoreForPlayer = async (req, res) => {
     try {
@@ -26,6 +26,41 @@ export const insertScoreForPlayer = async (req, res) => {
         console.log(error);
         res.status(500).json({
             message: error.message,
+        });
+    }
+};
+
+export const removePlayerScore = async (req, res) => {
+    try {
+        const { event_id, user_id, game_id } = req.body;
+
+        const checkIfGamesInEvent = await eventGameResult(event_id, game_id);
+
+        if (checkIfGamesInEvent.rows.length === 0) {
+            return res.status(404).json({
+                message: "Game is not part of this event",
+            });
+        }
+
+        const eventGameId = checkIfGamesInEvent.rows[0].id;
+
+        const result = await removeGameScore(eventGameId, user_id);
+
+        if (!result) {
+            return res.status(404).json({
+                message: "Player score not found",
+            });
+        }
+
+        return res.status(200).json({
+            message: "Player removed from game results",
+            result,
+        });
+    } catch (error) {
+        console.error("Failed to remove player score:", error);
+
+        return res.status(500).json({
+            message: "Internal server error",
         });
     }
 };

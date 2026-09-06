@@ -8,7 +8,7 @@ import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import EventAtendees from "@/components/events/eventAtendees";
-import { styles } from "@/styles/eventId"
+import { styles } from "@/styles/eventId";
 import Button from "@/components/generalComponents/Button";
 
 const EventPage = () => {
@@ -39,9 +39,7 @@ const EventPage = () => {
                 getData();
             }
 
-            return () => {
-                
-            }
+            return () => {};
         }, [eventId])
     );
 
@@ -88,16 +86,18 @@ const EventPage = () => {
             </View>
             <EventIdHeader event={event} />
 
-            {selectedTab === "polls" && <Poll poll={event.polls[0]} selectedTab={selectedTab} />}
+            {selectedTab === "polls" && (
+                <Poll poll={event.polls[0]} selectedTab={selectedTab} setEvent={setEvent} group_id={event.group_id} />
+            )}
 
             {selectedTab === "addtoevent" && (
                 <>
-                    <EventAtendees members={event.members} event_id={event.id} setEvent={setEvent}/>
-                    <EventHome event={event} selectedTab={selectedTab} />
+                    <EventAtendees members={event.members} event_id={event.id} setEvent={setEvent} />
+                    <EventHome event={event} selectedTab={selectedTab} setEvent={setEvent} />
                 </>
             )}
 
-            {selectedTab === "results" && <Result event={event} selectedTab={selectedTab} />}
+            {selectedTab === "results" && <Result event={event} selectedTab={selectedTab} setEvent={setEvent} />}
         </ScrollView>
     );
 };

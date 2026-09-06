@@ -75,13 +75,33 @@ export const addPollOptionQuery = async (pollId, gameId) => {
         VALUES ($1, $2)
         ON CONFLICT (poll_id, game_id)
         DO NOTHING
-        RETURNING *;
+        RETURNING id, poll_id, game_id, created_at;
         `,
         [pollId, gameId]
     );
 
-    console.log(result.rows[0]);
-    return result.rows[0];
+    if (result.rows.length === 0) {
+        return null;
+    }
+
+    const optionResult = await pool.query(
+        `
+        SELECT
+            po.id,
+            po.poll_id,
+            po.game_id,
+            po.created_at,
+            g.title,
+            0 AS votes
+        FROM poll_options po
+        JOIN games g
+            ON g.id = po.game_id
+        WHERE po.id = $1;
+        `,
+        [result.rows[0].id]
+    );
+
+    return optionResult.rows[0];
 };
 
 export const createPollVote = async (poll_id, option_id, user_id) => {

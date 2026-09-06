@@ -23,3 +23,19 @@ export const AddPlayersScore = (
         console.log(error);
     }
 };
+
+export const RemovePlayersScore = async (event_id: number, user_id: number, game_id: number) => {
+    try {
+        const response = await api.delete("/events/scoring/removeResult", {
+            data: {
+                event_id: event_id,
+                user_id: user_id,
+                game_id: game_id,
+            },
+        });
+
+        return response;
+    } catch (error) {
+        console.log(error);
+    }
+};

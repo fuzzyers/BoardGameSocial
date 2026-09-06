@@ -23,9 +23,9 @@ const EventAttendees = ({ members, event_id, setEvent }: EventAttendeesProps) =>
                     members: currentEvent.members.map((member) =>
                         member.id === userId
                             ? {
-                                ...member,
-                                attending: !member.attending,
-                            }
+                                  ...member,
+                                  attending: !member.attending,
+                              }
                             : member
                     ),
                 };
@@ -50,9 +50,7 @@ const EventAttendees = ({ members, event_id, setEvent }: EventAttendeesProps) =>
                     <Pressable
                         style={({ pressed }) => [
                             styles.attendanceButton,
-                            member.attending
-                                ? styles.attending
-                                : styles.notAttending,
+                            member.attending ? styles.attending : styles.notAttending,
                             pressed && styles.pressed,
                         ]}
                         onPress={() => handleToggleAttendance(member.id)}

@@ -35,3 +35,17 @@ export const insertGameScores = async (eventGameId, user_id, score, placement, l
 
     return result.rows[0];
 };
+
+export const removeGameScore = async (eventGameId, user_id) => {
+    const result = await pool.query(
+        `
+        DELETE FROM game_scores
+        WHERE event_game_id = $1
+        AND user_id = $2
+        RETURNING *
+        `,
+        [eventGameId, user_id]
+    );
+
+    return result.rows[0];
+};

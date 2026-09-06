@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
 import { createFirebaseUser } from "@/services/auth";
-import { styles } from "@/styles/googleRegister"
+import { styles } from "@/styles/googleRegister";
 import { errorStyle } from "@/styles/error";
 
 const GoogleRegisterPage = () => {

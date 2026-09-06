@@ -1,4 +1,4 @@
-import { Game, PollType } from "@/types/apiDataTypes";
+import { Game, EventWithGames, PollType } from "@/types/apiDataTypes";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import GamesListModal from "../gamesList/gamesListModal";
@@ -8,14 +8,14 @@ import { voteForGame } from "@/services/event";
 type PollProps = {
     poll: PollType;
     selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls";
+    group_id: number;
+    setEvent: React.Dispatch<React.SetStateAction<EventWithGames | undefined>>;
 };
 
-const Poll = ({ poll, selectedTab }: PollProps) => {
-    const [localPoll, setLocalPoll] = useState<PollType>(poll);
-
+const Poll = ({ poll, selectedTab, group_id, setEvent }: PollProps) => {
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
     const [visible, setVisible] = useState<boolean>(false);
-    const [games, setGames] = useState<Game[]>();
+    const [games, setGames] = useState<Game[]>([]);
 
     const [voting, setVoting] = useState<boolean>(false);
     const [loadingGames, setLoadingGames] = useState<boolean>(false);
@@ -24,6 +24,7 @@ const Poll = ({ poll, selectedTab }: PollProps) => {
     const getGames = async () => {
         try {
             setLoadingGames(true);
+            setMessage(null);
 
             const response = await getAllGames();
 
@@ -44,20 +45,33 @@ const Poll = ({ poll, selectedTab }: PollProps) => {
             setVoting(true);
             setMessage(null);
 
-            await voteForGame(localPoll.id, selectedOption);
+            await voteForGame(poll.id, selectedOption);
 
-            setLocalPoll((currentPoll) => ({
-                ...currentPoll,
-                total_votes: currentPoll.total_votes + 1,
-                options: currentPoll.options.map((option) =>
-                    option.id === selectedOption
-                        ? {
-                              ...option,
-                              votes: option.votes + 1,
-                          }
-                        : option
-                ),
-            }));
+            setEvent((currentEvent) => {
+                if (!currentEvent) return currentEvent;
+
+                return {
+                    ...currentEvent,
+                    polls: currentEvent.polls.map((currentPoll) => {
+                        if (currentPoll.id !== poll.id) {
+                            return currentPoll;
+                        }
+
+                        return {
+                            ...currentPoll,
+                            total_votes: currentPoll.total_votes + 1,
+                            options: currentPoll.options.map((option) =>
+                                option.id === selectedOption
+                                    ? {
+                                          ...option,
+                                          votes: option.votes + 1,
+                                      }
+                                    : option
+                            ),
+                        };
+                    }),
+                };
+            });
 
             setMessage("Vote added!");
             setSelectedOption(null);
@@ -71,12 +85,12 @@ const Poll = ({ poll, selectedTab }: PollProps) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.question}>{localPoll.question}</Text>
+            <Text style={styles.question}>{poll.question}</Text>
 
             {message && <Text style={styles.message}>{message}</Text>}
 
-            {localPoll.options.map((option) => {
-                const percentage = localPoll.total_votes > 0 ? (option.votes / localPoll.total_votes) * 100 : 0;
+            {poll.options.map((option) => {
+                const percentage = poll.total_votes > 0 ? (option.votes / poll.total_votes) * 100 : 0;
 
                 const selected = selectedOption === option.id;
 
@@ -136,10 +150,12 @@ const Poll = ({ poll, selectedTab }: PollProps) => {
 
             <GamesListModal
                 visible={visible}
-                games={games ?? []}
-                eventId={localPoll.id}
+                games={games}
+                eventId={poll.id}
+                group_id={group_id}
                 onClose={() => setVisible(false)}
                 selectedTab={selectedTab}
+                setEvent={setEvent}
             />
         </View>
     );

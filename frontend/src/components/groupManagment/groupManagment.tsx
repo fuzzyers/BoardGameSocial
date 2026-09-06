@@ -1,11 +1,4 @@
-import {
-    Modal,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
+import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import GroupDetailsSection from "./GroupDetailsSection";
 import MemberList from "./memberList";
@@ -20,12 +13,8 @@ type CreateGroupModalProps = {
     groupData: any;
 };
 
-const GroupManagment = ({
-    visible,
-    onClose,
-    groupData,
-}: CreateGroupModalProps) => {
-    const router = useRouter()
+const GroupManagment = ({ visible, onClose, groupData }: CreateGroupModalProps) => {
+    const router = useRouter();
 
     const handleEditGroup = () => {
         console.log("Edit group");
@@ -36,59 +25,36 @@ const GroupManagment = ({
     };
 
     const handleDeleteGroup = async () => {
-        await deleteGroup(groupData.id)
-        onClose()
-        router.back()
+        await deleteGroup(groupData.id);
+        onClose();
+        router.back();
     };
 
     const handleLeaveGroup = async () => {
-        await leaveGroup(groupData.id)
-        onClose()
+        await leaveGroup(groupData.id);
+        onClose();
         router.back();
     };
 
     return (
-        <Modal
-            visible={visible}
-            transparent
-            animationType="fade"
-            onRequestClose={onClose}
-        >
+        <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
             <View style={styles.overlay}>
                 <View style={styles.modal}>
                     <View style={styles.header}>
                         <View>
-                            <Text style={styles.title}>
-                                Manage Group
-                            </Text>
+                            <Text style={styles.title}>Manage Group</Text>
 
-                            <Text style={styles.subtitle}>
-                                Manage your group settings and members
-                            </Text>
+                            <Text style={styles.subtitle}>Manage your group settings and members</Text>
                         </View>
 
-                        <Pressable
-                            style={({ pressed }) => [
-                                styles.closeIcon,
-                                pressed && styles.pressed,
-                            ]}
-                            onPress={onClose}
-                        >
-                            <Text style={styles.closeIconText}>
-                                ✕
-                            </Text>
+                        <Pressable style={({ pressed }) => [styles.closeIcon, pressed && styles.pressed]} onPress={onClose}>
+                            <Text style={styles.closeIconText}>✕</Text>
                         </Pressable>
                     </View>
 
-                    <ScrollView
-                        style={styles.scroll}
-                        contentContainerStyle={styles.content}
-                        showsVerticalScrollIndicator
-                    >
+                    <ScrollView style={styles.scroll} contentContainerStyle={styles.content} showsVerticalScrollIndicator>
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>
-                                Group
-                            </Text>
+                            <Text style={styles.sectionTitle}>Group</Text>
                             {/* <Pressable
                                 style={({ pressed }) => [
                                     styles.actionButton,
@@ -113,23 +79,15 @@ const GroupManagment = ({
                         </View>
 
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>
-                                Members
-                            </Text>
+                            <Text style={styles.sectionTitle}>Members</Text>
 
-                            <MemberList
-                                groupData={groupData}
-                            />
+                            <MemberList groupData={groupData} />
 
-                            <UserSearch
-                                groupData={groupData}
-                            />
+                            <UserSearch groupData={groupData} />
                         </View>
 
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>
-                                Management
-                            </Text>
+                            <Text style={styles.sectionTitle}>Management</Text>
 
                             {/* <Pressable
                                 style={({ pressed }) => [
@@ -152,12 +110,10 @@ const GroupManagment = ({
                                     ›
                                 </Text>
                             </Pressable>*/}
-                        </View> 
+                        </View>
 
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>
-                                Danger Zone
-                            </Text>
+                            <Text style={styles.sectionTitle}>Danger Zone</Text>
 
                             <Button
                                 title={"Leave Group"}
@@ -176,12 +132,7 @@ const GroupManagment = ({
                     </ScrollView>
 
                     <View style={styles.footer}>
-                        <Button
-                            title={"Close"}
-                            onPress={() => onClose()}
-                            variant={"secondary"}
-                            disabled={false}
-                        />
+                        <Button title={"Close"} onPress={() => onClose()} variant={"secondary"} disabled={false} />
                     </View>
                 </View>
             </View>

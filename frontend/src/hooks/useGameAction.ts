@@ -1,6 +1,6 @@
 import { addGameToEvent, addGameToEventPoll } from "@/services/event";
 import { addExpansionToGame, addToCollection, removeFromCollection } from "@/services/games";
-import { Game } from "@/types/apiDataTypes";
+import { EventWithGames, Game } from "@/types/apiDataTypes";
 import { useState } from "react";
 
 type GameActionProps = {
@@ -9,11 +9,12 @@ type GameActionProps = {
     eventId?: number;
     group_id?: number;
     expansion?: Game;
+    setEvent?: React.Dispatch<React.SetStateAction<EventWithGames | undefined>>;
 };
 
 type ActionStatus = "success" | "error" | null;
 
-const useGameAction = ({ game, selectedTab, eventId, group_id, expansion }: GameActionProps) => {
+const useGameAction = ({ game, selectedTab, eventId, group_id, expansion, setEvent }: GameActionProps) => {
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState<ActionStatus>(null);
 
@@ -52,18 +53,63 @@ const useGameAction = ({ game, selectedTab, eventId, group_id, expansion }: Game
 
                 return runAction(async () => {
                     await addGameToEvent(game.id, eventId, group_id);
+
+                    setEvent?.((currentEvent) => {
+                        if (!currentEvent) {
+                            return currentEvent;
+                        }
+
+                        const alreadyExists = currentEvent.games.some((existingGame) => existingGame.id === game.id);
+
+                        if (alreadyExists) {
+                            return currentEvent;
+                        }
+
+                        return {
+                            ...currentEvent,
+                            games: [
+                                ...currentEvent.games,
+                                {
+                                    ...game,
+                                    results: [],
+                                },
+                            ],
+                        };
+                    });
                 });
 
             case "polls":
-                console.log(eventId);
                 if (eventId === undefined) {
                     return;
                 }
 
                 return runAction(async () => {
-                    await addGameToEventPoll(game.id, eventId);
-                });
+                    const response = await addGameToEventPoll(game.id, eventId);
 
+                    setEvent?.((currentEvent) => {
+                        if (!currentEvent) {
+                            return currentEvent;
+                        }
+
+                        return {
+                            ...currentEvent,
+                            polls: currentEvent.polls.map((poll) => {
+                                if (poll.id !== eventId) {
+                                    return poll;
+                                }
+
+                                if (poll.options.some((option) => option.game_id === game.id)) {
+                                    return poll;
+                                }
+
+                                return {
+                                    ...poll,
+                                    options: [...poll.options, response.data],
+                                };
+                            }),
+                        };
+                    });
+                });
             case "expansion":
                 if (!expansion) {
                     return;

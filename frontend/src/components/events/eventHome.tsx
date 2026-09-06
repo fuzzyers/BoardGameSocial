@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import { EventWithGames, Game } from "@/types/apiDataTypes";
 import { getAllGames } from "@/services/games";
+import { addGameToEvent } from "@/services/event";
 import { useState } from "react";
 import GamesListModal from "../gamesList/gamesListModal";
 import DeleteEventButton from "./deleteEventButton";
@@ -9,23 +10,29 @@ import Button from "../generalComponents/Button";
 type EventHomeProps = {
     event: EventWithGames;
     selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls";
+    setEvent: React.Dispatch<React.SetStateAction<EventWithGames | undefined>>;
 };
 
-const EventHome = ({ event, selectedTab }: EventHomeProps) => {
+const EventHome = ({ event, selectedTab, setEvent }: EventHomeProps) => {
     const [games, setGames] = useState<Game[]>();
-    const [addGames, setAddGames] = useState<boolean>(false);
+    const [addGames, setAddGames] = useState(false);
 
     const getGames = async () => {
-        const response = await getAllGames();
+        try {
+            const response = await getAllGames();
 
-        setGames(response);
-        setAddGames(true);
+            setGames(response);
+            setAddGames(true);
+        } catch (error) {
+            console.error("Failed to load games:", error);
+        }
     };
 
     return (
         <View>
             <Text style={styles.sectionTitle}>Games</Text>
-            {event.games[0]?.id ? (
+
+            {event.games.length > 0 ? (
                 event.games.map((game) => (
                     <View key={game.id} style={styles.gameCard}>
                         <Text style={styles.gameTitle}>{game.title}</Text>
@@ -38,20 +45,18 @@ const EventHome = ({ event, selectedTab }: EventHomeProps) => {
             {addGames && games && (
                 <GamesListModal
                     visible={addGames}
-                    games={games ?? []}
+                    games={games}
                     eventId={event.id}
                     onClose={() => setAddGames(false)}
                     selectedTab={selectedTab}
                     group_id={event.group_id}
+                    setEvent={setEvent}
                 />
             )}
+
             <View style={styles.RowContainer}>
-                <Button
-                    title={"Add Games"}
-                    onPress={() => getGames()}
-                    variant={"primary"}
-                    disabled={false}
-                />
+                <Button title="Add Games" onPress={getGames} variant="primary" disabled={false} />
+
                 <DeleteEventButton group_id={event.group_id} eventId={event.id} />
             </View>
         </View>
@@ -77,47 +82,11 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: "600",
     },
-    modalOverlay: {
-        flex: 1,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-
-    modalContent: {
-        width: "90%",
-        maxHeight: "80%",
-        backgroundColor: "white",
-        borderRadius: 12,
-        padding: 16,
-    },
-
-    modalHeader: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: 12,
-    },
-
-    modalTitle: {
-        fontSize: 20,
-        fontWeight: "bold",
-    },
-
-    closeButton: {
-        padding: 8,
-    },
-
-    closeButtonText: {
-        fontSize: 20,
-        fontWeight: "bold",
-    },
 
     RowContainer: {
-        flex:1,
-        flexDirection: 'row'
-
-    }
+        flexDirection: "row",
+        gap: 8,
+    },
 });
 
 export default EventHome;

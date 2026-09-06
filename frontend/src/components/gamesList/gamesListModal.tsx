@@ -1,6 +1,6 @@
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import GamesList from "../gamesList/gamesList";
-import { Game } from "@/types/apiDataTypes";
+import { EventWithGames, Game } from "@/types/apiDataTypes";
 
 type GamesListModalProps = {
     visible: boolean;
@@ -9,9 +9,10 @@ type GamesListModalProps = {
     onClose: () => void;
     selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion";
     group_id: number;
+    setEvent: React.Dispatch<React.SetStateAction<EventWithGames | undefined>>;
 };
 
-const GamesListModal = ({ visible, games, onClose, eventId, selectedTab, group_id }: GamesListModalProps) => {
+const GamesListModal = ({ visible, games, onClose, eventId, selectedTab, group_id, setEvent }: GamesListModalProps) => {
     return (
         <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
             <View style={styles.modalOverlay}>
@@ -24,8 +25,14 @@ const GamesListModal = ({ visible, games, onClose, eventId, selectedTab, group_i
                         </Pressable>
                     </View>
 
-                    <View style={{ flex: 1 }}>
-                        <GamesList games={games} selectedTab={selectedTab} eventId={eventId} group_id={group_id} />
+                    <View style={styles.listContainer}>
+                        <GamesList
+                            games={games}
+                            selectedTab={selectedTab}
+                            eventId={eventId}
+                            group_id={group_id}
+                            setEvent={setEvent}
+                        />
                     </View>
                 </View>
             </View>
@@ -68,6 +75,10 @@ const styles = StyleSheet.create({
     closeButtonText: {
         fontSize: 20,
         fontWeight: "bold",
+    },
+
+    listContainer: {
+        flex: 1,
     },
 });
 

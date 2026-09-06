@@ -63,8 +63,21 @@ export type Event = {
     members: Members[];
 };
 
+export type GameResult = {
+    user_id: number;
+    name: string;
+    username: string;
+    placement: number;
+    score: number;
+    leaderboard_points: number;
+};
+
+export type EventGame = Game & {
+    results: GameResult[];
+};
+
 export type EventWithGames = Event & {
-    games: Game[];
+    games: EventGame[];
     polls: PollType[];
 };
 

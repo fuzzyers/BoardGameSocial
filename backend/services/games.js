@@ -272,6 +272,7 @@ export const createExpansion = async (game) => {
     try {
         await client.query("BEGIN");
 
+        // Make sure the base game exists
         const baseGame = await client.query(
             `
             SELECT id
@@ -285,56 +286,77 @@ export const createExpansion = async (game) => {
             throw new Error("Base game not found");
         }
 
-        const expansionResult = await client.query(
+        // Check whether the expansion already exists
+        const existingExpansion = await client.query(
             `
-            INSERT INTO games (
-                title,
-                description,
-                bgg_id,
-                year_published,
-                min_players,
-                max_players,
-                min_play_time,
-                max_play_time,
-                min_age,
-                average_rating,
-                avg_weight,
-                submitted_by
-            )
-            VALUES (
-                $1,
-                $2,
-                $3,
-                $4,
-                $5,
-                $6,
-                $7,
-                $8,
-                $9,
-                $10,
-                $11,
-                $12
-            )
-            RETURNING *
+            SELECT *
+            FROM games
+            WHERE bgg_id = $1
             `,
-            [
-                game.title,
-                game.description,
-                game.bgg_id,
-                game.year_published,
-                game.min_players,
-                game.max_players,
-                game.min_play_time,
-                game.max_play_time,
-                game.min_age,
-                game.avg_rating,
-                game.avg_weight,
-                game.submitted_by,
-            ]
+            [game.bgg_id]
         );
 
-        const expansion = expansionResult.rows[0];
+        let expansion;
 
+        if (existingExpansion.rowCount > 0) {
+            // Reuse existing expansion
+            expansion = existingExpansion.rows[0];
+        } else {
+            // Create the expansion
+            const expansionResult = await client.query(
+                `
+                INSERT INTO games (
+                    title,
+                    description,
+                    bgg_id,
+                    year_published,
+                    min_players,
+                    max_players,
+                    min_play_time,
+                    max_play_time,
+                    min_age,
+                    average_rating,
+                    avg_weight,
+                    submitted_by,
+                    review_status
+                )
+                VALUES (
+                    $1,
+                    $2,
+                    $3,
+                    $4,
+                    $5,
+                    $6,
+                    $7,
+                    $8,
+                    $9,
+                    $10,
+                    $11,
+                    $12,
+                    'imported'
+                )
+                RETURNING *
+                `,
+                [
+                    game.title,
+                    game.description,
+                    game.bgg_id,
+                    game.year_published,
+                    game.min_players,
+                    game.max_players,
+                    game.min_play_time,
+                    game.max_play_time,
+                    game.min_age,
+                    game.avg_rating,
+                    game.avg_weight,
+                    game.submitted_by,
+                ]
+            );
+
+            expansion = expansionResult.rows[0];
+        }
+
+        // Link the expansion to this base game
         await client.query(
             `
             INSERT INTO game_expansions (
@@ -342,6 +364,8 @@ export const createExpansion = async (game) => {
                 expansion_id
             )
             VALUES ($1, $2)
+            ON CONFLICT (base_game_id, expansion_id)
+            DO NOTHING
             `,
             [game.base_game_id, expansion.id]
         );

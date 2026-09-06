@@ -96,4 +96,4 @@ const buttonStyles = StyleSheet.create({
     },
 });
 
-export default buttonStyles
+export default buttonStyles;

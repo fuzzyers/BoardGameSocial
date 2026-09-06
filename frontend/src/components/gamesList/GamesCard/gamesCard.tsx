@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet } from "react-native";
-import { Game } from "@/types/apiDataTypes";
+import { EventWithGames, Game } from "@/types/apiDataTypes";
 import GamesCardHeader from "./gamesCardHeader";
 import GamesCardInfo from "./gamesCardInfo";
 
@@ -10,9 +10,10 @@ type GamesCardProps = {
     eventId?: number;
     group_id?: number;
     expansion?: Game;
+    setEvent?: React.Dispatch<React.SetStateAction<EventWithGames | undefined>>;
 };
 
-const GamesCard = ({ game, selectedTab, eventId, group_id, expansion }: GamesCardProps) => {
+const GamesCard = ({ game, selectedTab, eventId, group_id, expansion, setEvent }: GamesCardProps) => {
     const router = useRouter();
 
     const handlePress = () => {
@@ -26,7 +27,15 @@ const GamesCard = ({ game, selectedTab, eventId, group_id, expansion }: GamesCar
 
     return (
         <Pressable style={styles.card} onPress={handlePress}>
-            <GamesCardHeader game={game} selectedTab={selectedTab} expansion={expansion} eventId={eventId} group_id={group_id} />
+            <GamesCardHeader
+                game={game}
+                selectedTab={selectedTab}
+                expansion={expansion}
+                eventId={eventId}
+                group_id={group_id}
+                setEvent={setEvent}
+            />
+
             <GamesCardInfo game={game} />
         </Pressable>
     );

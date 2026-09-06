@@ -44,7 +44,7 @@ export const addOptionToPoll = async (req, res) => {
                 message: "Poll ID and game ID are required.",
             });
         }
-        console.log("Test");
+
         const poll = await getPollByIdQuery(poll_id);
 
         if (!poll) {
@@ -63,6 +63,8 @@ export const addOptionToPoll = async (req, res) => {
 
         return res.status(201).json(option);
     } catch (error) {
+        console.error(error);
+
         return res.status(500).json({
             message: "Failed to add option to poll.",
         });

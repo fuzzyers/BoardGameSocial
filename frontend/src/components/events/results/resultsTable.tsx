@@ -1,6 +1,6 @@
 import Button from "@/components/generalComponents/Button";
-import { AddPlayersScore } from "@/services/eventScoring";
-import { Game } from "@/types/apiDataTypes";
+import { AddPlayersScore, RemovePlayersScore } from "@/services/eventScoring";
+import { EventWithGames, Game } from "@/types/apiDataTypes";
 import { useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
@@ -28,9 +28,10 @@ type ResultTableProps = {
     };
     members: Member[];
     event_id: number;
+    setEvent: React.Dispatch<React.SetStateAction<EventWithGames | undefined>>;
 };
 
-const ResultTable = ({ game, members, event_id }: ResultTableProps) => {
+const ResultTable = ({ game, members, event_id, setEvent }: ResultTableProps) => {
     const [selectedMember, setSelectedMember] = useState<Member | null>(null);
 
     const [placement, setPlacement] = useState("");
@@ -75,7 +76,46 @@ const ResultTable = ({ game, members, event_id }: ResultTableProps) => {
         try {
             setSaving(true);
 
-            await AddPlayersScore(event_id, selectedMember.id, game.id, scoreNumber, placementNumber, game.avg_weight);
+            const response = await AddPlayersScore(
+                event_id,
+                selectedMember.id,
+                game.id,
+                scoreNumber,
+                placementNumber,
+                game.avg_weight
+            );
+
+            if (!response) {
+                throw new Error("Failed to save result");
+            }
+
+            console.log(response.data);
+            const newResult: GameResult = {
+                user_id: selectedMember.id,
+                name: selectedMember.name,
+                username: selectedMember.username,
+                placement: placementNumber,
+                score: scoreNumber,
+                leaderboard_points: response.data.data.leaderboard_points,
+            };
+
+            setEvent((currentEvent) => {
+                if (!currentEvent) {
+                    return currentEvent;
+                }
+
+                return {
+                    ...currentEvent,
+                    games: currentEvent.games.map((currentGame) =>
+                        currentGame.id === game.id
+                            ? {
+                                  ...currentGame,
+                                  results: [...currentGame.results, newResult],
+                              }
+                            : currentGame
+                    ),
+                };
+            });
 
             closeModal();
         } catch (error) {
@@ -85,8 +125,30 @@ const ResultTable = ({ game, members, event_id }: ResultTableProps) => {
         }
     };
 
-    const handleRemovePlayer = (userId: number) => {
-        console.log("Remove player:", userId);
+    const handleRemovePlayer = async (userId: number) => {
+        try {
+            await RemovePlayersScore(event_id, userId, game.id);
+
+            setEvent((currentEvent) => {
+                if (!currentEvent) {
+                    return currentEvent;
+                }
+
+                return {
+                    ...currentEvent,
+                    games: currentEvent.games.map((currentGame) =>
+                        currentGame.id === game.id
+                            ? {
+                                  ...currentGame,
+                                  results: currentGame.results.filter((result) => result.user_id !== userId),
+                              }
+                            : currentGame
+                    ),
+                };
+            });
+        } catch (error) {
+            console.error("Failed to remove player result:", error);
+        }
     };
 
     return (

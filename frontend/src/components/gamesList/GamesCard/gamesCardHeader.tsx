@@ -1,4 +1,4 @@
-import { Game } from "@/types/apiDataTypes";
+import { EventWithGames, Game } from "@/types/apiDataTypes";
 import { StyleSheet, Text, View } from "react-native";
 import GameActionButton from "./gameActionButton";
 import useGameAction from "@/hooks/useGameAction";
@@ -9,15 +9,17 @@ type GamesCardHeaderProps = {
     eventId?: number;
     group_id?: number;
     expansion?: Game;
+    setEvent?: React.Dispatch<React.SetStateAction<EventWithGames | undefined>>;
 };
 
-const GamesCardHeader = ({ game, selectedTab, eventId, group_id, expansion }: GamesCardHeaderProps) => {
+const GamesCardHeader = ({ game, selectedTab, eventId, group_id, expansion, setEvent }: GamesCardHeaderProps) => {
     const { action, loading, status, button } = useGameAction({
         game,
         selectedTab,
         eventId,
         group_id,
         expansion,
+        setEvent,
     });
 
     return (

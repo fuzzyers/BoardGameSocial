@@ -53,4 +53,4 @@ export const leaveGroup = async (groupId: number) => {
     } catch (error) {
         console.log(error);
     }
-}
+};
