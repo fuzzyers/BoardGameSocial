@@ -6,8 +6,9 @@ import { getEventById } from "@/services/event";
 import { EventWithGames } from "@/types/apiDataTypes";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useState } from "react";
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import EventAtendees from "@/components/events/eventAtendees";
+import { styles } from "@/styles/eventId"
 
 const EventPage = () => {
     const { eventId } = useLocalSearchParams();
@@ -36,7 +37,7 @@ const EventPage = () => {
             if (eventId) {
                 getData();
             }
-        }, [])
+        }, [eventId])
     );
 
     if (loading) {
@@ -86,8 +87,8 @@ const EventPage = () => {
 
             {selectedTab === "addtoevent" && (
                 <>
-                    <EventHome event={event} selectedTab={selectedTab} />
                     <EventAtendees members={event.members} event_id={event.id} />
+                    <EventHome event={event} selectedTab={selectedTab} />
                 </>
             )}
 
@@ -95,38 +96,5 @@ const EventPage = () => {
         </ScrollView>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-    },
-
-    center: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 10,
-    },
-
-    tabs: {
-        flexDirection: "row",
-        marginBottom: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: "#ddd",
-    },
-
-    tab: {
-        flex: 1,
-        paddingVertical: 12,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-
-    selectedTab: {
-        borderBottomWidth: 2,
-        borderBottomColor: "#333",
-    },
-});
 
 export default EventPage;

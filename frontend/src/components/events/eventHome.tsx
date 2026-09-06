@@ -4,6 +4,7 @@ import { getAllGames } from "@/services/games";
 import { useEffect, useState } from "react";
 import GamesListModal from "../gamesList/gamesListModal";
 import DeleteEventButton from "./deleteEventButton";
+import { buttonStyle } from "@/styles/button";
 
 type EventHomeProps = {
     event: EventWithGames;
@@ -34,9 +35,6 @@ const EventHome = ({ event, selectedTab }: EventHomeProps) => {
                 <Text>No Games Currently Added</Text>
             )}
 
-            <Pressable onPress={() => getGames()}>
-                <Text>Add Games</Text>
-            </Pressable>
             {addGames && games && (
                 <GamesListModal
                     visible={addGames}
@@ -47,8 +45,12 @@ const EventHome = ({ event, selectedTab }: EventHomeProps) => {
                     group_id={event.group_id}
                 />
             )}
-
-            <DeleteEventButton group_id={event.group_id} eventId={event.id} />
+            <View style={styles.RowContainer}>
+                <Pressable style={buttonStyle.button} onPress={() => getGames()}>
+                    <Text style={buttonStyle.text}>Add Games</Text>
+                </Pressable>
+                <DeleteEventButton group_id={event.group_id} eventId={event.id} />
+            </View>
         </View>
     );
 };
@@ -107,6 +109,12 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "bold",
     },
+
+    RowContainer: {
+        flex:1,
+        flexDirection: 'row'
+
+    }
 });
 
 export default EventHome;
