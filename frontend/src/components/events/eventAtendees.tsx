@@ -1,18 +1,38 @@
 import { toggleAttendance } from "@/services/event";
-import { Members } from "@/types/apiDataTypes";
+import { EventWithGames, Members } from "@/types/apiDataTypes";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 type EventAttendeesProps = {
     members: Members[];
     event_id: number;
+    setEvent: React.Dispatch<React.SetStateAction<EventWithGames | null>>;
 };
 
-const EventAttendees = ({ members, event_id }: EventAttendeesProps) => {
+const EventAttendees = ({ members, event_id, setEvent }: EventAttendeesProps) => {
     const handleToggleAttendance = async (userId: number) => {
-        console.log("Toggle attendance for user:", userId);
         try {
-            const response = toggleAttendance(event_id, userId);
-        } catch (error) {}
+            await toggleAttendance(event_id, userId);
+
+            setEvent((currentEvent) => {
+                if (!currentEvent) {
+                    return currentEvent;
+                }
+
+                return {
+                    ...currentEvent,
+                    members: currentEvent.members.map((member) =>
+                        member.id === userId
+                            ? {
+                                ...member,
+                                attending: !member.attending,
+                            }
+                            : member
+                    ),
+                };
+            });
+        } catch (error) {
+            console.error("Failed to toggle attendance:", error);
+        }
     };
 
     return (
