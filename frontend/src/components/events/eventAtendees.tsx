@@ -48,7 +48,13 @@ const EventAttendees = ({ members, event_id, setEvent }: EventAttendeesProps) =>
                     </View>
 
                     <Pressable
-                        style={[styles.attendanceButton, member.attending ? styles.attending : styles.notAttending]}
+                        style={({ pressed }) => [
+                            styles.attendanceButton,
+                            member.attending
+                                ? styles.attending
+                                : styles.notAttending,
+                            pressed && styles.pressed,
+                        ]}
                         onPress={() => handleToggleAttendance(member.id)}
                     >
                         <Text style={[styles.buttonText, member.attending ? styles.attendingText : styles.notAttendingText]}>
@@ -133,6 +139,10 @@ const styles = StyleSheet.create({
 
     notAttendingText: {
         color: "#777",
+    },
+
+    pressed: {
+        opacity: 0.6,
     },
 });
 
