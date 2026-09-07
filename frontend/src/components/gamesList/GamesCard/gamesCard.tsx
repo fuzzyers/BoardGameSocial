@@ -6,7 +6,7 @@ import GamesCardInfo from "./gamesCardInfo";
 
 type GamesCardProps = {
     game: Game;
-    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion";
+    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion" | "top3";
     eventId?: number;
     group_id?: number;
     expansion?: Game;
@@ -17,6 +17,7 @@ const GamesCard = ({ game, selectedTab, eventId, group_id, expansion, setEvent }
     const router = useRouter();
 
     const handlePress = () => {
+        if (selectedTab === "top3") return
         router.push({
             pathname: "/(app)/games/[gameid]",
             params: {

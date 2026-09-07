@@ -5,11 +5,11 @@ import { EventWithGames, Game } from "@/types/apiDataTypes";
 type GamesListModalProps = {
     visible: boolean;
     games: Game[];
-    eventId: number;
+    eventId?: number;
     onClose: () => void;
-    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion";
-    group_id: number;
-    setEvent: React.Dispatch<React.SetStateAction<EventWithGames | undefined>>;
+    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion" | "top3";
+    group_id?: number;
+    setEvent?: React.Dispatch<React.SetStateAction<EventWithGames | undefined>>;
 };
 
 const GamesListModal = ({ visible, games, onClose, eventId, selectedTab, group_id, setEvent }: GamesListModalProps) => {

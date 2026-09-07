@@ -2,10 +2,12 @@ import { EventWithGames, Game } from "@/types/apiDataTypes";
 import { StyleSheet, Text, View } from "react-native";
 import GameActionButton from "./gameActionButton";
 import useGameAction from "@/hooks/useGameAction";
+import { Picker } from "@react-native-picker/picker";
+import { useState } from "react";
 
 type GamesCardHeaderProps = {
     game: Game;
-    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion";
+    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion" | "top3";
     eventId?: number;
     group_id?: number;
     expansion?: Game;
@@ -13,6 +15,7 @@ type GamesCardHeaderProps = {
 };
 
 const GamesCardHeader = ({ game, selectedTab, eventId, group_id, expansion, setEvent }: GamesCardHeaderProps) => {
+    const [position, setPosition] = useState<number>(1);
     const { action, loading, status, button } = useGameAction({
         game,
         selectedTab,
@@ -20,6 +23,7 @@ const GamesCardHeader = ({ game, selectedTab, eventId, group_id, expansion, setE
         group_id,
         expansion,
         setEvent,
+        position
     });
 
     return (
@@ -53,6 +57,22 @@ const GamesCardHeader = ({ game, selectedTab, eventId, group_id, expansion, setE
             </View>
 
             <View style={styles.actionContainer}>
+                {selectedTab === "top3" && (
+                    <View style={styles.positionPickerContainer}>
+                        <View style={styles.pickerContainer}>
+                            <Picker
+                                selectedValue={position}
+                                onValueChange={(value) => setPosition(value)}
+                                style={styles.picker}
+                            >
+                                <Picker.Item label="1st" value={1} />
+                                <Picker.Item label="2nd" value={2} />
+                                <Picker.Item label="3rd" value={3} />
+                            </Picker>
+                        </View>
+                    </View>
+                )}
+
                 {button && (
                     <GameActionButton
                         title={button.title}
@@ -140,6 +160,27 @@ const styles = StyleSheet.create({
     actionContainer: {
         marginLeft: 10,
         flexShrink: 0,
+    },
+
+    positionPickerContainer: {
+        marginBottom: 16,
+    },
+
+    positionLabel: {
+        fontSize: 16,
+        fontWeight: "600",
+        marginBottom: 6,
+    },
+
+    pickerContainer: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 8,
+        overflow: "hidden",
+    },
+    picker: {
+        height: 40,
+        width: 85,
     },
 });
 

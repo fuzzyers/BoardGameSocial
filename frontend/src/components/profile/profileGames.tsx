@@ -1,20 +1,58 @@
 import { StyleSheet, Text, View } from "react-native";
-import { ProfileData } from "@/types/apiDataTypes";
+import { Game, ProfileData } from "@/types/apiDataTypes";
+import GamesListModal from "../gamesList/gamesListModal";
+import { useState } from "react";
+import Button from "../generalComponents/Button";
+import { getAllCollectionGames } from "@/services/games";
+import Top3Game from "./top3games";
 
 type ProfileGamesProps = {
     profile: ProfileData;
 };
 
 const ProfileGames = ({ profile }: ProfileGamesProps) => {
+    const [gamesListVisible, setGamesListVisible] = useState(false)
+    const [games, setGames] = useState<Game[]>()
+    const [loading, setLoading] = useState<boolean>(false)
+
+    const getGames = async () => {
+        try {
+            setLoading(true)
+            const response = await getAllCollectionGames()
+
+            setGames(response)
+
+            setGamesListVisible(true)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Games</Text>
+            <Text style={styles.title}>Top 3 Games</Text>
 
-            {profile.games.map((game) => (
-                <View key={game.id} style={styles.game}>
-                    <Text style={styles.gameTitle}>{game.title}</Text>
-                </View>
-            ))}
+            <Top3Game
+                top3Games={profile.top3_games}
+            />
+
+            <Button
+                title={"Edit Top 3 Games"}
+                disabled={loading}
+                onPress={() => getGames()}
+                variant="outline"
+            />
+
+            {games && (
+                <GamesListModal 
+                    visible={gamesListVisible}
+                    games={games}
+                    onClose={() => setGamesListVisible(false)}
+                    selectedTab="top3"
+                />
+            )}
         </View>
     );
 };

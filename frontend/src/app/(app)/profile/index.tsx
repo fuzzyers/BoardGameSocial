@@ -1,11 +1,16 @@
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
 import ProfileHeader from "@/components/profile/profileHeader";
 import ProfileStats from "@/components/profile/profileStatistics";
 import ProfileGames from "@/components/profile/profileGames";
 import { useMyProfile } from "@/hooks/useMyProfile";
+import { useEffect } from "react";
 
 const ProfilePage = () => {
     const { profile, loading, error, updateProfileDescription } = useMyProfile();
+
+    useEffect(() => {
+        console.log(profile)
+    },[profile])
 
     if (loading) {
         return (
@@ -27,7 +32,7 @@ const ProfilePage = () => {
         <ScrollView style={styles.container} contentContainerStyle={styles.content}>
             <ProfileHeader profile={profile!} updateDescription={updateProfileDescription} />
             <ProfileStats profile={profile!} />
-            {/* <ProfileGames profile={profile} /> */}
+            <ProfileGames profile={profile!} />
         </ScrollView>
     );
 };

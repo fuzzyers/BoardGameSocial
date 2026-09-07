@@ -1,20 +1,22 @@
 import { addGameToEvent, addGameToEventPoll } from "@/services/event";
 import { addExpansionToGame, addToCollection, removeFromCollection } from "@/services/games";
+import { updateTop3 } from "@/services/profile";
 import { EventWithGames, Game } from "@/types/apiDataTypes";
 import { useState } from "react";
 
 type GameActionProps = {
     game: Game;
-    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion";
+    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion" | "top3";
     eventId?: number;
     group_id?: number;
     expansion?: Game;
     setEvent?: React.Dispatch<React.SetStateAction<EventWithGames | undefined>>;
+    position?: number;
 };
 
 type ActionStatus = "success" | "error" | null;
 
-const useGameAction = ({ game, selectedTab, eventId, group_id, expansion, setEvent }: GameActionProps) => {
+const useGameAction = ({ game, selectedTab, eventId, group_id, expansion, setEvent, position }: GameActionProps) => {
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState<ActionStatus>(null);
 
@@ -119,6 +121,16 @@ const useGameAction = ({ game, selectedTab, eventId, group_id, expansion, setEve
                     await addExpansionToGame(game.id, expansion);
                 });
 
+            case "top3":
+                if (!position){
+                    return
+                }
+
+                return runAction(async () => {
+                    const response = await updateTop3(game.id, position)
+
+                    console.log(response)
+                })
             default:
                 return;
         }
@@ -170,6 +182,15 @@ const useGameAction = ({ game, selectedTab, eventId, group_id, expansion, setEve
                     errorTitle: "✕",
                     variant: "default" as const,
                 };
+
+            case "top3":
+                return {
+                    title: "+",
+                    loadingTitle: "...",
+                    successTitle: "✓",
+                    errorTitle: "✕",
+                    variant: "default" as const,
+                }
 
             default:
                 return null;

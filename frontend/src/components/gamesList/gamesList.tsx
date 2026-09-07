@@ -4,7 +4,7 @@ import GameCard from "./GamesCard/gamesCard";
 
 type GamesListProps = {
     games: Game[];
-    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion";
+    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion" | "top3";
     eventId?: number;
     group_id?: number;
     expansion?: Game;

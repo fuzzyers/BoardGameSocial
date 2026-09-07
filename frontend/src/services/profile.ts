@@ -11,3 +11,12 @@ export const updateProfileBio = async (newBio: string) => {
 
     return response.data.data;
 };
+
+export const updateTop3 = async (gameId:number, position:number) => {
+    const response = await api.put("/profile/myProfile/top3", {
+        gameId: gameId,
+        position: position
+    })
+
+    return response
+}

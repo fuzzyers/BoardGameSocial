@@ -471,3 +471,21 @@ ALTER TABLE users
 ADD COLUMN firebase_uid TEXT UNIQUE;
 ALTER TABLE users
 ALTER COLUMN password DROP NOT NULL;
+
+CREATE TABLE user_top_games (
+    user_id INT NOT NULL,
+    game_id INT NOT NULL,
+
+    position INT NOT NULL
+        CHECK (position BETWEEN 1 AND 3),
+
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (user_id, position),
+
+    UNIQUE (user_id, game_id),
+
+    FOREIGN KEY (user_id, game_id)
+        REFERENCES user_games(user_id, game_id)
+        ON DELETE CASCADE
+);

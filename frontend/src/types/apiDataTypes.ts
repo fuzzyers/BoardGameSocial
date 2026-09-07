@@ -49,6 +49,7 @@ export type Game = {
     avg_weight: number | null;
     submitted_by: number;
     created_at: string;
+    primary_image_url: string;
     expansions: Game[];
 };
 
@@ -112,6 +113,7 @@ export type ProfileData = {
     name: string;
     role: string;
     username: string;
+    top3_games: Game[]
 };
 
 export type Members = {

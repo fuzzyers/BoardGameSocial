@@ -27,7 +27,6 @@ export const useMyProfile = () => {
     const updateProfileDescription = async (newDescription: string) => {
         const response = await updateProfileBio(newDescription);
 
-        console.log("Updated profile description:", response);
         setProfile((prevProfile) => {
             if (!prevProfile) return prevProfile;
             return {
