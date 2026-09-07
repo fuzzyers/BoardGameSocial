@@ -8,10 +8,6 @@ import { useEffect } from "react";
 const ProfilePage = () => {
     const { profile, loading, error, updateProfileDescription } = useMyProfile();
 
-    useEffect(() => {
-        console.log(profile)
-    },[profile])
-
     if (loading) {
         return (
             <View style={styles.loading}>

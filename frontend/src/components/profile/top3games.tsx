@@ -8,9 +8,9 @@ type Top3GamesProps = {
 const Top3Game = ({top3Games}: Top3GamesProps) => {
     return (
         <View>
-            <Top3GameItem game={top3Games[0]}/>
-            <Top3GameItem game={top3Games[1]}/>
-            <Top3GameItem game={top3Games[2]}/>
+            <Top3GameItem game={top3Games[0]} pos={1}/>
+            <Top3GameItem game={top3Games[1]} pos={2}/>
+            <Top3GameItem game={top3Games[2]} pos={3}/>
         </View>
     );
 };

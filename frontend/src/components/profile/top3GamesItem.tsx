@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-const Top3GameItem = ({game}: any) => {
+const Top3GameItem = ({game, pos}: any) => {
 
     return (
         <Pressable
@@ -9,7 +9,7 @@ const Top3GameItem = ({game}: any) => {
         >
             <View style={styles.position}>
                 <Text style={styles.positionText}>
-                    {game.position}
+                    {pos}
                 </Text>
             </View>
       
