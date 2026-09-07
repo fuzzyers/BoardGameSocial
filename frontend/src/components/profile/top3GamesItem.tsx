@@ -35,7 +35,7 @@ const Top3GameItem = ({game, pos}: any) => {
             ) : (
                 <View style={styles.emptyContainer}>
                     <Text style={styles.addText}>
-                        Click here to add a game
+                        No game Added
                     </Text>
                 </View>
             )}
