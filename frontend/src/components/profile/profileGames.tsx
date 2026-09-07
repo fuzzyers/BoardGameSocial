@@ -32,7 +32,7 @@ const ProfileGames = ({ profile }: ProfileGamesProps) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Top 3 Games</Text>
+            <Text style={styles.title}>Top 3 Games (Page Needs Refreshed to see Top3 updates will fix soon pinky promise)</Text>
 
             <Top3Game
                 top3Games={profile.top3_games}

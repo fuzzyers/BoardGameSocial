@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, useWindowDimensions, View } from "react-native";
+import { ActivityIndicator, StyleSheet, useWindowDimensions, View } from "react-native";
 import GamesControllerHeader from "./gamesControllerHeader";
 import GamesList from "./gamesList";
 import { Game } from "@/types/apiDataTypes";
@@ -8,27 +8,36 @@ import SearchBGG from "./BGG/searchBgg";
 
 const GamesContainer = () => {
     const [selectedTab, setSelectedTab] = useState<"collection" | "database" | "add">("collection");
-
+    const [loading, setLoading] = useState<boolean>(true)
     const [games, setGames] = useState<Game[]>([]);
 
     const { width } = useWindowDimensions();
     const isMobile = width < 768;
 
     const onSelect = async () => {
-        let data: Game[] = [];
+        try{
+            setLoading(true)
+            let data: Game[] = [];
 
-        if (selectedTab === "collection") {
-            data = await getAllCollectionGames();
+            if (selectedTab === "collection") {
+                data = await getAllCollectionGames();
+            }
+
+            if (selectedTab === "database") {
+                data = await getAllGames();
+                console.log("Fetched games from database:", data);
+            }
+
+            if (selectedTab === "add") {
+                setLoading(false)
+                return;
+            }
+            setGames(data);
+        }catch (error) {
+
+        } finally {
+            setLoading(false)
         }
-
-        if (selectedTab === "database") {
-            data = await getAllGames();
-            console.log("Fetched games from database:", data);
-        }
-
-        if (selectedTab === "add") return;
-
-        setGames(data);
     };
 
     useEffect(() => {
@@ -38,7 +47,7 @@ const GamesContainer = () => {
     return (
         <View style={[styles.container, isMobile && styles.mobileContainer]}>
             <GamesControllerHeader selectedTab={selectedTab} onSelectTab={setSelectedTab} />
-
+            {loading && <ActivityIndicator/>}
             <View style={styles.content}>
                 {selectedTab === "collection" && <GamesList games={games} selectedTab={selectedTab} />}
 
