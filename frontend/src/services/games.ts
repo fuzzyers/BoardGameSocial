@@ -18,18 +18,9 @@ export const getAllCollectionGames = async () => {
 };
 
 export const createGame = async (game: any) => {
-    try {
-        const response = await api.post("/games", { game });
+    const response = await api.post("/games", { game });
 
-        // if (game.add_to_collection === true) {
-        //     await api.put("/games/collection/me", { game_id: response.data.id });
-        // }
-
-        return response;
-    } catch (error) {
-        console.error("Failed to create game:", error);
-        throw error;
-    }
+    return response;
 };
 
 export const addToCollection = async (game_id: number) => {

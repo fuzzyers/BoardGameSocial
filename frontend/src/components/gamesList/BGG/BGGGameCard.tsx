@@ -11,6 +11,7 @@ type BGGGameCardProps = {
 const BGGGameCard = ({ game, onExpansionSelected }: BGGGameCardProps) => {
     const [loadingExp, setLoadingExp] = useState(false);
     const [loadingGame, setLoadingGame] = useState(false);
+    const [addGame, setAddGame] = useState("Add Game")
 
     const handleAddGame = async () => {
         if (loadingGame) {
@@ -23,6 +24,8 @@ const BGGGameCard = ({ game, onExpansionSelected }: BGGGameCardProps) => {
             const gameById = await searchBGGGameByID(game.bgg_id);
 
             await createGame(gameById);
+
+            setAddGame("Added")
         } catch (error) {
             console.error("Failed to add game:", error);
         } finally {
@@ -61,7 +64,7 @@ const BGGGameCard = ({ game, onExpansionSelected }: BGGGameCardProps) => {
 
             <View style={styles.actions}>
                 <Pressable style={[styles.button, loadingGame && styles.disabled]} onPress={handleAddGame} disabled={loadingGame}>
-                    {loadingGame ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Add Game</Text>}
+                    {loadingGame ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>{addGame}</Text>}
                 </Pressable>
 
                 <Pressable
