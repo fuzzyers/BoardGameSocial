@@ -27,7 +27,7 @@ const ProfilePage = () => {
         <ScrollView style={styles.container} contentContainerStyle={styles.content}>
             <ProfileHeader profile={profile!} updateDescription={updateProfileDescription} />
             <ProfileStats profile={profile!} />
-            <ProfileGames profile={profile!} />
+            <ProfileGames profile={profile!} owner={true}/>
         </ScrollView>
     );
 };

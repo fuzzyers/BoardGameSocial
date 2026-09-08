@@ -20,3 +20,13 @@ export const updateTop3 = async (gameId:number, position:number) => {
 
     return response
 }
+
+export const getAnotherUserProfile = async (userId: number) => {
+    try {
+        const response = await api.get(`/profile/${userId}`)
+
+        return response.data
+    } catch (error) {
+        
+    }
+}

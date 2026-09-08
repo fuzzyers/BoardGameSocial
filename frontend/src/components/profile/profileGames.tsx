@@ -8,9 +8,10 @@ import Top3Game from "./top3games";
 
 type ProfileGamesProps = {
     profile: ProfileData;
+    owner: boolean
 };
 
-const ProfileGames = ({ profile }: ProfileGamesProps) => {
+const ProfileGames = ({ profile, owner=true }: ProfileGamesProps) => {
     const [gamesListVisible, setGamesListVisible] = useState(false)
     const [games, setGames] = useState<Game[]>()
     const [loading, setLoading] = useState<boolean>(false)
@@ -38,12 +39,14 @@ const ProfileGames = ({ profile }: ProfileGamesProps) => {
                 top3Games={profile.top3_games}
             />
 
-            <Button
-                title={"Edit Top 3 Games"}
-                disabled={loading}
-                onPress={() => getGames()}
-                variant="outline"
-            />
+            {owner && 
+                <Button
+                    title={"Edit Top 3 Games"}
+                    disabled={loading}
+                    onPress={() => getGames()}
+                    variant="outline"
+                />
+            }
 
             {games && (
                 <GamesListModal 
