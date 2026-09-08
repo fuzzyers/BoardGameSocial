@@ -38,12 +38,8 @@ export const removeUserFromGroup = async (groupId: number, userId: number) => {
 };
 
 export const deleteGroup = async (groupId: number) => {
-    try {
-        const response = await api.delete(`/groups/${groupId}`);
-        return response;
-    } catch (error) {
-        console.log(error);
-    }
+    const response = await api.delete(`/groups/${groupId}`);
+    return response;
 };
 
 export const leaveGroup = async (groupId: number) => {

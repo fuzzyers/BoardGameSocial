@@ -6,6 +6,8 @@ import UserSearch from "./userSearch";
 import Button from "../generalComponents/Button";
 import { deleteGroup, leaveGroup } from "@/services/groups";
 import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { errorStyle } from "@/styles/error";
 
 type CreateGroupModalProps = {
     visible: boolean;
@@ -14,20 +16,18 @@ type CreateGroupModalProps = {
 };
 
 const GroupManagment = ({ visible, onClose, groupData }: CreateGroupModalProps) => {
+    const [error, setError] = useState("")
     const router = useRouter();
 
-    const handleEditGroup = () => {
-        console.log("Edit group");
-    };
-
-    const handleManageRoles = () => {
-        console.log("Manage roles");
-    };
-
     const handleDeleteGroup = async () => {
-        await deleteGroup(groupData.id);
-        onClose();
-        router.back();
+        try {
+            await deleteGroup(groupData.id);
+
+            onClose();
+            router.back();
+        } catch (error) {
+            setError("You are not permited to delete this group")
+        }
     };
 
     const handleLeaveGroup = async () => {
@@ -128,6 +128,8 @@ const GroupManagment = ({ visible, onClose, groupData }: CreateGroupModalProps) 
                                 variant={"dangerOutline"}
                                 disabled={false}
                             />
+
+                            {error && <Text style={errorStyle.error}>{error}</Text>}
                         </View>
                     </ScrollView>
 
