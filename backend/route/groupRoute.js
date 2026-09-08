@@ -15,7 +15,7 @@ const router = express.Router();
 router.post("/create", firebaseAuthMiddleware, createGroup);
 router
     .put("/addUser", firebaseAuthMiddleware, addUserToGroup)
-    .put("/removeUser", firebaseAuthMiddleware, removeUserFromGroup)
+    .put("/removeUser", firebaseAuthMiddleware, requireGroupAdmin, removeUserFromGroup)
     .put("/leaveGroup", firebaseAuthMiddleware, leaveAgroup);
 router
     .get("/", firebaseAuthMiddleware, getAllGroups)

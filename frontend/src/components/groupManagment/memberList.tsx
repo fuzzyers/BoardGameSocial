@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { GroupDetails } from "@/types/apiDataTypes";
 import { removeUserFromGroup } from "@/services/groups";
+import { useRouter } from "expo-router";
+import { errorStyle } from "@/styles/error";
 
 type MemberListProps = {
     groupData: GroupDetails | null;
@@ -9,34 +11,41 @@ type MemberListProps = {
 
 const MemberList = ({ groupData }: MemberListProps) => {
     const [groupDataState, setGroupDataState] = useState<GroupDetails | null>(groupData);
-
+    const [error, setError] = useState("")
+    const router = useRouter()
+    
     useEffect(() => {
         setGroupDataState(groupData);
     }, [groupData]);
 
     const handleRemoveUser = async (groupId: number, userId: number) => {
         try {
+            setError("")
             const response = await removeUserFromGroup(groupId, userId);
 
-            if (response && response.status === 201) {
-                // remove the user from the local state to update the UI
-                if (groupDataState) {
-                    const updatedMembers = groupDataState.members.filter((member) => member.id !== userId);
-                    setGroupDataState({ ...groupDataState, members: updatedMembers });
-                }
+            if (groupDataState) {
+                const updatedMembers = groupDataState.members.filter((member) => member.id !== userId);
+                setGroupDataState({ ...groupDataState, members: updatedMembers });
             }
         } catch (error) {
+            setError("You are not permitted to use this function")
             console.error("Error removing user from group:", error);
         }
     };
+
+    const handleProfileNavigation = (id: number) => {
+        router.replace(`/(app)/profile/${id}`)
+    }
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Members</Text>
             {groupDataState?.members.map((member, index) => (
                 <View key={index} style={styles.memberRow}>
-                    <Text style={styles.memberName}>{member.name}</Text>
-                    <Text style={styles.roleText}>{member.role}</Text>
+                    <Pressable style={styles.memberProfile} onPress={() => handleProfileNavigation(member.id)}>
+                        <Text style={styles.memberName}>{member.name}</Text>
+                        <Text style={styles.roleText}>{member.role}</Text>
+                    </Pressable>
                     {member.role !== "owner" && (
                         <Pressable style={styles.removeButton} onPress={() => handleRemoveUser(groupDataState?.id, member.id)}>
                             <Text style={styles.removeButtonText}>Remove</Text>
@@ -44,6 +53,7 @@ const MemberList = ({ groupData }: MemberListProps) => {
                     )}
                 </View>
             ))}
+            {error && <Text style={errorStyle.error}>{error}</Text>}
         </View>
     );
 };
@@ -94,6 +104,10 @@ const styles = StyleSheet.create({
         color: "#555",
         paddingRight: 10
     },
+    memberProfile: {
+        flex:1,
+        flexDirection: "row"
+    }
 });
 
 export default MemberList;

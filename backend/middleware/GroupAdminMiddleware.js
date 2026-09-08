@@ -3,7 +3,7 @@ import pool from "../db/db.js";
 export const requireGroupAdmin = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        const groupId = req.params.group_id || req.body.group_id;
+        const groupId = req.params.group_id || req.body.group_id || req.body.groupId;
 
         if (!groupId) {
             return res.status(400).json({
