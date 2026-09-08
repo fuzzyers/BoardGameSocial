@@ -3,7 +3,7 @@ import { Game, ProfileData } from "@/types/apiDataTypes";
 import GamesListModal from "../gamesList/gamesListModal";
 import { useState } from "react";
 import Button from "../generalComponents/Button";
-import { getAllCollectionGames } from "@/services/games";
+import { getAllGames } from "@/services/games";
 import Top3Game from "./top3games";
 
 type ProfileGamesProps = {
@@ -18,7 +18,7 @@ const ProfileGames = ({ profile }: ProfileGamesProps) => {
     const getGames = async () => {
         try {
             setLoading(true)
-            const response = await getAllCollectionGames()
+            const response = await getAllGames()
 
             setGames(response)
 

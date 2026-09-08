@@ -3,7 +3,6 @@ import ProfileHeader from "@/components/profile/profileHeader";
 import ProfileStats from "@/components/profile/profileStatistics";
 import ProfileGames from "@/components/profile/profileGames";
 import { useMyProfile } from "@/hooks/useMyProfile";
-import { useEffect } from "react";
 
 const ProfilePage = () => {
     const { profile, loading, error, updateProfileDescription } = useMyProfile();

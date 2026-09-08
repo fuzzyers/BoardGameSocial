@@ -1,7 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const Top3GameItem = ({game, pos}: any) => {
-
     return (
         <Pressable
             style={styles.container}

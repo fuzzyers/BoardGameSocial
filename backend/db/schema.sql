@@ -25,7 +25,8 @@ DROP TABLE IF EXISTS
     roles,
     polls,
     poll_options,
-    poll_votes
+    poll_votes,
+    user_top_games
 CASCADE;
 
 
@@ -485,7 +486,11 @@ CREATE TABLE user_top_games (
 
     UNIQUE (user_id, game_id),
 
-    FOREIGN KEY (user_id, game_id)
-        REFERENCES user_games(user_id, game_id)
+    FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (game_id)
+        REFERENCES games(id)
         ON DELETE CASCADE
 );
