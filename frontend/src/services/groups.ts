@@ -20,12 +20,8 @@ export const getGroups = async () => {
 };
 
 export const addUserToGroup = async (groupId: number, userId: number) => {
-    try {
-        const response = await api.put(`/groups/addUser`, { groupId, userId, roleId: 3 });
-        return response;
-    } catch (error) {
-        console.log(error);
-    }
+    const response = await api.put(`/groups/addUser`, { groupId, userId, roleId: 3 });
+    return response;
 };
 
 export const removeUserFromGroup = async (groupId: number, userId: number) => {

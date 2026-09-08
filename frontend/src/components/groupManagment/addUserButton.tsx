@@ -1,40 +1,36 @@
-import { Pressable, StyleSheet, Text } from "react-native";
 import { addUserToGroup } from "@/services/groups";
+import Button from "../generalComponents/Button";
+import { useState } from "react";
 
 const AddUserButton = ({ userId, groupId }: { userId: number; groupId: number | undefined }) => {
+    const [title, setTitle] = useState("Add User")
+    const [buttonDisabled, setButtonDisabled] = useState(false)
+
     const handleAddUser = async () => {
-        if (!groupId) {
-            return;
+        try {
+            if (!groupId) {
+                return;
+            }
+            setButtonDisabled(true)
+
+            await addUserToGroup(groupId, userId);
+
+            setTitle("User Added")
+        } catch (error) {
+            setButtonDisabled(false)
+            setTitle("Try Again")
         }
-        await addUserToGroup(groupId, userId);
+
     };
 
     return (
-        <Pressable style={styles.button} onPress={handleAddUser}>
-            <Text style={styles.buttonText}>Add User</Text>
-        </Pressable>
+        <Button
+            title={title}
+            onPress={() => handleAddUser()}
+            variant="secondary"
+            disabled={buttonDisabled}
+        />
     );
 };
-
-const styles = StyleSheet.create({
-    button: {
-        backgroundColor: "#4CAF50",
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 5,
-        alignItems: "center",
-        justifyContent: "center",
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
-    },
-    buttonText: {
-        color: "#fff",
-        fontSize: 16,
-        fontWeight: "bold",
-    },
-});
 
 export default AddUserButton;

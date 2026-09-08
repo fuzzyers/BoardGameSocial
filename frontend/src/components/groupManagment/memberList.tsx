@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
     },
     memberName: {
         fontSize: 16,
+        flex:1
     },
     removeButton: {
         backgroundColor: "#ff4d4d",
@@ -91,6 +92,7 @@ const styles = StyleSheet.create({
     roleText: {
         fontSize: 14,
         color: "#555",
+        paddingRight: 10
     },
 });
 
