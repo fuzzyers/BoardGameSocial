@@ -448,6 +448,82 @@ export const getUserCollection = async (userId) => {
                 FROM user_games ug
                 WHERE ug.user_id = $1
                 AND ug.game_id = g.id
+                AND ug.collection_status = 'owned'
+            )
+            OR EXISTS (
+                SELECT 1
+                FROM user_games ug
+                JOIN game_expansions ge2
+                    ON ge2.expansion_id = ug.game_id
+                WHERE ug.user_id = $1
+                AND ge2.base_game_id = g.id
+            )
+
+        GROUP BY g.id
+        ORDER BY g.title;
+        `,
+        [userId]
+    );
+
+    return result.rows;
+};
+
+export const addGameToWishlist = (userId, gameId) => {
+    const result = pool.query(
+        `
+        INSERT INTO user_games
+        (
+            user_id,
+            game_id,
+            collection_status
+        )
+        VALUES($1,$2, 'wishlist')
+        ON CONFLICT DO NOTHING
+        `,
+        [userId, gameId]
+    )
+
+    return result.rows
+}
+
+export const getUserWishlist = async (userId) => {
+    const result = await pool.query(
+        `
+        SELECT
+            g.*,
+            COALESCE(
+                json_agg(
+                    json_build_object(
+                        'id', e.id,
+                        'title', e.title,
+                        'description', e.description,
+                        'bgg_id', e.bgg_id,
+                        'year_published', e.year_published,
+                        'min_players', e.min_players,
+                        'max_players', e.max_players,
+                        'min_play_time', e.min_play_time,
+                        'max_play_time', e.max_play_time,
+                        'min_age', e.min_age,
+                        'primary_image_url', e.primary_image_url
+                    )
+                ) FILTER (WHERE e.id IS NOT NULL),
+                '[]'
+            ) AS expansions
+        FROM games g
+
+        LEFT JOIN game_expansions ge
+            ON ge.base_game_id = g.id
+
+        LEFT JOIN games e
+            ON e.id = ge.expansion_id
+
+        WHERE
+            EXISTS (
+                SELECT 1
+                FROM user_games ug
+                WHERE ug.user_id = $1
+                AND ug.game_id = g.id
+                AND ug.collection_status = 'wishlist'
             )
             OR EXISTS (
                 SELECT 1

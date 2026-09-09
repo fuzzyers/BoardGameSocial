@@ -1,15 +1,15 @@
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 
 type GamesHeaderProps = {
-    selectedTab: "collection" | "database" | "add";
-    onSelectTab: (tab: "collection" | "database" | "add") => void;
+    selectedTab: "collection" | "database" | "add" | "wishlist";
+    onSelectTab: (tab: "collection" | "database" | "add" | "wishlist") => void;
 };
 
 const GamesControllerHeader = ({ selectedTab, onSelectTab }: GamesHeaderProps) => {
     const { width } = useWindowDimensions();
     const isMobile = width < 768;
 
-    const handleSelect = (category: "collection" | "database" | "add") => {
+    const handleSelect = (category: "collection" | "database" | "add" | "wishlist") => {
         onSelectTab(category);
     };
 
@@ -20,6 +20,13 @@ const GamesControllerHeader = ({ selectedTab, onSelectTab }: GamesHeaderProps) =
                 onPress={() => handleSelect("collection")}
             >
                 <Text style={[styles.tabText, selectedTab === "collection" && styles.activeTabText]}>My Collection</Text>
+            </Pressable>
+
+            <Pressable
+                style={[styles.tabButton, isMobile && styles.mobileTabButton, selectedTab === "wishlist" && styles.activeTab]}
+                onPress={() => handleSelect("wishlist")}
+            >
+                <Text style={[styles.tabText, selectedTab === "wishlist" && styles.activeTabText]}>My Wishlist</Text>
             </Pressable>
 
             <Pressable

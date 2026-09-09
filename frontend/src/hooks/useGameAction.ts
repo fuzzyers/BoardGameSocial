@@ -6,7 +6,7 @@ import { useState } from "react";
 
 type GameActionProps = {
     game: Game;
-    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion" | "top3";
+    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion" | "top3" | "wishlist";
     eventId?: number;
     group_id?: number;
     expansion?: Game;
