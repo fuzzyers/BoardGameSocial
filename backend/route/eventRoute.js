@@ -5,6 +5,7 @@ import {
     deleteEventById,
     getEvents,
     getEventWithGames,
+    removeGameFromEvent,
     toggleEventAttendance,
 } from "../controller/eventController.js";
 import { requireGroupAdmin } from "../middleware/GroupAdminMiddleware.js";
@@ -17,6 +18,6 @@ router
     .get("/:id", firebaseAuthMiddleware, getEventWithGames)
     .delete("/:id", firebaseAuthMiddleware, requireGroupAdmin, deleteEventById);
 router
-    .post("/addGameToEvent", firebaseAuthMiddleware, addEventGame)
+    .post("/addGameToEvent", firebaseAuthMiddleware, addEventGame).post("/removeGameFromEvent", firebaseAuthMiddleware, requireGroupAdmin, removeGameFromEvent)
     .put("/attendingEvent", firebaseAuthMiddleware, toggleEventAttendance);
 export default router;

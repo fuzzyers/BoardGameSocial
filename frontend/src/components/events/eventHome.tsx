@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
 import { EventWithGames, Game } from "@/types/apiDataTypes";
 import { getAllGames } from "@/services/games";
-import { addGameToEvent } from "@/services/event";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GamesListModal from "../gamesList/gamesListModal";
 import DeleteEventButton from "./deleteEventButton";
 import Button from "../generalComponents/Button";
+import { removeGameFromEvent } from "@/services/event";
 
 type EventHomeProps = {
     event: EventWithGames;
@@ -16,6 +16,8 @@ type EventHomeProps = {
 const EventHome = ({ event, selectedTab, setEvent }: EventHomeProps) => {
     const [games, setGames] = useState<Game[]>();
     const [addGames, setAddGames] = useState(false);
+    const [error, setError] = useState("")
+
 
     const getGames = async () => {
         try {
@@ -28,6 +30,29 @@ const EventHome = ({ event, selectedTab, setEvent }: EventHomeProps) => {
         }
     };
 
+    const removeGame = async (gameId: number) => {
+        try {
+            setError("")
+            await removeGameFromEvent(gameId, event.id, event.group_id);
+
+            setEvent((currentEvent) => {
+                if (!currentEvent) {
+                    return currentEvent;
+                }
+
+                return {
+                    ...currentEvent,
+                    games: currentEvent.games.filter(
+                        (game) => game.id !== gameId
+                    ),
+                };
+            });
+        } catch (error) {
+            setError("You do not have permission to remove a game")
+            console.error("Failed to remove game from event:", error);
+        }
+    };
+
     return (
         <View>
             <Text style={styles.sectionTitle}>Games</Text>
@@ -36,6 +61,15 @@ const EventHome = ({ event, selectedTab, setEvent }: EventHomeProps) => {
                 event.games.map((game) => (
                     <View key={game.id} style={styles.gameCard}>
                         <Text style={styles.gameTitle}>{game.title}</Text>
+                        <View style={styles.buttonCon}>
+                            <Text>{error}</Text>
+                            <Button
+                                title="Remove Game From Event"
+                                onPress={() => removeGame(game.id)}
+                                variant="dangerOutline"
+                                disabled={false}
+                            />
+                        </View>
                     </View>
                 ))
             ) : (
@@ -76,6 +110,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginBottom: 10,
         elevation: 2,
+        flex:1,
+        flexDirection: "row"
     },
 
     gameTitle: {
@@ -87,6 +123,10 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: 8,
     },
+
+    buttonCon: {
+        marginLeft: "auto",
+    }
 });
 
 export default EventHome;

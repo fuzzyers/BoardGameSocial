@@ -19,7 +19,7 @@ const ProfileByIdPage = () => {
                     setLoading(true);
                     const data = await getAnotherUserProfile(Number(id))
                     console.log(data)
-                    setProfile(data.data)
+                    setProfile(data)
                 } catch (error) {
                     console.error("Failed to get profile:", error);
                     setProfile(null);

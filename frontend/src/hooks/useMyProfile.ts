@@ -11,6 +11,7 @@ export const useMyProfile = () => {
         const fetchProfile = async () => {
             try {
                 const response = await getMyProfile();
+                console.log(response)
 
                 setProfile(response);
             } catch (error) {

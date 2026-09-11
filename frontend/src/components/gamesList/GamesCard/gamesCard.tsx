@@ -3,10 +3,10 @@ import { Pressable, StyleSheet } from "react-native";
 import { EventWithGames, Game } from "@/types/apiDataTypes";
 import GamesCardHeader from "./gamesCardHeader";
 import GamesCardInfo from "./gamesCardInfo";
+import { selectedTab } from "@/types/gamesList";
 
-type GamesCardProps = {
+type GamesCardProps = selectedTab & {
     game: Game;
-    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion" | "top3" | "wishlist";
     eventId?: number;
     group_id?: number;
     expansion?: Game;

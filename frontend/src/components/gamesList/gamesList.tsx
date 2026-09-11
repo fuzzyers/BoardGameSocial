@@ -1,10 +1,10 @@
 import { EventWithGames, Game } from "@/types/apiDataTypes";
 import { FlatList, StyleSheet, useWindowDimensions } from "react-native";
 import GameCard from "./GamesCard/gamesCard";
+import { selectedTab } from "@/types/gamesList";
 
-type GamesListProps = {
+type GamesListProps = selectedTab & {
     games: Game[];
-    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion" | "top3" | "wishlist";
     eventId?: number;
     group_id?: number;
     expansion?: Game;

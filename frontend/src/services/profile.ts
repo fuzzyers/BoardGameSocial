@@ -25,7 +25,7 @@ export const getAnotherUserProfile = async (userId: number) => {
     try {
         const response = await api.get(`/profile/${userId}`)
 
-        return response.data
+        return response.data.data
     } catch (error) {
         
     }

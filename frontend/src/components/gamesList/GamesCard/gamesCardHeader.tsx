@@ -6,10 +6,10 @@ import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import Button from "@/components/generalComponents/Button";
 import { addToWishList } from "@/services/games";
+import { selectedTab } from "@/types/gamesList";
 
-type GamesCardHeaderProps = {
+type GamesCardHeaderProps = selectedTab & {
     game: Game;
-    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion" | "top3" | "wishlist";
     eventId?: number;
     group_id?: number;
     expansion?: Game;

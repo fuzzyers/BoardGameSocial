@@ -72,3 +72,13 @@ export const toggleAttendance = async (event_id: number, user_id: number) => {
 
     return response;
 };
+
+export const removeGameFromEvent = async (gameId: number, eventId: number, group_id:number) => {
+    const response = await api.post("/events/removeGameFromEvent", {
+        event_id: eventId,
+        game_id: gameId,
+        group_id: group_id
+    });
+
+    return response;
+};
