@@ -1,17 +1,18 @@
 import { EventWithGames, Game } from "@/types/apiDataTypes";
 import { FlatList, StyleSheet, useWindowDimensions } from "react-native";
 import GameCard from "./GamesCard/gamesCard";
+import { selectedTab } from "@/types/gamesList";
 
-type GamesListProps = {
+type GamesListProps = selectedTab & {
     games: Game[];
-    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion" | "top3";
     eventId?: number;
     group_id?: number;
     expansion?: Game;
     setEvent?: React.Dispatch<React.SetStateAction<EventWithGames | undefined>>;
+    wishlist?: boolean;
 };
 
-const GamesList = ({ games, selectedTab, eventId, group_id, expansion, setEvent }: GamesListProps) => {
+const GamesList = ({ games, selectedTab, eventId, group_id, expansion, setEvent, wishlist }: GamesListProps) => {
     const { width } = useWindowDimensions();
 
     const numColumns = width >= 600 ? 2 : 1;
@@ -30,6 +31,7 @@ const GamesList = ({ games, selectedTab, eventId, group_id, expansion, setEvent 
                     group_id={group_id}
                     expansion={expansion}
                     setEvent={setEvent}
+                    wishlist={wishlist}
                 />
             )}
         />

@@ -11,7 +11,14 @@ export const getProfile = async (user_id) => {
             R.name AS role,
             U.description,
 
-            COUNT(DISTINCT UG.game_id) AS game_count,
+            COUNT(DISTINCT UG.game_id)
+                FILTER (WHERE UG.collection_status = 'owned')
+                AS owned_game_count,
+
+            COUNT(DISTINCT UG.game_id)
+                FILTER (WHERE UG.collection_status = 'wishlist')
+                AS wishlist_game_count,
+
             COUNT(DISTINCT GM.group_id) AS group_count,
             COUNT(DISTINCT EP.event_id) AS events_count,
 
@@ -31,8 +38,62 @@ export const getProfile = async (user_id) => {
                         ON UTG.game_id = G.id
                     WHERE UTG.user_id = U.id
                 ),
-                '[]'
-            ) AS top3_games
+                '[]'::json
+            ) AS top3_games,
+
+            COALESCE(
+                (
+                    SELECT JSON_AGG(
+                        JSONB_BUILD_OBJECT(
+                            'id', G.id,
+                            'title', G.title,
+                            'description', G.description,
+                            'bgg_id', G.bgg_id,
+                            'year_published', G.year_published,
+                            'min_players', G.min_players,
+                            'max_players', G.max_players,
+                            'min_play_time', G.min_play_time,
+                            'max_play_time', G.max_play_time,
+                            'min_age', G.min_age,
+                            'primary_image_url', G.primary_image_url
+                        )
+                        ORDER BY G.title
+                    )
+                    FROM user_games UG2
+                    JOIN games G
+                        ON UG2.game_id = G.id
+                    WHERE UG2.user_id = U.id
+                    AND UG2.collection_status = 'owned'
+                ),
+                '[]'::json
+            ) AS owned_games,
+
+            COALESCE(
+                (
+                    SELECT JSON_AGG(
+                        JSONB_BUILD_OBJECT(
+                            'id', G.id,
+                            'title', G.title,
+                            'description', G.description,
+                            'bgg_id', G.bgg_id,
+                            'year_published', G.year_published,
+                            'min_players', G.min_players,
+                            'max_players', G.max_players,
+                            'min_play_time', G.min_play_time,
+                            'max_play_time', G.max_play_time,
+                            'min_age', G.min_age,
+                            'primary_image_url', G.primary_image_url
+                        )
+                        ORDER BY G.title
+                    )
+                    FROM user_games UG3
+                    JOIN games G
+                        ON UG3.game_id = G.id
+                    WHERE UG3.user_id = U.id
+                    AND UG3.collection_status = 'wishlist'
+                ),
+                '[]'::json
+            ) AS wishlist_games
 
         FROM users U
 

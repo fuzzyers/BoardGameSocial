@@ -3,11 +3,11 @@ import { ActivityIndicator, StyleSheet, useWindowDimensions, View } from "react-
 import GamesControllerHeader from "./gamesControllerHeader";
 import GamesList from "./gamesList";
 import { Game } from "@/types/apiDataTypes";
-import { getAllCollectionGames, getAllGames } from "@/services/games";
+import { getAllCollectionGames, getAllGames, getAllWishListGames } from "@/services/games";
 import SearchBGG from "./BGG/searchBgg";
 
 const GamesContainer = () => {
-    const [selectedTab, setSelectedTab] = useState<"collection" | "database" | "add">("collection");
+    const [selectedTab, setSelectedTab] = useState<"collection" | "database" | "add" | "wishlist">("collection");
     const [loading, setLoading] = useState<boolean>(true)
     const [games, setGames] = useState<Game[]>([]);
 
@@ -25,7 +25,10 @@ const GamesContainer = () => {
 
             if (selectedTab === "database") {
                 data = await getAllGames();
-                console.log("Fetched games from database:", data);
+            }
+
+            if (selectedTab === "wishlist") {
+                data = await getAllWishListGames()
             }
 
             if (selectedTab === "add") {
@@ -51,7 +54,9 @@ const GamesContainer = () => {
             <View style={styles.content}>
                 {selectedTab === "collection" && <GamesList games={games} selectedTab={selectedTab} />}
 
-                {selectedTab === "database" && <GamesList games={games} selectedTab={selectedTab} />}
+                {selectedTab === "wishlist" && <GamesList games={games} selectedTab={selectedTab} />}
+
+                {selectedTab === "database" && <GamesList games={games} selectedTab={selectedTab} wishlist={true}/>}
 
                 {selectedTab === "add" && <SearchBGG />}
             </View>

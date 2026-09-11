@@ -179,3 +179,42 @@ export const toggleEventAttendance = async (req, res) => {
         });
     }
 };
+
+export const removeGameFromEvent = async (req, res) => {
+    try {
+        const { event_id, game_id } = req.body;
+
+        if (!event_id || !game_id) {
+            return res.status(400).json({
+                message: "Event ID and game ID are required.",
+            });
+        }
+
+        const result = await pool.query(
+            `
+            DELETE FROM event_games
+            WHERE event_id = $1
+              AND game_id = $2
+            RETURNING *;
+            `,
+            [event_id, game_id]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({
+                message: "Game is not currently added to this event.",
+            });
+        }
+
+        return res.status(200).json({
+            message: "Game removed from event successfully.",
+            eventGame: result.rows[0],
+        });
+    } catch (error) {
+        console.error("Error removing game from event:", error);
+
+        return res.status(500).json({
+            message: "Failed to remove game from event.",
+        });
+    }
+};

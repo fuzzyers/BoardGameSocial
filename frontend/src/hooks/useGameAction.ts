@@ -2,11 +2,11 @@ import { addGameToEvent, addGameToEventPoll } from "@/services/event";
 import { addExpansionToGame, addToCollection, removeFromCollection } from "@/services/games";
 import { updateTop3 } from "@/services/profile";
 import { EventWithGames, Game } from "@/types/apiDataTypes";
+import { selectedTab } from "@/types/gamesList";
 import { useState } from "react";
 
-type GameActionProps = {
+type GameActionProps = selectedTab & {
     game: Game;
-    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion" | "top3";
     eventId?: number;
     group_id?: number;
     expansion?: Game;

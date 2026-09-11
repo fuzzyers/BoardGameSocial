@@ -66,3 +66,24 @@ export const getGameById = async (gameid: number) => {
         throw error;
     }
 };
+
+export const addToWishList = async (game_id: number) => {
+    try {
+        const response = await api.put("/games/collection/me/wishlist", { game_id: game_id });
+
+        return response;
+    } catch (error) {
+        console.log("Failed to add game to collection: ", error);
+        throw error;
+    }
+};
+
+export const getAllWishListGames = async () => {
+    try {
+        const response = await api.get("/games/collection/me/wishlist");
+
+        return response.data.data;
+    } catch (error) {
+        console.log(error);
+    }
+};

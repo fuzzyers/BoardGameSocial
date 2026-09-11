@@ -4,18 +4,23 @@ import GameActionButton from "./gameActionButton";
 import useGameAction from "@/hooks/useGameAction";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
+import Button from "@/components/generalComponents/Button";
+import { addToWishList } from "@/services/games";
+import { selectedTab } from "@/types/gamesList";
 
-type GamesCardHeaderProps = {
+type GamesCardHeaderProps = selectedTab & {
     game: Game;
-    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion" | "top3";
     eventId?: number;
     group_id?: number;
     expansion?: Game;
     setEvent?: React.Dispatch<React.SetStateAction<EventWithGames | undefined>>;
+    wishlist?: boolean;
 };
 
-const GamesCardHeader = ({ game, selectedTab, eventId, group_id, expansion, setEvent }: GamesCardHeaderProps) => {
+const GamesCardHeader = ({ game, selectedTab, eventId, group_id, expansion, setEvent, wishlist }: GamesCardHeaderProps) => {
     const [position, setPosition] = useState<number>(1);
+    const [wishlistAdd, setWishlistAdd] = useState<boolean>(false)
+    const [wishlistText, setWishlistText] = useState<string>("wishlist")
     const { action, loading, status, button } = useGameAction({
         game,
         selectedTab,
@@ -25,6 +30,18 @@ const GamesCardHeader = ({ game, selectedTab, eventId, group_id, expansion, setE
         setEvent,
         position
     });
+
+    const handleAddToWishList = async () => {
+        try {
+            setWishlistAdd(true)
+
+            const response = await addToWishList(game.id)
+
+            setWishlistText("Added")
+        } catch (error) {
+            setWishlistAdd(false)
+        }
+    }
 
     return (
         <View style={styles.header}>
@@ -83,6 +100,15 @@ const GamesCardHeader = ({ game, selectedTab, eventId, group_id, expansion, setE
                         status={status}
                         onPress={action}
                         variant={button.variant}
+                    />
+                )}
+
+                {wishlist && (
+                    <Button
+                        title={wishlistText}
+                        onPress={() => handleAddToWishList()}
+                        variant={"secondary"}
+                        disabled={wishlistAdd}
                     />
                 )}
             </View>

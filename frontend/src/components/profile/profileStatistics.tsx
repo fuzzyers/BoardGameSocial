@@ -1,30 +1,43 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { ProfileData } from "@/types/apiDataTypes";
+import { useRouter } from "expo-router";
 
 type ProfileStatsProps = {
     profile: ProfileData;
 };
 
 const ProfileStats = ({ profile }: ProfileStatsProps) => {
+    const router = useRouter();
+
+    const handleReroute = (location: string) => {
+        router.replace(`/(app)/profile/${location}/${profile.id}`)
+    }
+
     return (
         <View style={styles.container}>
-            <View style={styles.stat}>
-                <Text style={styles.number}>{profile.game_count}</Text>
+            <Pressable style={styles.stat} onPress={() => handleReroute("collection")}>
+                <Text style={styles.number}>{profile.owned_game_count}</Text>
 
                 <Text style={styles.label}>Games</Text>
-            </View>
+            </Pressable>
 
-            <View style={styles.stat}>
+            <Pressable style={styles.stat} onPress={() => handleReroute("wishlist")}>
+                <Text style={styles.number}>{profile.wishlist_game_count}</Text>
+
+                <Text style={styles.label}>Wishlist</Text>
+            </Pressable>
+
+            <Pressable style={styles.stat}>
                 <Text style={styles.number}>{profile.events_count}</Text>
 
                 <Text style={styles.label}>Events</Text>
-            </View>
+            </Pressable>
 
-            <View style={styles.stat}>
+            <Pressable style={styles.stat}>
                 <Text style={styles.number}>{profile.group_count}</Text>
 
                 <Text style={styles.label}>Groups</Text>
-            </View>
+            </Pressable>
         </View>
     );
 };

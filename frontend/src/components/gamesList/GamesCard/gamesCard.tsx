@@ -3,17 +3,18 @@ import { Pressable, StyleSheet } from "react-native";
 import { EventWithGames, Game } from "@/types/apiDataTypes";
 import GamesCardHeader from "./gamesCardHeader";
 import GamesCardInfo from "./gamesCardInfo";
+import { selectedTab } from "@/types/gamesList";
 
-type GamesCardProps = {
+type GamesCardProps = selectedTab & {
     game: Game;
-    selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion" | "top3";
     eventId?: number;
     group_id?: number;
     expansion?: Game;
     setEvent?: React.Dispatch<React.SetStateAction<EventWithGames | undefined>>;
+    wishlist?: boolean;
 };
 
-const GamesCard = ({ game, selectedTab, eventId, group_id, expansion, setEvent }: GamesCardProps) => {
+const GamesCard = ({ game, selectedTab, eventId, group_id, expansion, setEvent, wishlist }: GamesCardProps) => {
     const router = useRouter();
 
     const handlePress = () => {
@@ -35,6 +36,7 @@ const GamesCard = ({ game, selectedTab, eventId, group_id, expansion, setEvent }
                 eventId={eventId}
                 group_id={group_id}
                 setEvent={setEvent}
+                wishlist={wishlist}
             />
 
             <GamesCardInfo game={game} />

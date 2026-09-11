@@ -107,13 +107,16 @@ export type ProfileData = {
     description: string;
     email: string;
     events_count: string;
-    game_count: string;
+    owned_game_count: string;
+    wishlist_game_count: string;
     group_count: string;
     id: number;
     name: string;
     role: string;
     username: string;
-    top3_games: Game[]
+    top3_games: Game[];
+    wishlist_games: Game[];
+    owned_games: Game[];
 };
 
 export type Members = {
