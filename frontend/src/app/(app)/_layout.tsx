@@ -88,6 +88,22 @@ export default function AppLayout() {
                     headerShown: false,
                 }}
             />
+
+            <Tabs.Screen
+                name="profile/collection/[id]"
+                options={{
+                    href: null,
+                    headerShown: false,
+                }}
+            />
+
+            <Tabs.Screen
+                name="profile/wishlist/[id]"
+                options={{
+                    href: null,
+                    headerShown: false,
+                }}
+            />
         </Tabs>
     );
 }
