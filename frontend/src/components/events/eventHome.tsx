@@ -16,8 +16,7 @@ type EventHomeProps = {
 const EventHome = ({ event, selectedTab, setEvent }: EventHomeProps) => {
     const [games, setGames] = useState<Game[]>();
     const [addGames, setAddGames] = useState(false);
-    const [error, setError] = useState("")
-
+    const [error, setError] = useState("");
 
     const getGames = async () => {
         try {
@@ -32,7 +31,7 @@ const EventHome = ({ event, selectedTab, setEvent }: EventHomeProps) => {
 
     const removeGame = async (gameId: number) => {
         try {
-            setError("")
+            setError("");
             await removeGameFromEvent(gameId, event.id, event.group_id);
 
             setEvent((currentEvent) => {
@@ -42,13 +41,11 @@ const EventHome = ({ event, selectedTab, setEvent }: EventHomeProps) => {
 
                 return {
                     ...currentEvent,
-                    games: currentEvent.games.filter(
-                        (game) => game.id !== gameId
-                    ),
+                    games: currentEvent.games.filter((game) => game.id !== gameId),
                 };
             });
         } catch (error) {
-            setError("You do not have permission to remove a game")
+            setError("You do not have permission to remove a game");
             console.error("Failed to remove game from event:", error);
         }
     };
@@ -110,8 +107,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginBottom: 10,
         elevation: 2,
-        flex:1,
-        flexDirection: "row"
+        flex: 1,
+        flexDirection: "row",
     },
 
     gameTitle: {
@@ -126,7 +123,7 @@ const styles = StyleSheet.create({
 
     buttonCon: {
         marginLeft: "auto",
-    }
+    },
 });
 
 export default EventHome;

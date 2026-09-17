@@ -6,6 +6,7 @@ const router = express.Router();
 router
     .get("/myProfile", firebaseAuthMiddleware, getMyProfile)
     .get("/:id", firebaseAuthMiddleware, getProfileByID)
-    .put("/myProfile/updateBio", firebaseAuthMiddleware, updateProfileBio).put("/myProfile/top3", firebaseAuthMiddleware, updateTop3Games);
+    .put("/myProfile/updateBio", firebaseAuthMiddleware, updateProfileBio)
+    .put("/myProfile/top3", firebaseAuthMiddleware, updateTop3Games);
 
 export default router;

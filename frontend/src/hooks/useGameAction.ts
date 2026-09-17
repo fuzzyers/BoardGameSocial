@@ -1,3 +1,4 @@
+import { useProfile } from "@/context/profileContext";
 import { addGameToEvent, addGameToEventPoll } from "@/services/event";
 import { addExpansionToGame, addToCollection, removeFromCollection } from "@/services/games";
 import { updateTop3 } from "@/services/profile";
@@ -19,6 +20,7 @@ type ActionStatus = "success" | "error" | null;
 const useGameAction = ({ game, selectedTab, eventId, group_id, expansion, setEvent, position }: GameActionProps) => {
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState<ActionStatus>(null);
+    const {refreshProfile} = useProfile()
 
     const runAction = async (action: () => Promise<void>) => {
         try {
@@ -41,11 +43,13 @@ const useGameAction = ({ game, selectedTab, eventId, group_id, expansion, setEve
             case "database":
                 return runAction(async () => {
                     await addToCollection(game.id);
+                    refreshProfile()
                 });
 
             case "collection":
                 return runAction(async () => {
                     await removeFromCollection(game.id);
+                    refreshProfile()
                 });
 
             case "addtoevent":
@@ -122,15 +126,15 @@ const useGameAction = ({ game, selectedTab, eventId, group_id, expansion, setEve
                 });
 
             case "top3":
-                if (!position){
-                    return
+                if (!position) {
+                    return;
                 }
 
                 return runAction(async () => {
-                    const response = await updateTop3(game.id, position)
+                    const response = await updateTop3(game.id, position);
 
-                    console.log(response)
-                })
+                    console.log(response);
+                });
             default:
                 return;
         }
@@ -190,7 +194,7 @@ const useGameAction = ({ game, selectedTab, eventId, group_id, expansion, setEve
                     successTitle: "✓",
                     errorTitle: "✕",
                     variant: "default" as const,
-                }
+                };
 
             default:
                 return null;

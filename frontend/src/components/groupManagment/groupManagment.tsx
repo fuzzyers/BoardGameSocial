@@ -16,7 +16,7 @@ type CreateGroupModalProps = {
 };
 
 const GroupManagment = ({ visible, onClose, groupData }: CreateGroupModalProps) => {
-    const [error, setError] = useState("")
+    const [error, setError] = useState("");
     const router = useRouter();
 
     const handleDeleteGroup = async () => {
@@ -26,7 +26,7 @@ const GroupManagment = ({ visible, onClose, groupData }: CreateGroupModalProps) 
             onClose();
             router.back();
         } catch (error) {
-            setError("You are not permited to delete this group")
+            setError("You are not permited to delete this group");
         }
     };
 

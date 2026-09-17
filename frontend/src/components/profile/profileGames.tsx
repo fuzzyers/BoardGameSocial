@@ -8,52 +8,47 @@ import Top3Game from "./top3games";
 
 type ProfileGamesProps = {
     profile: ProfileData;
-    owner: boolean
+    owner: boolean;
+    updateTop3Game: any;
 };
 
-const ProfileGames = ({ profile, owner=true }: ProfileGamesProps) => {
-    const [gamesListVisible, setGamesListVisible] = useState(false)
-    const [games, setGames] = useState<Game[]>()
-    const [loading, setLoading] = useState<boolean>(false)
+const ProfileGames = ({ profile, owner = true, updateTop3Game }: ProfileGamesProps) => {
+    const [gamesListVisible, setGamesListVisible] = useState(false);
+    const [games, setGames] = useState<Game[]>();
+    const [loading, setLoading] = useState<boolean>(false);
 
     const getGames = async () => {
         try {
-            setLoading(true)
-            const response = await getAllGames()
+            setLoading(true);
+            if (games === undefined) {
+                const response = await getAllGames();
 
-            setGames(response)
+                setGames(response);
+            }
 
-            setGamesListVisible(true)
+            setGamesListVisible(true);
         } catch (error) {
-            console.log(error)
+            console.log(error);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Top 3 Games (Page Needs Refreshed to see Top3 updates will fix soon pinky promise)</Text>
 
-            <Top3Game
-                top3Games={profile.top3_games}
-            />
+            <Top3Game top3Games={profile.top3_games} />
 
-            {owner && 
-                <Button
-                    title={"Edit Top 3 Games"}
-                    disabled={loading}
-                    onPress={() => getGames()}
-                    variant="outline"
-                />
-            }
+            {owner && <Button title={"Edit Top 3 Games"} disabled={loading} onPress={() => getGames()} variant="outline" />}
 
             {games && (
-                <GamesListModal 
+                <GamesListModal
                     visible={gamesListVisible}
                     games={games}
                     onClose={() => setGamesListVisible(false)}
                     selectedTab="top3"
+                    updateTop3Game={updateTop3Game}
                 />
             )}
         </View>

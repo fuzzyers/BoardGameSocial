@@ -481,10 +481,10 @@ export const addGameToWishlist = (userId, gameId) => {
         ON CONFLICT DO NOTHING
         `,
         [userId, gameId]
-    )
+    );
 
-    return result.rows
-}
+    return result.rows;
+};
 
 export const getUserWishlist = async (userId) => {
     const result = await pool.query(

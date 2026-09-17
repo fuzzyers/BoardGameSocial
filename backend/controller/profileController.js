@@ -9,7 +9,7 @@ export const getMyProfile = async (req, res) => {
 
         res.status(200).json({ message: "success", data: response });
     } catch (error) {
-        console.log(error)
+        console.log(error);
         res.status(500).json({ message: error });
     }
 };
@@ -64,9 +64,7 @@ export const updateTop3Games = async (req, res) => {
         const top3Games = result.rows;
 
         // Remove whatever game is currently in this position
-        const existingPosition = top3Games.find(
-            (game) => game.position === position
-        );
+        const existingPosition = top3Games.find((game) => game.position === position);
 
         if (existingPosition) {
             await client.query(
@@ -79,14 +77,9 @@ export const updateTop3Games = async (req, res) => {
             );
         }
 
-        const existingGame = top3Games.find(
-            (game) => game.game_id === gameId
-        );
+        const existingGame = top3Games.find((game) => game.game_id === gameId);
 
-        if (
-            existingGame &&
-            existingGame.position !== position
-        ) {
+        if (existingGame && existingGame.position !== position) {
             await client.query(
                 `
                 DELETE FROM user_top_games

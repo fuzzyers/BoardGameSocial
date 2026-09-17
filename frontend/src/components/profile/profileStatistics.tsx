@@ -10,8 +10,8 @@ const ProfileStats = ({ profile }: ProfileStatsProps) => {
     const router = useRouter();
 
     const handleReroute = (location: string) => {
-        router.replace(`/(app)/profile/${location}/${profile.id}`)
-    }
+        router.replace(`/(app)/profile/${location}/${profile.id}`);
+    };
 
     return (
         <View style={styles.container}>

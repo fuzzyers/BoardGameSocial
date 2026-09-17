@@ -11,16 +11,16 @@ type MemberListProps = {
 
 const MemberList = ({ groupData }: MemberListProps) => {
     const [groupDataState, setGroupDataState] = useState<GroupDetails | null>(groupData);
-    const [error, setError] = useState("")
-    const router = useRouter()
-    
+    const [error, setError] = useState("");
+    const router = useRouter();
+
     useEffect(() => {
         setGroupDataState(groupData);
     }, [groupData]);
 
     const handleRemoveUser = async (groupId: number, userId: number) => {
         try {
-            setError("")
+            setError("");
             const response = await removeUserFromGroup(groupId, userId);
 
             if (groupDataState) {
@@ -28,14 +28,14 @@ const MemberList = ({ groupData }: MemberListProps) => {
                 setGroupDataState({ ...groupDataState, members: updatedMembers });
             }
         } catch (error) {
-            setError("You are not permitted to use this function")
+            setError("You are not permitted to use this function");
             console.error("Error removing user from group:", error);
         }
     };
 
     const handleProfileNavigation = (id: number) => {
-        router.replace(`/(app)/profile/${id}`)
-    }
+        router.replace(`/(app)/profile/${id}`);
+    };
 
     return (
         <View style={styles.container}>
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     },
     memberName: {
         fontSize: 16,
-        flex:1
+        flex: 1,
     },
     removeButton: {
         backgroundColor: "#ff4d4d",
@@ -102,12 +102,12 @@ const styles = StyleSheet.create({
     roleText: {
         fontSize: 14,
         color: "#555",
-        paddingRight: 10
+        paddingRight: 10,
     },
     memberProfile: {
-        flex:1,
-        flexDirection: "row"
-    }
+        flex: 1,
+        flexDirection: "row",
+    },
 });
 
 export default MemberList;

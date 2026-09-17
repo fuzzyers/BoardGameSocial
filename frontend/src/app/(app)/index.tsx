@@ -2,7 +2,7 @@ import Button from "@/components/generalComponents/Button";
 import InstallApp from "@/components/installApp";
 import { getSocket } from "@/services/socket";
 import { router } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 export default function HomeScreen() {
     const handleLogout = async () => {
@@ -11,24 +11,12 @@ export default function HomeScreen() {
         socket.disconnect();
         router.push("/(auth)/signout");
     };
-    
 
     return (
         <View style={styles.container}>
-        {/*      <Button
-                 title={"Install App"}
-                 onPress={() => handleLogout()}
-                 variant={"dangerOutline"}
-                disabled={false}
-             /> */}
-             <InstallApp/>
+            <InstallApp />
 
-            <Button
-                title={"Logout"}
-                onPress={() => handleLogout()}
-                variant={"dangerOutline"}
-                disabled={false}
-            />
+            <Button title={"Logout"} onPress={() => handleLogout()} variant={"dangerOutline"} disabled={false} />
         </View>
     );
 }

@@ -11,7 +11,7 @@ type BGGGameCardProps = {
 const BGGGameCard = ({ game, onExpansionSelected }: BGGGameCardProps) => {
     const [loadingExp, setLoadingExp] = useState(false);
     const [loadingGame, setLoadingGame] = useState(false);
-    const [addGame, setAddGame] = useState("Add Game")
+    const [addGame, setAddGame] = useState("Add Game");
 
     const handleAddGame = async () => {
         if (loadingGame) {
@@ -25,7 +25,7 @@ const BGGGameCard = ({ game, onExpansionSelected }: BGGGameCardProps) => {
 
             await createGame(gameById);
 
-            setAddGame("Added")
+            setAddGame("Added");
         } catch (error) {
             console.error("Failed to add game:", error);
         } finally {

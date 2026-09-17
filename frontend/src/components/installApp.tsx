@@ -1,77 +1,44 @@
 import { useState } from "react";
-import {
-    Modal,
-    Pressable,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
+import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 
 const InstallApp = () => {
     const [visible, setVisible] = useState(false);
 
     return (
         <>
-            <Pressable
-                style={styles.button}
-                onPress={() => setVisible(true)}
-            >
+            <Pressable style={styles.button} onPress={() => setVisible(true)}>
                 <Text style={styles.buttonText}>Install App Instructions</Text>
             </Pressable>
 
-            <Modal
-                visible={visible}
-                transparent
-                animationType="fade"
-                onRequestClose={() => setVisible(false)}
-            >
+            <Modal visible={visible} transparent animationType="fade" onRequestClose={() => setVisible(false)}>
                 <View style={styles.overlay}>
                     <View style={styles.modal}>
-                        <Text style={styles.title}>
-                            Install BoardGameSocial
-                        </Text>
+                        <Text style={styles.title}>Install BoardGameSocial</Text>
 
                         <Text style={styles.description}>
-                            Install BoardGameSocial on your device for
-                            quick access and an app-like experience.
+                            Install BoardGameSocial on your device for quick access and an app-like experience.
                         </Text>
 
-                        <Text style={styles.heading}>
-                            Chrome on Desktop
-                        </Text>
+                        <Text style={styles.heading}>Chrome on Desktop</Text>
 
                         <Text style={styles.text}>
-                            Look for the install icon in the address bar
-                            at the top of your browser. Click it and
-                            select "Install".
+                            Look for the install icon in the address bar at the top of your browser. Click it and select
+                            "Install".
                         </Text>
 
-                        <Text style={styles.heading}>
-                            Chrome on Android
-                        </Text>
+                        <Text style={styles.heading}>Chrome on Android</Text>
 
                         <Text style={styles.text}>
-                            Open the three-dot menu in Chrome and select
-                            "Install app" or "Add to Home screen". (This should work)
+                            Open the three-dot menu in Chrome and select "Install app" or "Add to Home screen". (This should work)
                             on most browsers not just chrome.
                         </Text>
 
-                        <Text style={styles.heading}>
-                            Safari on iPhone / iPad
-                        </Text>
+                        <Text style={styles.heading}>Safari on iPhone / iPad</Text>
 
-                        <Text style={styles.text}>
-                            Tap the Share button, select "Add to Home
-                            Screen", then tap "Add".
-                        </Text>
+                        <Text style={styles.text}>Tap the Share button, select "Add to Home Screen", then tap "Add".</Text>
 
-                        <Pressable
-                            style={styles.closeButton}
-                            onPress={() => setVisible(false)}
-                        >
-                            <Text style={styles.closeText}>
-                                Close
-                            </Text>
+                        <Pressable style={styles.closeButton} onPress={() => setVisible(false)}>
+                            <Text style={styles.closeText}>Close</Text>
                         </Pressable>
                     </View>
                 </View>

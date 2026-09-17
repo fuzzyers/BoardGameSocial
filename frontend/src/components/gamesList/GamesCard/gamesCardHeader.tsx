@@ -7,6 +7,7 @@ import { useState } from "react";
 import Button from "@/components/generalComponents/Button";
 import { addToWishList } from "@/services/games";
 import { selectedTab } from "@/types/gamesList";
+import { useProfile } from "@/context/profileContext";
 
 type GamesCardHeaderProps = selectedTab & {
     game: Game;
@@ -15,12 +16,23 @@ type GamesCardHeaderProps = selectedTab & {
     expansion?: Game;
     setEvent?: React.Dispatch<React.SetStateAction<EventWithGames | undefined>>;
     wishlist?: boolean;
+    updateTop3Game?: any;
 };
 
-const GamesCardHeader = ({ game, selectedTab, eventId, group_id, expansion, setEvent, wishlist }: GamesCardHeaderProps) => {
+const GamesCardHeader = ({
+    game,
+    selectedTab,
+    eventId,
+    group_id,
+    expansion,
+    setEvent,
+    wishlist,
+    updateTop3Game,
+}: GamesCardHeaderProps) => {
     const [position, setPosition] = useState<number>(1);
-    const [wishlistAdd, setWishlistAdd] = useState<boolean>(false)
-    const [wishlistText, setWishlistText] = useState<string>("wishlist")
+    const [wishlistAdd, setWishlistAdd] = useState<boolean>(false);
+    const [wishlistText, setWishlistText] = useState<string>("wishlist");
+    const {refreshProfile} = useProfile()
     const { action, loading, status, button } = useGameAction({
         game,
         selectedTab,
@@ -28,20 +40,20 @@ const GamesCardHeader = ({ game, selectedTab, eventId, group_id, expansion, setE
         group_id,
         expansion,
         setEvent,
-        position
+        position,
     });
 
     const handleAddToWishList = async () => {
         try {
-            setWishlistAdd(true)
+            setWishlistAdd(true);
 
-            const response = await addToWishList(game.id)
+            const response = await addToWishList(game.id);
 
-            setWishlistText("Added")
+            setWishlistText("Added");
         } catch (error) {
-            setWishlistAdd(false)
+            setWishlistAdd(false);
         }
-    }
+    };
 
     return (
         <View style={styles.header}>
@@ -77,11 +89,7 @@ const GamesCardHeader = ({ game, selectedTab, eventId, group_id, expansion, setE
                 {selectedTab === "top3" && (
                     <View style={styles.positionPickerContainer}>
                         <View style={styles.pickerContainer}>
-                            <Picker
-                                selectedValue={position}
-                                onValueChange={(value) => setPosition(value)}
-                                style={styles.picker}
-                            >
+                            <Picker selectedValue={position} onValueChange={(value) => setPosition(value)} style={styles.picker}>
                                 <Picker.Item label="1st" value={1} />
                                 <Picker.Item label="2nd" value={2} />
                                 <Picker.Item label="3rd" value={3} />

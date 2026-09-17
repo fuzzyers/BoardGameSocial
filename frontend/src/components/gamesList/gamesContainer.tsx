@@ -5,22 +5,26 @@ import GamesList from "./gamesList";
 import { Game } from "@/types/apiDataTypes";
 import { getAllCollectionGames, getAllGames, getAllWishListGames } from "@/services/games";
 import SearchBGG from "./BGG/searchBgg";
+import { useProfile } from "@/context/profileContext";
 
 const GamesContainer = () => {
     const [selectedTab, setSelectedTab] = useState<"collection" | "database" | "add" | "wishlist">("collection");
-    const [loading, setLoading] = useState<boolean>(true)
+    const { profile } = useProfile();
+    const [loadingGames, setLoadingGames] = useState<boolean>(true);
     const [games, setGames] = useState<Game[]>([]);
 
     const { width } = useWindowDimensions();
     const isMobile = width < 768;
 
     const onSelect = async () => {
-        try{
-            setLoading(true)
+        try {
+            setLoadingGames(true);
             let data: Game[] = [];
 
+            if (!profile) return;
+
             if (selectedTab === "collection") {
-                data = await getAllCollectionGames();
+                data = profile?.owned_games;
             }
 
             if (selectedTab === "database") {
@@ -28,18 +32,18 @@ const GamesContainer = () => {
             }
 
             if (selectedTab === "wishlist") {
-                data = await getAllWishListGames()
+                console.log("wishlist", profile?.wishlist_games);
+                data = profile?.wishlist_games;
             }
 
             if (selectedTab === "add") {
-                setLoading(false)
+                setLoadingGames(false);
                 return;
             }
             setGames(data);
-        }catch (error) {
-
+        } catch (error) {
         } finally {
-            setLoading(false)
+            setLoadingGames(false);
         }
     };
 
@@ -50,13 +54,15 @@ const GamesContainer = () => {
     return (
         <View style={[styles.container, isMobile && styles.mobileContainer]}>
             <GamesControllerHeader selectedTab={selectedTab} onSelectTab={setSelectedTab} />
-            {loading && <ActivityIndicator/>}
+            {loadingGames && <ActivityIndicator />}
             <View style={styles.content}>
                 {selectedTab === "collection" && <GamesList games={games} selectedTab={selectedTab} />}
 
                 {selectedTab === "wishlist" && <GamesList games={games} selectedTab={selectedTab} />}
 
-                {selectedTab === "database" && <GamesList games={games} selectedTab={selectedTab} wishlist={true}/>}
+                {selectedTab === "database" && !loadingGames && (
+                    <GamesList games={games} selectedTab={selectedTab} wishlist={true} />
+                )}
 
                 {selectedTab === "add" && <SearchBGG />}
             </View>

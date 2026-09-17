@@ -12,13 +12,14 @@ type GamesCardProps = selectedTab & {
     expansion?: Game;
     setEvent?: React.Dispatch<React.SetStateAction<EventWithGames | undefined>>;
     wishlist?: boolean;
+    updateTop3Game?: any;
 };
 
-const GamesCard = ({ game, selectedTab, eventId, group_id, expansion, setEvent, wishlist }: GamesCardProps) => {
+const GamesCard = ({ game, selectedTab, eventId, group_id, expansion, setEvent, wishlist, updateTop3Game }: GamesCardProps) => {
     const router = useRouter();
 
     const handlePress = () => {
-        if (selectedTab === "top3") return
+        if (selectedTab === "top3") return;
         router.push({
             pathname: "/(app)/games/[gameid]",
             params: {
@@ -37,6 +38,7 @@ const GamesCard = ({ game, selectedTab, eventId, group_id, expansion, setEvent, 
                 group_id={group_id}
                 setEvent={setEvent}
                 wishlist={wishlist}
+                updateTop3Game={updateTop3Game}
             />
 
             <GamesCardInfo game={game} />

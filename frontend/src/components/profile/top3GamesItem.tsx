@@ -1,24 +1,19 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-const Top3GameItem = ({game, pos}: any) => {
+const Top3GameItem = ({ game, pos }: any) => {
     return (
         <Pressable
             style={styles.container}
             // onPress={onPress}
         >
             <View style={styles.position}>
-                <Text style={styles.positionText}>
-                    {pos}
-                </Text>
+                <Text style={styles.positionText}>{pos}</Text>
             </View>
-      
+
             {game ? (
                 <View style={styles.gameContainer}>
                     {game.primary_image_url ? (
-                        <img
-                            src={game.primary_image_url}
-                            style={styles.image}
-                        />
+                        <img src={game.primary_image_url} style={styles.image} />
                     ) : (
                         <View style={styles.imagePlaceholder}>
                             <Text>No Image</Text>
@@ -26,21 +21,17 @@ const Top3GameItem = ({game, pos}: any) => {
                     )}
 
                     <View style={styles.gameInfo}>
-                        <Text style={styles.gameTitle}>
-                            {game.title}
-                        </Text>
+                        <Text style={styles.gameTitle}>{game.title}</Text>
                     </View>
                 </View>
             ) : (
                 <View style={styles.emptyContainer}>
-                    <Text style={styles.addText}>
-                        No game Added
-                    </Text>
+                    <Text style={styles.addText}>No game Added</Text>
                 </View>
             )}
         </Pressable>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -110,4 +101,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Top3GameItem
+export default Top3GameItem;

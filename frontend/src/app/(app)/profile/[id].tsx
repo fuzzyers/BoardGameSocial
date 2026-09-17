@@ -8,7 +8,7 @@ import ProfileHeaderByID from "@/components/profile/profileHeaderById";
 import { ProfileData } from "@/types/apiDataTypes";
 
 const ProfileByIdPage = () => {
-    const [profile, setProfile] = useState<ProfileData | null>()
+    const [profile, setProfile] = useState<ProfileData | null>();
     const [loading, setLoading] = useState(true);
     const { id } = useLocalSearchParams();
 
@@ -17,21 +17,20 @@ const ProfileByIdPage = () => {
             const getData = async () => {
                 try {
                     setLoading(true);
-                    const data = await getAnotherUserProfile(Number(id))
-                    console.log(data)
-                    setProfile(data)
+                    const data = await getAnotherUserProfile(Number(id));
+                    console.log(data);
+                    setProfile(data);
                 } catch (error) {
                     console.error("Failed to get profile:", error);
                     setProfile(null);
                 } finally {
-                    setLoading(false)
+                    setLoading(false);
                 }
-  
-            }
+            };
 
-            getData()
-        },[id])
-    )
+            getData();
+        }, [id])
+    );
 
     if (loading) {
         return (
@@ -53,7 +52,7 @@ const ProfileByIdPage = () => {
         <ScrollView style={styles.container} contentContainerStyle={styles.content}>
             <ProfileHeaderByID profile={profile} />
             <ProfileStats profile={profile!} />
-            <ProfileGames profile={profile!} owner={false}/>
+            <ProfileGames profile={profile!} owner={false} />
         </ScrollView>
     );
 };

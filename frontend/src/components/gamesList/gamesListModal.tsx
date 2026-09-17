@@ -1,6 +1,6 @@
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import GamesList from "../gamesList/gamesList";
-import { EventWithGames, Game } from "@/types/apiDataTypes";
+import { EventWithGames, Game, ProfileData } from "@/types/apiDataTypes";
 
 type GamesListModalProps = {
     visible: boolean;
@@ -10,9 +10,19 @@ type GamesListModalProps = {
     selectedTab: "collection" | "database" | "add" | "addtoevent" | "polls" | "expansion" | "top3";
     group_id?: number;
     setEvent?: React.Dispatch<React.SetStateAction<EventWithGames | undefined>>;
+    updateTop3Game?: any;
 };
 
-const GamesListModal = ({ visible, games, onClose, eventId, selectedTab, group_id, setEvent }: GamesListModalProps) => {
+const GamesListModal = ({
+    visible,
+    games,
+    onClose,
+    eventId,
+    selectedTab,
+    group_id,
+    setEvent,
+    updateTop3Game,
+}: GamesListModalProps) => {
     return (
         <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
             <View style={styles.modalOverlay}>
@@ -32,6 +42,7 @@ const GamesListModal = ({ visible, games, onClose, eventId, selectedTab, group_i
                             eventId={eventId}
                             group_id={group_id}
                             setEvent={setEvent}
+                            updateTop3Game={updateTop3Game}
                         />
                     </View>
                 </View>

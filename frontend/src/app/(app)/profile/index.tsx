@@ -5,7 +5,7 @@ import ProfileGames from "@/components/profile/profileGames";
 import { useMyProfile } from "@/hooks/useMyProfile";
 
 const ProfilePage = () => {
-    const { profile, loading, error, updateProfileDescription } = useMyProfile();
+    const { profile, loading, error, updateProfileDescription, updateTop3Game } = useMyProfile();
 
     if (loading) {
         return (
@@ -26,8 +26,8 @@ const ProfilePage = () => {
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.content}>
             <ProfileHeader profile={profile!} updateDescription={updateProfileDescription} />
-            <ProfileStats profile={profile!}/>
-            <ProfileGames profile={profile!} owner={true}/>
+            <ProfileStats profile={profile!} />
+            <ProfileGames profile={profile!} owner={true} updateTop3Game={updateTop3Game} />
         </ScrollView>
     );
 };

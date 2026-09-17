@@ -140,7 +140,7 @@ export const updateBio = async (user_id, bio) => {
 };
 
 export const getTop3Games = async (user_id) => {
-        const result = await pool.query(
+    const result = await pool.query(
         `
         SELECT * FROM user_top_games
         WHERE user_id = $1
@@ -149,8 +149,8 @@ export const getTop3Games = async (user_id) => {
         [user_id]
     );
 
-    return result.rows
-}
+    return result.rows;
+};
 
 export const deleteTop3Game = async (user_id, position) => {
     await pool.query(
@@ -172,5 +172,5 @@ export const insertTop3Game = async (user_id, gameId, position) => {
         [user_id, gameId, position]
     );
 
-    return response.rows
+    return response.rows;
 };

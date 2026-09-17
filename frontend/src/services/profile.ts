@@ -12,21 +12,19 @@ export const updateProfileBio = async (newBio: string) => {
     return response.data.data;
 };
 
-export const updateTop3 = async (gameId:number, position:number) => {
+export const updateTop3 = async (gameId: number, position: number) => {
     const response = await api.put("/profile/myProfile/top3", {
         gameId: gameId,
-        position: position
-    })
+        position: position,
+    });
 
-    return response
-}
+    return response;
+};
 
 export const getAnotherUserProfile = async (userId: number) => {
     try {
-        const response = await api.get(`/profile/${userId}`)
+        const response = await api.get(`/profile/${userId}`);
 
-        return response.data.data
-    } catch (error) {
-        
-    }
-}
+        return response.data.data;
+    } catch (error) {}
+};

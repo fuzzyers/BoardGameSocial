@@ -168,28 +168,28 @@ export const addGameToUsersWishList = async (req, res) => {
         const { game_id } = req.body;
         const user_id = req.user.id;
 
-        const wishlist = await gamesService.addGameToWishlist(user_id, game_id)
+        const wishlist = await gamesService.addGameToWishlist(user_id, game_id);
 
-        res.status(200).json({message: "success", data: wishlist})
+        res.status(200).json({ message: "success", data: wishlist });
     } catch (error) {
         console.error("Error creating expansion:", error);
         res.status(500).json({
             message: error.message,
         });
     }
-}
+};
 
 export const getUsersWishlist = async (req, res) => {
     try {
         const user_id = req.user.id;
 
-        const wishlist = await gamesService.getUserWishlist(user_id)
+        const wishlist = await gamesService.getUserWishlist(user_id);
 
-        res.status(200).json({message: "success", data: wishlist})
+        res.status(200).json({ message: "success", data: wishlist });
     } catch (error) {
         console.error("Error creating expansion:", error);
         res.status(500).json({
             message: error.message,
         });
     }
-}
+};
