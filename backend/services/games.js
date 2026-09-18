@@ -542,3 +542,16 @@ export const getUserWishlist = async (userId) => {
 
     return result.rows;
 };
+
+export const updateGameToCollectionFromWishlist = async (user_id, game_id) => {
+    const query = await pool.query(
+        `
+        UPDATE user_games
+        SET collection_status = 'owned'
+        WHERE user_id = $1 
+        AND game_id = $2
+        `, [user_id, game_id]
+    )
+
+    return query.rows[0]
+}

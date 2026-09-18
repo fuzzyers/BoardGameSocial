@@ -193,3 +193,18 @@ export const getUsersWishlist = async (req, res) => {
         });
     }
 };
+
+export const updateWishlistToCollection = async (req, res) => {
+    try {
+        const user_id = req.user.id;
+        const {game_id} = req.body
+ 
+        const addGameToCollection = await gamesService.updateGameToCollectionFromWishlist(user_id, game_id)
+
+        res.status(200).json({ message: "success", data: addGameToCollection });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+}

@@ -87,3 +87,15 @@ export const getAllWishListGames = async () => {
         console.log(error);
     }
 };
+
+export const updateWishListGame = async (game_id: Number) => {
+    try {
+        const response = await api.put("/games/collection/me/wishlist/owned", {
+                game_id: game_id
+        });
+
+        return response.data
+    } catch (error) {
+        console.log(error);
+    }
+}

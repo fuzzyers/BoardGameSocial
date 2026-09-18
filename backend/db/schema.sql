@@ -283,7 +283,7 @@ CREATE TABLE user_games (
     collection_status VARCHAR(30)
         DEFAULT 'owned'
         CHECK(
-            collection_status IN
+             collection_status IN
             (
                 'owned',
                 'wishlist',

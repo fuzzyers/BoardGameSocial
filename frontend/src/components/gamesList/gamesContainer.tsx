@@ -32,7 +32,6 @@ const GamesContainer = () => {
             }
 
             if (selectedTab === "wishlist") {
-                console.log("wishlist", profile?.wishlist_games);
                 data = profile?.wishlist_games;
             }
 

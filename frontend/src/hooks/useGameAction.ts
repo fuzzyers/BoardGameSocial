@@ -1,6 +1,6 @@
 import { useProfile } from "@/context/profileContext";
 import { addGameToEvent, addGameToEventPoll } from "@/services/event";
-import { addExpansionToGame, addToCollection, removeFromCollection } from "@/services/games";
+import { addExpansionToGame, addToCollection, removeFromCollection, updateWishListGame } from "@/services/games";
 import { updateTop3 } from "@/services/profile";
 import { EventWithGames, Game } from "@/types/apiDataTypes";
 import { selectedTab } from "@/types/gamesList";
@@ -133,8 +133,15 @@ const useGameAction = ({ game, selectedTab, eventId, group_id, expansion, setEve
                 return runAction(async () => {
                     const response = await updateTop3(game.id, position);
 
-                    console.log(response);
                 });
+
+            case "wishlist":
+
+            return runAction(async () => {
+                const response = await updateWishListGame(game.id)
+                refreshProfile()
+            })
+
             default:
                 return;
         }
@@ -196,6 +203,15 @@ const useGameAction = ({ game, selectedTab, eventId, group_id, expansion, setEve
                     variant: "default" as const,
                 };
 
+            case "wishlist": {
+                return {
+                    title: "+",
+                    loadingTitle: "...",
+                    successTitle: "✓",
+                    errorTitle: "✕",
+                    variant: "default" as const,
+                };
+            }
             default:
                 return null;
         }

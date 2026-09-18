@@ -14,6 +14,7 @@ import {
     createExpansion,
     addGameToUsersWishList,
     getUsersWishlist,
+    updateWishlistToCollection,
 } from "../controller/gameController.js";
 
 import { adminAuthentication } from "../middleware/adminAuthMiddleware.js";
@@ -28,7 +29,7 @@ router
     .get("/collection/me", firebaseAuthMiddleware, getCollection)
     .put("/collection/me", firebaseAuthMiddleware, addGameToCollection)
     .put("/collection/me/remove", firebaseAuthMiddleware, removeGameFromCollection)
-    .put("/collection/me/wishlist", firebaseAuthMiddleware, addGameToUsersWishList)
+    .put("/collection/me/wishlist", firebaseAuthMiddleware, addGameToUsersWishList).put("/collection/me/wishlist/owned", firebaseAuthMiddleware, updateWishlistToCollection)
     .get("/collection/me/wishlist", firebaseAuthMiddleware, getUsersWishlist);
 router.get("/expansion/:id", firebaseAuthMiddleware, getGame).post("/expansion/", firebaseAuthMiddleware, createExpansion);
 
